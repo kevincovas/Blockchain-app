@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+    clientes_db: 
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: mysecretpassword
+            POSTGRES_USER: admin
+            POSTGRES_DB: clientsite
+        ports:
+            - 5432:5432
+        
