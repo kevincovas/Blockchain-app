@@ -1,0 +1,20 @@
+{
+  "name": "peluqueria_app_server",
+  "version": "0.0.1",
+  "main": "server.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
