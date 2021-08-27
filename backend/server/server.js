@@ -1,6 +1,9 @@
+require('dotenv').config(); //Pone las variables del fichero .env en el entorno.
+
 const express = require("express");
 const cors = require("cors");
 const db = require('./db');
+const config = require('./config');
 
 const app = express();
 
@@ -35,6 +38,6 @@ app.post("/clients", async (req,res) => {
     } 
 });
 
-app.listen(8080, () => {
+app.listen(config.SERVER_PORT, () => {
     console.log("peluqueria_app server on port 8080");
 });
