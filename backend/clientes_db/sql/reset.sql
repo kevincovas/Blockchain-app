@@ -8,7 +8,7 @@ CREATE TABLE clients (
     client_surname VARCHAR(25),
     birth_date DATE,
     gender VARCHAR(1),
-    email VARCHAR(25),
+    email VARCHAR(50),
     phone NUMERIC,
     cell_phone NUMERIC,
     details TEXT,

@@ -4,7 +4,7 @@ const checkEnvVar = (name) => {
     if (name in process.env){
         return process.env[name];
     }
-    throw new error("Missing environment variable");
+    throw new Error("Missing environment variable");
 }
 module.exports = {
     DB_HOST: checkEnvVar('DB_HOST'),
