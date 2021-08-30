@@ -26,3 +26,4 @@ CREATE TABLE users (
     created TIMESTAMP DEFAULT NOW(),
     updated TIMESTAMP
 );
+
