@@ -17,13 +17,9 @@ CREATE TABLE clients (
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    email VARCHAR(25),
-    user_password VARCHAR(12),
+    email VARCHAR(50),
+    user_password VARCHAR(25),
     created TIMESTAMP DEFAULT NOW(),
     updated TIMESTAMP
 );
 
-CREATE TABLE clientUser (
-    clientUserId SERIAL PRIMARY KEY,
-    clientId INTEGER REFERENCES clients (client_id)
-)
