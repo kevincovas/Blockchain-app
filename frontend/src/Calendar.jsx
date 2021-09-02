@@ -48,7 +48,6 @@ function Calendar()
   }
 	
 	// Init Values
-	useEffect(() => {  }, []);	
 	useEffect(() => { /* Buscaré las citas disponibles ése día */ }, [state.selectedDay]);	
 
 	
@@ -66,7 +65,7 @@ locale="es"
       firstDayOfWeek={1}
  showOutsideDays 	  
 		  selectedDays={state.selectedDay}
-		
+		todayButton="Hoy"
 		disabledDays={test}
 		  
 		  
