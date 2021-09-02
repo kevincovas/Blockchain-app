@@ -2,6 +2,7 @@ import React from 'react';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
+// Month Translation in Spanish
 const MONTHS = [
   'Enero',
   'Febrero',
@@ -16,6 +17,8 @@ const MONTHS = [
   'Noviembre',
   'Diciembre',
 ];
+
+// Week Translation in Spanish
 const WEEKDAYS_LONG = [
   'Domingo',
   'Lunes',
@@ -25,10 +28,14 @@ const WEEKDAYS_LONG = [
   'Viernes',
   'Sábado',
 ];
+
+// Week Days in Spanish
 const WEEKDAYS_SHORT = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
+// Calendar Class
 export default class Calendar extends React.Component {
-	
+
+  // Get Props
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
@@ -37,12 +44,14 @@ export default class Calendar extends React.Component {
     };
   }
 
+  // On click a day, change state
   handleDayClick(day, { selected }) {
     this.setState({
       selectedDay: selected ? undefined : day,
     });
   }
 
+  // Render Element
   render() {
     return (
       <div>

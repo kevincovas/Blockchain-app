@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Calendar from './Calendar.jsx'
 
-
+// App Base
 function App() {
 
   return ( 
@@ -10,7 +10,6 @@ function App() {
 	
 	<Calendar />
 
-	
     </div>
 		
   ) 
