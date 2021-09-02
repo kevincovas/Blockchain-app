@@ -32,27 +32,63 @@ const WEEKDAYS_LONG = [
 // Week Days in Spanish
 const WEEKDAYS_SHORT = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
-
-
 function Calendar()
 {
 	// Set None day Selected
 	const [state, setState] = useState({selectedDay: null});
-	const [test, setDisabledDays] = useState([new Date(2021, 8, 12)]);
+	const [disabledDays, setDisabledDays] = useState();
 	
 	  // On click a day, change state
   function handleDayClick(day, { selected }) {
    setState({
       selectedDay: selected ? undefined : day,
-    });
+    });	
   }
 	
-	// Init Values
+	function handleSubmit()
+	{
+		// TODO Crear Cita por WS
+		event.preventDefault();
+	}
+	
+	function handleChange()
+	{
+		
+	}
+	
+	// Effects to Restart Calendar
 	useEffect(() => { /* Buscaré las citas disponibles ése día */ }, [state.selectedDay]);	
 
 	
 	return ( 
 
+<div>
+
+ <form onSubmit={handleSubmit}>
+
+ <label>
+          Peluquero:
+          
+<select onChange={handleChange}>
+  <option value="Pepe">Pepe</option>
+  <option value="Antonio">Antonio</option>
+  <option value="Jaime">Jaime</option>
+  <option value="Luis">Luis</option>
+</select>
+		  
+</label>
+<br />
+ <label>
+          Servicios:
+         
+		 <select>
+  <option value="Corte">Corte</option>
+  <option value="Tinte">Tinte</option>
+  <option value="Pestanas">Pestañas</option>
+  <option value="Unas">Uñas</option>
+</select>
+		 
+</label>
 
 <div>
         <DayPicker
@@ -66,7 +102,7 @@ locale="es"
  showOutsideDays 	  
 		  selectedDays={state.selectedDay}
 		todayButton="Hoy"
-		disabledDays={test}
+		disabledDays={disabledDays}
 		  
 		  
         />
@@ -75,62 +111,17 @@ locale="es"
             ? state.selectedDay.toLocaleDateString()
             : 'Selecciona el día'}</p>
 
+
       </div>
 
+<input type="submit" value="Submit" />
+
+
+</form>
+
+</div>
 
 	);
 }
 
 export default Calendar ;
-
-/*
-
-// Calendar Class
-export default class Calendar extends React.Component {
-
-  // Get Props
-  constructor(props) {
-    super(props);
-    this.handleDayClick = this.handleDayClick.bind(this);
-    this.state = {
-      selectedDay: null,
-    };
-  }
-
-  // On click a day, change state
-  handleDayClick(day, { selected }) {
-    this.setState({
-      selectedDay: selected ? undefined : day,
-    });
-  }
-
-  // Render Element
-  render() {
-    return (
-      <div>
-        <DayPicker
-          selectedDays={this.state.selectedDay}
-          onDayClick={this.handleDayClick}
-		  
-locale="es"
-      months={MONTHS}
-      weekdaysLong={WEEKDAYS_LONG}
-      weekdaysShort={WEEKDAYS_SHORT}
-      firstDayOfWeek={1}
- showOutsideDays 	  
-		  
-        />
-        <p>
-          {this.state.selectedDay
-            ? this.state.selectedDay.toLocaleDateString()
-            : 'Selecciona el día'}
-        </p>
-      </div>
-    );
-  }
-  
-  
-  
-}
-
-*/
