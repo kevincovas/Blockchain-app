@@ -40,7 +40,7 @@ function Calendar()
 	// Setters
 	const [state, setState] = useState({selectedDay: null});
 	const [disabledDays, setDisabledDays] = useState();
-	const [todoList, setTodoList] = useState( ['Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón'] );
+	const [todoList, setTodoList] = useState( ['' , 'Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón'] );
 	
 	// TODO Read From Database
 	// Variable Option Lists
