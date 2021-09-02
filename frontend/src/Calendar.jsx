@@ -37,7 +37,19 @@ function Calendar()
 	// Set None day Selected
 	const [state, setState] = useState({selectedDay: null});
 	const [disabledDays, setDisabledDays] = useState();
+	const [todoList, setTodoList] = useState( ['Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón'] );
 	
+	
+	// Variable Option Lists
+	let list= null;
+  if (todoList === null) {
+    list = <div>Loading options...</div>
+  } else {
+    list = <select onChange={handleChange}>
+      {todoList.map(todo =>  <option key={todo} value={todo}>{todo}</option> )}
+    </select>
+  }
+  	
 	  // On click a day, change state
   function handleDayClick(day, { selected }) {
    setState({
@@ -68,14 +80,8 @@ function Calendar()
 
  <label>
           Peluquero:
-          
-<select onChange={handleChange}>
-  <option value="Pepe">Pepe</option>
-  <option value="Antonio">Antonio</option>
-  <option value="Jaime">Jaime</option>
-  <option value="Luis">Luis</option>
-</select>
-		  
+ {list}          
+		  		  
 </label>
 <br />
  <label>
