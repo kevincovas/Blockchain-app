@@ -2,6 +2,7 @@ import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import React , { useEffect, useState } from 'react';
 
+// TODO Separar Constantes en otro fichero
 // Month Translation in Spanish
 const MONTHS = [
   'Enero',
@@ -18,6 +19,7 @@ const MONTHS = [
   'Diciembre',
 ];
 
+// TODO Separar Constantes en otro fichero
 // Week Translation in Spanish
 const WEEKDAYS_LONG = [
   'Domingo',
@@ -29,17 +31,18 @@ const WEEKDAYS_LONG = [
   'Sábado',
 ];
 
+// TODO Separar Constantes en otro fichero
 // Week Days in Spanish
 const WEEKDAYS_SHORT = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
 function Calendar()
 {
-	// Set None day Selected
+	// Setters
 	const [state, setState] = useState({selectedDay: null});
 	const [disabledDays, setDisabledDays] = useState();
 	const [todoList, setTodoList] = useState( ['Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón'] );
 	
-	
+	// TODO Read From Database
 	// Variable Option Lists
 	let list= null;
   if (todoList === null) {
@@ -50,6 +53,7 @@ function Calendar()
     </select>
   }
   	
+	// TODO Style ?
 	  // On click a day, change state
   function handleDayClick(day, { selected }) {
    setState({
@@ -59,18 +63,19 @@ function Calendar()
 	
 	function handleSubmit()
 	{
-		// TODO Crear Cita por WS
+		// TODO Crear Cita por WS + check todos los campos correctos
 		event.preventDefault();
 	}
 	
+	// TODO Acciones al cambiar inputs
 	function handleChange()
 	{
-		
+	
 	}
 	
+	// TODO Add more UseEffects
 	// Effects to Restart Calendar
 	useEffect(() => { /* Buscaré las citas disponibles ése día */ }, [state.selectedDay]);	
-
 	
 	return ( 
 
