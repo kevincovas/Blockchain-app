@@ -102,6 +102,8 @@ function Calendar()
 </label>
 
 <div>
+
+		// TODO sólo mostrar mes actual y siguiente
         <DayPicker
          
 onDayClick={ handleDayClick }	  
