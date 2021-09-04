@@ -1,4 +1,6 @@
-require('dotenv').config(); //Pone las variables del fichero .env en el entorno.
+//Pone las variables del fichero .env en el entorno.
+require('dotenv').config();
+const db = require("../server/db/db");
 
 const express = require("express");
 const cors = require("cors");
@@ -27,6 +29,11 @@ app.get('/error', async (req,res,next) => {
 })
 app.use(errorHandler);
 
-app.listen(config.SERVER_PORT, () => {
-    console.log(`peluqueria_app server on port ${config.SERVER_PORT}`);
-});
+const startServer = async () => {
+    db.pool;
+    app.listen(config.SERVER_PORT, () => {
+        console.log(`peluqueria_app server on port ${config.SERVER_PORT}`);
+    });
+  }
+  
+  startServer();
