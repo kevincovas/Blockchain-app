@@ -1,11 +1,5 @@
 const {pool} = require('./db');
 
-/*  user_id SERIAL PRIMARY KEY,
-    email VARCHAR(25),
-    user_password VARCHAR(12),
-    created TIMESTAMP DEFAULT NOW(),
-    updated TIMESTAMP */
-
 const getUsersSQL = `
     SELECT * FROM users;
 `;
@@ -45,8 +39,8 @@ const newUserSQL = `
     INSERT INTO users (USE_email, USE_password) VALUES ($1,$2) RETURNING *;
 `;
 
-const newUser = async (USE_email, USE_password) => {
-    const result = await pool.query(newUserSQL, [USE_email, USE_password]);
+const newUser = async (USE_email, hashedPassword) => {
+    const result = await pool.query(newUserSQL, [USE_email, hashedPassword]);
     return result.rows;
 }
 

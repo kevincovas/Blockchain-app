@@ -1,5 +1,6 @@
 const db = require ('./db/db_users');
 const { Router } = require('express');
+const auth = require("./auth/auth.service");
 
 const router = new Router();
 
@@ -44,7 +45,9 @@ router.post("/", async (req,res) => {
         return res.status(400).json(errorResult("Missing 'password' field"));
     }
     try{
-        const newUser = await db.newUser(USE_email,USE_password);
+        const hashedPassword = await auth.hashPassword(USE_password);
+        console.log(`Hashed password: ${hashedPassword}`);
+        const newUser = await db.newUser(USE_email,hashedPassword);
         res.json(okResult(newUser));
     }catch (e){
         res.status(500).json(errorResult(e.toString()));
@@ -83,5 +86,6 @@ router.delete("/:USE_id" , async(req, res) => {
         return res.json(okResult(data));
     } 
 })
+
 
 module.exports = router;
