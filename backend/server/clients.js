@@ -91,7 +91,7 @@ router.delete("/:PEO_id" , async(req, res) => {
 
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
-    } else if(!found){ //Si no encuentra el cliente a liminar
+    } else if(!found){ //Si no encuentra el cliente a eliminar
         return res
             .status(400)
             .json(errorResult(`Client with ID ${PEO_id} not found`));

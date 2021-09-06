@@ -5,7 +5,6 @@ const getClientsSQL = `
 `;
 
 const getClients = async() => {
-    const result = await pool.query(getClientsSQL);
     
     try {
         const result = await pool.query(getClientsSQL);

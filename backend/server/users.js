@@ -6,59 +6,82 @@ const router = new Router();
 const okResult = (results) => ({ status: "OK", results })
 const errorResult = (details) => ({ status: "ERROR", details })
 
+//Obtenemos todos los usuarios
 router.get('/', async (req,res) =>{
-    try{
-        const users = await db.getUsers();
-        res.json(okResult(users));
-    } catch (e){
-        res.status(500).json(errorResult(e.toString()));
+    const { ok, found, data } = await db.getUsers();
+    if(!ok){ //Si ha habido un error en el servidor
+        return res.status(500).json(errorResult(data));
+    } else if(!found){ //Si no se encuentran usuarios
+        return res
+            .status(400)
+            .json(errorResult(`Clients doesn't exist`));
+    } else{ //Si hay usuarios
+        return res.json(okResult(data));
     } 
 });
 
-router.get('/:user_id', async (req,res) => {
-    try{
-        const user = await db.getOneUser(req.params.user_id);
-        res.json(okResult(user));
-    } catch (e){
-        res.status(500).json(errorResult(e.toString()));
+//Obtenemos un solo usuario
+router.get('/:USE_id', async (req,res) => {
+    const { ok, found, data } = await db.getOneUser(req.params.USE_id);
+    if(!ok){ //Si ha habido un error en el servidor
+        return res.status(500).json(errorResult(data));
+    } else if(!found){ //Si no se encuentra el usuario
+        return res
+            .status(400)
+            .json(errorResult(`User doesn't exist`));
+    } else{ //Si existe el usuario
+        return res.json(okResult(data));
     } 
 });
 
+//Creamos un nuevo usuario
 router.post("/", async (req,res) => {
-    const {email, user_password} = req.body;
-    if(!email){
+    const {USE_email, USE_password} = req.body;
+    if(!USE_email){
         return res.status(400).json(errorResult("Missing 'email' field"));
     }
-    if(!user_password){
-        return res.status(400).json(errorResult("Missing 'user_password' field"));
+    if(!USE_password){
+        return res.status(400).json(errorResult("Missing 'password' field"));
     }
     try{
-        const newUser = await db.newUser(email, user_password);
+        const newUser = await db.newUser(USE_email,USE_password);
         res.json(okResult(newUser));
     }catch (e){
         res.status(500).json(errorResult(e.toString()));
     } 
 });
 
-router.put("/:user_id" , async(req, res) => {
-    const {user_id} = req.params;
-    const {email, user_password} = req.body;
-    try {
-        const updateUser = await db.updateUser(user_id, email, user_password);
-        res.json(okResult(updateUser));
-    } catch(e) {
-        res.status(500).json(errorResult(e.toString()));
-    }    
+//Actualizamos un usuario
+router.put("/:USE_id" , async(req, res) => {
+    const {USE_id} = req.params;
+    const {USE_email, USE_password} = req.body;
+    const { ok, found, data } = await db.updateUser(USE_id, USE_email, USE_password);
+
+    if(!ok){ //Si ha habido un error en el servidor
+        return res.status(500).json(errorResult(data));
+    } else if(!found){ //Si no encuentra el usuario a actualizar
+        return res
+            .status(400)
+            .json(errorResult(`User with ID ${USE_id} not found`));
+    } else{ //Si se ha actualizado el usuario
+        return res.json(okResult(data));
+    }   
 });
 
-router.delete("/:user_id" , async(req, res) => {
-    const {user_id} = req.params;
-    try {
-        const deleteUser = await db.deleteUser(user_id);
-        res.json(okResult(deleteUser));
-    }catch (e){
-        res.status(500).json(errorResult(e.toString()));
-    }
+//Eliminamos un usuario
+router.delete("/:USE_id" , async(req, res) => {
+    const {USE_id} = req.params;
+    const { ok, found, data } = await db.deleteUser(USE_id);
+
+    if(!ok){ //Si ha habido un error en el servidor
+        return res.status(500).json(errorResult(data));
+    } else if(!found){ //Si no encuentra el usuario a eliminar
+        return res
+            .status(400)
+            .json(errorResult(`User with ID ${USE_id} not found`));
+    } else{ //Si se ha eliminado el usuario
+        return res.json(okResult(data));
+    } 
 })
 
 module.exports = router;
