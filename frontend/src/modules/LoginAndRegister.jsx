@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-/*import "./LoginAndRegisterPage.css";*/
+import React, { useEffect, useState } from 'react';/*import "./LoginAndRegisterPage.css";*/
 import * as api from '../api';
 
 const LOGIN = "Login";
