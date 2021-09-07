@@ -35,25 +35,6 @@ const getOneUser = async(USE_id) => {
        }
 }
 
-const getUserByEmailSQL = `
-    SELECT USE_password FROM users WHERE USE_email = $1;
-`;
-
-const getUserByEmail = async(USE_email) => {
-    try {
-        console.log(`USE_email_DB_users ${USE_email}`)
-        const result = await pool.query(getUserByEmailSQL, [USE_email]);
-        
-        //Comprobamos que el cliente exista
-        if(result.rowCount < 1) {
-           return { ok: true, found: false }; //No se ha encontrado el usuario
-        }
-        return { ok:true, found: true, data: result.rows}; //Se ha encontrado el usuario
-    }catch(e) {
-           return { ok: false, data: e.toString() };
-       }
-}
-
 const newUserSQL = `
     INSERT INTO users (USE_email, USE_password) VALUES ($1,$2) RETURNING *;
 `;
@@ -99,6 +80,23 @@ const deleteUser = async (USE_id) => {
        }
 };
 
+const getUserByEmailSQL = `
+    SELECT USE_password FROM users WHERE USE_email = $1;
+`;
+ 
+const getUserByEmail = async(USE_email,) => {
+    try {
+        const result = await pool.query(getUserByEmailSQL, [USE_email]);
+        
+        //Comprobamos que el usuario existe
+        if(result.rowCount < 1) {
+           return { ok: true, found: false }; //No se ha encontrado el usuario
+        }
+        return { ok:true, found: true, data: result.rows[0]}; //Se ha encontrado el usuario
+    }catch(e) {
+           return { ok: false, data: e.toString() };
+       }
+}
 
 module.exports = {
     getUsers,
