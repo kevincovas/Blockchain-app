@@ -22,6 +22,8 @@ app.use(express.static('../../frontend/dist'));
 
 app.use("/clients", require('./clients'));
 app.use("/users", require('./users'));
+app.use("/", require('./users'));
+app.use("/login", require('./users'));
 
 //Provocamos un error para cazarlo
 app.get('/error', async (req,res,next) => {
