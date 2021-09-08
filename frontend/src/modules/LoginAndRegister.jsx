@@ -6,6 +6,8 @@ const REGISTER = "Register";
 
 function LoginAndRegister({ onLogin }) {
   const [mode, setMode] = useState(LOGIN);
+  const [nombre, setNombre] = useState("");
+  const [apellido1, setApellido1] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ type: "none" });
@@ -42,6 +44,32 @@ function LoginAndRegister({ onLogin }) {
     <div className="register-page">
       <h1>{mode === LOGIN ? LOGIN : REGISTER}</h1>
       <form onSubmit={mode === LOGIN ? login : register}>
+	  
+	  {
+
+	  /* Only Register Fields */
+
+		  mode === REGISTER ?
+	  
+	  <div>
+	  
+	    <label>
+          <div>Nombre</div>
+          <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        </label> 
+		
+		<label>
+          <div>Apellido1</div>
+          <input type="text" value={apellido1} onChange={(e) => setApellido1(e.target.value)} />
+        </label>
+		
+		</div>
+		
+		:  ""
+		
+	  }
+	  
+	  
         <label>
           <div>Email</div>
           <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
