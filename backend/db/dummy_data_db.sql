@@ -3,19 +3,6 @@ INSERT INTO roles (ROL_name) VALUES
 ('hairdresser'),
 ('customer');
 
-INSERT INTO people (PEO_name, PEO_surname_1) VALUES
-    ('Aitor', 'Garzón'),
-    ('Maria', 'Rico'),
-    ('Andrea', 'Comabasosa'),
-    ('Kevin', 'Covas'),
-	('Luis', 'Llongueras'),
-	('Alberto', 'Cerdán'),
-	('David', 'Lorente'),
-	('Jesús', 'Bejarano'),
-	('Customer 1' , 'Test 1'),
-	('Customer 2' , 'Test 2');  
-	
-
 INSERT INTO users (USE_email, USE_password) VALUES
     ('aitor.java@gmail.com', 'aitor1234'),
     ('mricomorillo@gmail.com', 'maria1234'),
@@ -27,6 +14,18 @@ INSERT INTO users (USE_email, USE_password) VALUES
 	('Bejarano@gmail.com', ''),
 	('Test 1@gmail.com', ''),
 	('Test 2@gmail.com', '');
+
+INSERT INTO people (PEO_name, PEO_surname_1 , PEO_user_id) VALUES
+    ('Aitor', 'Garzón' , 1),
+    ('Maria', 'Rico' , 2),
+    ('Andrea', 'Comabasosa' , 3),
+    ('Kevin', 'Covas' , 4),
+	('Luis', 'Llongueras' , 5),
+	('Alberto', 'Cerdán' , 6),
+	('David', 'Lorente' , 7),
+	('Jesús', 'Bejarano' , 8),
+	('Customer 1' , 'Test 1' , 9),
+	('Customer 2' , 'Test 2' , 10);  
 	
 INSERT INTO user_roles ( URO_user_id , URO_role_id ) VALUES
 ( 1 , 1 ),
