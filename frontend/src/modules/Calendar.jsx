@@ -40,18 +40,19 @@ function Calendar()
 	// Setters
 	const [state, setState] = useState({selectedDay: null});
 	const [disabledDays, setDisabledDays] = useState();
-	const [todoList, setTodoList] = useState( ['' , 'Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón'] );
+	const [employee, setEmployee] = useState("");
+	const [employeeList, setEmployeeList] = useState([]);
 	
 	// TODO Read From Database
 	// Variable Option Lists
-	let list= null;
-  if (todoList === null) {
-    list = <div>Loading options...</div>
-  } else {
-    list = <select onChange={handleChange}>
-      {todoList.map(todo =>  <option key={todo} value={todo}>{todo}</option> )}
+	let listEmployee= null;
+    if (employeeList === null) {
+    listEmployee = <div>Loading options...</div>
+    } else {
+    listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  >
+      {employeeList.map(employee =>  <option key={employee} value={employee}>{employee}</option> )}
     </select>
-  }
+    }
   	
 	// TODO Style ?
 	  // On click a day, change state
@@ -65,6 +66,7 @@ function Calendar()
 	{
 		// TODO Crear Cita por WS + check todos los campos correctos
 		event.preventDefault();
+		alert(employee);
 	}
 	
 	// TODO Acciones al cambiar inputs
@@ -77,6 +79,21 @@ function Calendar()
 	// Effects to Restart Calendar
 	useEffect(() => { /* Buscaré las citas disponibles ése día */ }, [state.selectedDay]);	
 	
+	// Valores Iniciales
+	useEffect(() => {  
+	
+	// Peluqueros
+	setEmployeeList(['' , 'Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón']);  
+	
+	// Servicios
+	
+	// Disabled Days
+	setDisabledDays( [ { daysOfWeek: [0] } ] );
+	
+	
+	}, []);
+	
+	
 	return ( 
 
 <div>
@@ -85,7 +102,7 @@ function Calendar()
 
  <label>
           Peluquero:
- {list}          
+ {listEmployee}          
 		  		  
 </label>
 <br />
@@ -115,7 +132,9 @@ locale="es"
 		  selectedDays={state.selectedDay}
 		todayButton="Éste mes"
 		disabledDays={disabledDays}
-				  
+		fromMonth={new Date()}
+		toMonth={new Date(  new Date().getFullYear(),  new Date().getMonth() + 2 )}
+		
         />
 
 		<p>{state.selectedDay
