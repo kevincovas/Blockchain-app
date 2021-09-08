@@ -88,7 +88,14 @@ function Calendar()
 	// Servicios
 	
 	// Disabled Days
-	setDisabledDays( [ { daysOfWeek: [0] } ] );
+	setDisabledDays( [ 
+	{ daysOfWeek: [0] } ,
+
+{
+                   before: new Date(),
+        }
+
+	] );
 	
 	
 	}, []);
