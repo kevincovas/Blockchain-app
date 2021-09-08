@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Calendar from './modules/Calendar.jsx'
+import Reservations from './modules/Reservations.jsx'
 import LoginAndRegister from './modules/LoginAndRegister.jsx'
 
 
@@ -19,7 +19,7 @@ function App() {
   if (!isLoggedIn) {
     return <LoginAndRegister onLogin={login} />;
   } else {
-    return <Calendar/>
+    return <Reservations/>
   }
 }
 

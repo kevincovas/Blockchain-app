@@ -35,7 +35,7 @@ const WEEKDAYS_LONG = [
 // Week Days in Spanish
 const WEEKDAYS_SHORT = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 
-function Calendar()
+function Reservations()
 {
 	// Setters
 	const [state, setState] = useState({selectedDay: null});
@@ -161,4 +161,4 @@ locale="es"
 	);
 }
 
-export default Calendar ;
+export default Reservations;
