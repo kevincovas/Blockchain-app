@@ -37,6 +37,18 @@ export const getAllTodos = async () => {
   return todoList;
 }
 
+export const getHairdressers = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${HOST}/reservations/hairdressers`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    },
+  });
+  const hairdressersList = await response.json();
+  return hairdressersList.results;
+}
+
 export const addTodo = async (text) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${HOST}/todos`, {

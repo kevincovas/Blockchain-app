@@ -1,6 +1,7 @@
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import React , { useEffect, useState } from 'react';
+import * as api from '../api';
 
 // TODO Separar Constantes en otro fichero
 // Month Translation in Spanish
@@ -43,14 +44,19 @@ function Reservations()
 	const [employee, setEmployee] = useState("");
 	const [employeeList, setEmployeeList] = useState([]);
 	
+  const loadEmployeeList = async () => {
+    const employeeList = await api.getHairdressers();
+    setEmployeeList(employeeList);
+  }	
+	
 	// TODO Read From Database
 	// Variable Option Lists
 	let listEmployee= null;
     if (employeeList === null) {
     listEmployee = <div>Loading options...</div>
     } else {
-    listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  >
-      {employeeList.map(employee =>  <option key={employee} value={employee}>{employee}</option> )}
+    listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
+      {employeeList.map(employee =>  <option key={employee.peo_id} value={employee.peo_id}>{employee.peo_name + ' ' + employee.peo_surname_1 }</option> )}
     </select>
     }
   	
@@ -66,7 +72,6 @@ function Reservations()
 	{
 		// TODO Crear Cita por WS + check todos los campos correctos
 		event.preventDefault();
-		alert(employee);
 	}
 	
 	// TODO Acciones al cambiar inputs
@@ -83,11 +88,12 @@ function Reservations()
 	useEffect(() => {  
 	
 	// Peluqueros
-	setEmployeeList(['' , 'Antonio' , 'Manolete' , 'Torete' , 'Juan Peinón']);  
-	
+	loadEmployeeList();
+
 	// Servicios
 	
-	// Disabled Days
+	
+	// Disabled Days (Weekend + Full days)
 	setDisabledDays( [ 
 	{ daysOfWeek: [0] } ,
 
