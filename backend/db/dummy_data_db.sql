@@ -15,7 +15,7 @@ INSERT INTO users (email, password) VALUES
 	('Test 1@gmail.com', '$2a$10$Haxuey8W/m96O/rU337FQuM4sJRZQHjZqIdGdMy/UOtnKd6IYYXA2'),
 	('Test 2@gmail.com', '$2a$10$py4i4fKr5chWYneADBkyX.EEIKTNW5FLf9XJ5nrWCGiFwIe2aDgx.');
 
-INSERT INTO people (PEO_name, PEO_surname_1 , PEO_user_id) VALUES
+INSERT INTO people (name, surname_1 , user_id) VALUES
     ('Aitor', 'Garzón' , 1),
     ('Maria', 'Rico' , 2),
     ('Andrea', 'Comabasosa' , 3),
@@ -39,7 +39,7 @@ INSERT INTO user_roles ( URO_user_id , URO_role_id ) VALUES
 ( 9 , 3 ),
 ( 10 , 3);
 
-INSERT INTO products (PRO_name , PRO_Description , PRO_price ,  PRO_duration ,   PRO_is_service ,  PRO_is_for_women) VALUES
+INSERT INTO products (name , Description , price ,  duration ,   is_service ,  is_for_women) VALUES
 ('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false ),
 ('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false );
 
