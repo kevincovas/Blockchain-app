@@ -6,7 +6,7 @@ import * as constnt from '../config/const';
 
 function Reservations()
 {
-	// General Status
+	// Calendar Status
 	const [state, setState] = useState({selectedDay: null});
 	const [disabledDays, setDisabledDays] = useState();
 	
