@@ -68,7 +68,7 @@ function Reservations()
 	// Hairdresser
 	let listEmployee= null;
     if (employeeList === null) {
-    listEmployee = <div>Loading options...</div>
+    listEmployee = <div>Loading employees...</div>
     } else {
     listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
     {employeeList.map(employee =>  <option key={employee.id} value={employee.id}>{employee.name + ' ' + employee.surname_1 }</option> )}
@@ -78,7 +78,7 @@ function Reservations()
 	// Services Available
 	let listServices= null;
     if (servicesList === null) {
-    listServices = <div>Loading options...</div>
+    listServices = <div>Loading available services...</div>
     } else {
     listServices = <select onChange={(e) => setService(e.target.value)}  > <option key="0" value="0"></option>
     {
@@ -91,7 +91,7 @@ function Reservations()
 	
 	// Availability
 	let listAvailability = null;	
-	listAvailability = <div>Loading options...</div>	
+	listAvailability = <div>Loading available times...</div>	
 	
 	// Services Selected
 	let listServicesContracted = null;
