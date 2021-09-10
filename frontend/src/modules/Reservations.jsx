@@ -94,6 +94,18 @@ function Reservations()
 	listAvailability = <div>Loading options...</div>	
 	
 	// Services Selected
+	let listServicesContracted = null;
+    if (servicesContracted.length == 0) {
+    listServicesContracted = <div>Loading options...</div>
+    } else {
+    listServicesContracted = <ul>
+    {
+		servicesContracted.map(service =>  <li key={service} >{service}</li> )
+	}
+				
+    </ul>
+	
+    }	
 	
 	
 
@@ -217,6 +229,8 @@ servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
 Servicios contratados:
 
 </label>
+
+{listServicesContracted}
 
 
 <div>
