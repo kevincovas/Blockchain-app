@@ -8,6 +8,28 @@ inner join roles on roles.rol_id = user_roles.uro_role_id
 where roles.rol_name = 'hairdresser';
 `;
 
+const getServicesSQL = `
+select pro_id , pro_name , pro_description from products where pro_is_service = true
+`;
+
+const getReservationsByDaySQL= `
+select * from reservations where to_char(res_date_ini , 'YYYYMMDD') = $1
+`
+
+const getServices = async() => {
+    
+    try {
+        const result = await pool.query(getServicesSQL);
+        //Comprobamos que haya servicios
+        if(result.rowCount < 1) {
+           return { ok: true, found: false }; //No se han encontrado servicios
+        }
+        return { ok:true, found: true, data: result.rows}; //Se han encontrado servicios
+    }catch(e) {
+           return { ok: false, data: e.toString() };
+       }
+}
+
 const getHairdressers = async() => {
     
     try {
@@ -23,5 +45,5 @@ const getHairdressers = async() => {
 }
 
 module.exports = {
-   getHairdressers
+   getHairdressers , getServices
 };

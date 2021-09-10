@@ -40,6 +40,7 @@ CREATE TABLE product_categories (
 CREATE TABLE products (
   PRO_id SERIAL PRIMARY KEY, 
   PRO_name VARCHAR(100) NOT NULL, 
+  PRO_description TEXT,
   PRO_category INTEGER REFERENCES product_categories(PCA_id),
   PRO_price DECIMAL(10,2) NOT NULL, 
   PRO_duration SMALLINT,
@@ -86,8 +87,8 @@ CREATE TABLE reservations (
   RES_person_id INTEGER REFERENCES people(PEO_id),
   RES_booked_employee_id INTEGER REFERENCES people(PEO_id),
   RES_created_by_id INTEGER REFERENCES people(PEO_id),
-  RES_date DATE,
-  RES_duration SMALLINT,
+  RES_date_ini timestamp,
+  RES_date_end timestamp,
   RES_missed_reservation BOOLEAN,
   RES_created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   RES_updated_at TIMESTAMP NOT NULL DEFAULT NOW()
