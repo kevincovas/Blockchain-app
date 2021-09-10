@@ -100,7 +100,7 @@ function Reservations()
     } else {
     listServicesContracted = <ul>
     {
-		servicesContracted.map(service =>  <li key={service} >{service}  <button value={service} onClick={removeService}>
+		servicesContracted.map(service =>  <li key={service} > { servicesList.filter(serviceFilter => serviceFilter.id == service )[0].name }  <button value={service} onClick={removeService}>
 -
 </button></li> )
 	}
@@ -173,16 +173,19 @@ function Reservations()
 	
 	// Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
 	if(  servicesContracted.filter(serviceFilter => serviceFilter == service ).length <= 0 )
+	// Sólo si valor != 0
+	if (service !== "0")
 	setServicesContracted( prevState => [...prevState , service] );
 
 	}
 		
 		function removeService()
 		{
+			// Not submit form
 			event.preventDefault();
-			console.log( event.target.value );
-			
-			
+
+			// Remove Service
+			setServicesContracted(   prevState => prevState.filter(item => item !== event.target.value)   );
 		}
 		
 		
