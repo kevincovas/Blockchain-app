@@ -23,15 +23,15 @@ router.get('/', async (req,res) =>{
 
 /*Post para hacer el LOGIN */
 router.post("/login", async (req, res) => {
-    const { USE_email, USE_password } = req.body;
+    const { email, password } = req.body;
 
-    if(!USE_email){
+    if(!email){
         return res.status(400).json(errorResult("Missing 'email' field"));
     }
-    if(!USE_password){
+    if(!password){
         return res.status(400).json(errorResult("Missing 'password' field"));
     }
-    const {ok, found, data} = await db.getUserByEmail(USE_email);
+    const {ok, found, data} = await db.getUserByEmail(email);
     //return res.json(okResult(data));
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
@@ -40,17 +40,17 @@ router.post("/login", async (req, res) => {
             .status(400)
             .json(errorResult(`User doesn't exist`));
     } else{ //Si hay usuarios
-        const password_db = data.use_password;
+        const password_db = data.password;
         console.log(`password_db ${password_db}`);
-        console.log(`USE_password ${USE_password}`);
-        const passwordMatches = await auth.comparePasswords(USE_password, password_db);
+        console.log(`password ${password}`);
+        const passwordMatches = await auth.comparePasswords(password, password_db);
         console.log(`passwordMatches ${passwordMatches}`);
     
         if (!passwordMatches) {
             return res.status(400).json(errorResult(`Wrong email/password combination`));
         }
 
-        const token = auth.createToken(USE_email);
+        const token = auth.createToken(email);
         res.status(201).send(token);
         
         //return res.json(okResult(data));
@@ -58,8 +58,8 @@ router.post("/login", async (req, res) => {
 });
 
 //Obtenemos un solo usuario
-router.get('/:USE_id', async (req,res) => {
-    const { ok, found, data } = await db.getOneUser(req.params.USE_id);
+router.get('/:id', async (req,res) => {
+    const { ok, found, data } = await db.getOneUser(req.params.id);
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
     } else if(!found){ //Si no se encuentra el usuario
@@ -73,17 +73,17 @@ router.get('/:USE_id', async (req,res) => {
 
 //Creamos un nuevo usuario
 router.post("/", async (req,res) => {
-    const {USE_email, USE_password} = req.body;
-    if(!USE_email){
+    const {email, password} = req.body;
+    if(!email){
         return res.status(400).json(errorResult("Missing 'email' field"));
     }
-    if(!USE_password){
+    if(!password){
         return res.status(400).json(errorResult("Missing 'password' field"));
     }
     try{
-        const hashedPassword = await auth.hashPassword(USE_password);
+        const hashedPassword = await auth.hashPassword(password);
         console.log(`Hashed password: ${hashedPassword}`);
-        const newUser = await db.newUser(USE_email,hashedPassword);
+        const newUser = await db.newUser(email,hashedPassword);
         res.json(okResult(newUser));
     }catch (e){
         res.status(500).json(errorResult(e.toString()));
@@ -91,33 +91,33 @@ router.post("/", async (req,res) => {
 });
 
 //Actualizamos un usuario
-router.put("/:USE_id" , async(req, res) => {
-    const {USE_id} = req.params;
-    const {USE_email, USE_password} = req.body;
-    const { ok, found, data } = await db.updateUser(USE_id, USE_email, USE_password);
+router.put("/:id" , async(req, res) => {
+    const {id} = req.params;
+    const {email, password} = req.body;
+    const { ok, found, data } = await db.updateUser(id, email, password);
 
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
     } else if(!found){ //Si no encuentra el usuario a actualizar
         return res
             .status(400)
-            .json(errorResult(`User with ID ${USE_id} not found`));
+            .json(errorResult(`User with ID ${id} not found`));
     } else{ //Si se ha actualizado el usuario
         return res.json(okResult(data));
     }   
 });
 
 //Eliminamos un usuario
-router.delete("/:USE_id" , async(req, res) => {
-    const {USE_id} = req.params;
-    const { ok, found, data } = await db.deleteUser(USE_id);
+router.delete("/:id" , async(req, res) => {
+    const {id} = req.params;
+    const { ok, found, data } = await db.deleteUser(id);
 
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
     } else if(!found){ //Si no encuentra el usuario a eliminar
         return res
             .status(400)
-            .json(errorResult(`User with ID ${USE_id} not found`));
+            .json(errorResult(`User with ID ${id} not found`));
     } else{ //Si se ha eliminado el usuario
         return res.json(okResult(data));
     } 
