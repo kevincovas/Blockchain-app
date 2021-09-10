@@ -3,7 +3,7 @@ INSERT INTO roles (ROL_name) VALUES
 ('hairdresser'),
 ('customer');
 
-INSERT INTO users (USE_email, USE_password) VALUES
+INSERT INTO users (email, password) VALUES
     ('aitor.java@gmail.com', '$2a$10$Zt1J7BIh56T0xXJjwnR8cu7ydHRJH6y6/eoX0mBqde/jmtA0fFXrq'),
     ('mricomorillo@gmail.com', '$2a$10$RjALUii9I3Jx0mKTgsYhvOmx0/Z9QutVL0SXoRRiI0GUGHfLwHB62'),
     ('comabasosa.g.a@gmail.com', '$2a$10$VoI2krFcxskf1u.dMHShxeaZTsmqnmeu86gLBCffOcq2IaBTYQ0aC'),

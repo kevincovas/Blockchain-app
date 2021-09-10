@@ -19,12 +19,12 @@ const getUsers = async() => {
 }
 
 const getOneUserSQL = `
-    SELECT * FROM users WHERE USE_id = $1;
+    SELECT * FROM users WHERE id = $1;
 `;
 
-const getOneUser = async(USE_id) => {
+const getOneUser = async(id) => {
     try {
-        const result = await pool.query(getOneUserSQL, [USE_id]);
+        const result = await pool.query(getOneUserSQL, [id]);
         //Comprobamos que el cliente exista
         if(result.rowCount < 1) {
            return { ok: true, found: false }; //No se ha encontrado el usuario
@@ -36,13 +36,13 @@ const getOneUser = async(USE_id) => {
 }
 
 const getUserByEmailSQL = `
-    SELECT USE_password FROM users WHERE USE_email = $1;
+    SELECT password FROM users WHERE email = $1;
 `;
 
-const getUserByEmail = async(USE_email) => {
+const getUserByEmail = async(email) => {
     try {
-        console.log(`USE_email_DB_users ${USE_email}`)
-        const result = await pool.query(getUserByEmailSQL, [USE_email]);
+        console.log(`email_DB_users ${email}`)
+        const result = await pool.query(getUserByEmailSQL, [email]);
         
         //Comprobamos que el cliente exista
         if(result.rowCount < 1) {
@@ -55,23 +55,23 @@ const getUserByEmail = async(USE_email) => {
 }
 
 const newUserSQL = `
-    INSERT INTO users (USE_email, USE_password) VALUES ($1,$2) RETURNING *;
+    INSERT INTO users (email, password) VALUES ($1,$2) RETURNING *;
 `;
 
-const newUser = async (USE_email, hashedPassword) => {
-    const result = await pool.query(newUserSQL, [USE_email, hashedPassword]);
+const newUser = async (email, hashedPassword) => {
+    const result = await pool.query(newUserSQL, [email, hashedPassword]);
     return result.rows;
 }
 
 const updateUserSQL = `
-    UPDATE users SET  USE_email = $2,
-                      USE_password = $3
-    WHERE USE_id = $1 RETURNING *;  
+    UPDATE users SET  email = $2,
+                      password = $3
+    WHERE id = $1 RETURNING *;  
 `;
 
-const updateUser = async (USE_id,USE_email, USE_password) => {
+const updateUser = async (id,email, password) => {
     try {    
-        const result = await pool.query(updateUserSQL, [USE_id,USE_email, USE_password]);
+        const result = await pool.query(updateUserSQL, [id,email, password]);
         if(result.rowCount < 1) {
             return { ok: true, found: false };
         }
@@ -83,12 +83,12 @@ const updateUser = async (USE_id,USE_email, USE_password) => {
 
 
 const deleteUserSQL = `
-DELETE FROM users WHERE USE_id = $1 RETURNING *; 
+DELETE FROM users WHERE id = $1 RETURNING *; 
 `;
 
-const deleteUser = async (USE_id) => {
+const deleteUser = async (id) => {
     try {
-        const result = await pool.query(deleteUserSQL, [USE_id]);
+        const result = await pool.query(deleteUserSQL, [id]);
         //Comprobamos que se haya eliminado algun usuario
         if(result.rowCount < 1) {
            return { ok: true, found: false }; //No se ha eliminado ningun usuario
