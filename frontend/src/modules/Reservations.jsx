@@ -15,6 +15,7 @@ function Reservations()
 	const [employeeList, setEmployeeList] = useState([]);
 	
 	// Services
+	const [service , setService] = useState("");
 	const [servicesList, setServicesList] = useState([]);
 	
 	// Employee
@@ -25,18 +26,28 @@ function Reservations()
     
   // Service
   const loadServicesList = async () => {
-	  const servicesList = await api.getServices();
+	  const servicesList = await api.getServices(constnt.HOST);
 	  setServicesList(servicesList);
   }
 		
 	// Read From Database
-	// Variable Option Lists
+	// Hairdresser
 	let listEmployee= null;
     if (employeeList === null) {
     listEmployee = <div>Loading options...</div>
     } else {
     listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
-      {employeeList.map(employee =>  <option key={employee.peo_id} value={employee.peo_id}>{employee.peo_name + ' ' + employee.peo_surname_1 }</option> )}
+    {employeeList.map(employee =>  <option key={employee.peo_id} value={employee.peo_id}>{employee.peo_name + ' ' + employee.peo_surname_1 }</option> )}
+    </select>
+    }
+	
+	// Services
+	let listServices= null;
+    if (servicesList === null) {
+    listServices = <div>Loading options...</div>
+    } else {
+    listServices = <select onChange={(e) => setService(e.target.value)}  > <option key="0" value="0"></option>
+    {servicesList.map(service =>  <option key={service.pro_id} value={service.pro_id}>{service.pro_name}</option> )}
     </select>
     }
   	
@@ -71,6 +82,7 @@ function Reservations()
 	loadEmployeeList();
 
 	// Servicios
+	loadServicesList();
 	
 	
 	// Disabled Days (Weekend + Full days)
@@ -95,20 +107,12 @@ function Reservations()
 
  <label>
           Peluquero:
- {listEmployee}          
-		  		  
+ {listEmployee}           		  
 </label>
 <br />
  <label>
           Servicios:
-         
-		 <select>
-  <option value="Corte">Corte</option>
-  <option value="Tinte">Tinte</option>
-  <option value="Pestanas">Pestañas</option>
-  <option value="Unas">Uñas</option>
-</select>
-		 
+		  {listServices}		 
 </label>
 
 <div>
