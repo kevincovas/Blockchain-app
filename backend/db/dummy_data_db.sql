@@ -4,16 +4,16 @@ INSERT INTO roles (ROL_name) VALUES
 ('customer');
 
 INSERT INTO users (USE_email, USE_password) VALUES
-    ('aitor.java@gmail.com', 'aitor1234'),
-    ('mricomorillo@gmail.com', 'maria1234'),
-    ('comabasosa.g.a@gmail.com', 'andrea1234'),
-	('kevin.covas.91@gmail.com', 'kevin1234'),
-	('Llongueras@gmail.com', ''),
-	('Cerdán@gmail.com', ''),
-	('Lorente1@gmail.com', ''),
-	('Bejarano@gmail.com', ''),
-	('Test 1@gmail.com', ''),
-	('Test 2@gmail.com', '');
+    ('aitor.java@gmail.com', '$2a$10$Zt1J7BIh56T0xXJjwnR8cu7ydHRJH6y6/eoX0mBqde/jmtA0fFXrq'),
+    ('mricomorillo@gmail.com', '$2a$10$RjALUii9I3Jx0mKTgsYhvOmx0/Z9QutVL0SXoRRiI0GUGHfLwHB62'),
+    ('comabasosa.g.a@gmail.com', '$2a$10$VoI2krFcxskf1u.dMHShxeaZTsmqnmeu86gLBCffOcq2IaBTYQ0aC'),
+	('kevin.covas.91@gmail.com', '$2a$10$/E24.bQ3keXWp2wDAUDfGu8zx3OMIRusEc1XsrXqaEV3ezsDfLZyK'),
+	('Llongueras@gmail.com', '$2a$10$ZU0aDOMLyB.P4k2JawcO9ejHC4Ikz7S06lCz61okcpA6FvcL8f89O'),
+	('Cerdán@gmail.com', '$2a$10$8Yzla/tY9K.FOOnuqLSnaeXSdrTn1m9vxGuIgfx5nESWyDkc4rLOW'),
+	('Lorente1@gmail.com', '$2a$10$aSKXaosbpQz54vukNiZmyOPdubEe39cC/R6S7r.q2L81Ud4ORWwOy'),
+	('Bejarano@gmail.com', '$2a$10$f2/JnpF0nvS8HXGWwRqyJuuUDdhekJTBfJzyNRZuXV0UWHsKCH9HK'),
+	('Test 1@gmail.com', '$2a$10$Haxuey8W/m96O/rU337FQuM4sJRZQHjZqIdGdMy/UOtnKd6IYYXA2'),
+	('Test 2@gmail.com', '$2a$10$py4i4fKr5chWYneADBkyX.EEIKTNW5FLf9XJ5nrWCGiFwIe2aDgx.');
 
 INSERT INTO people (PEO_name, PEO_surname_1 , PEO_user_id) VALUES
     ('Aitor', 'Garzón' , 1),

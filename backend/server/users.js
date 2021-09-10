@@ -41,7 +41,10 @@ router.post("/login", async (req, res) => {
             .json(errorResult(`User doesn't exist`));
     } else{ //Si hay usuarios
         const password_db = data.use_password;
+        console.log(`password_db ${password_db}`);
+        console.log(`USE_password ${USE_password}`);
         const passwordMatches = await auth.comparePasswords(USE_password, password_db);
+        console.log(`passwordMatches ${passwordMatches}`);
     
         if (!passwordMatches) {
             return res.status(400).json(errorResult(`Wrong email/password combination`));

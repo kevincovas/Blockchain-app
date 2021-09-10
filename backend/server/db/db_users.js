@@ -48,7 +48,7 @@ const getUserByEmail = async(USE_email) => {
         if(result.rowCount < 1) {
            return { ok: true, found: false }; //No se ha encontrado el usuario
         }
-        return { ok:true, found: true, data: result.rows}; //Se ha encontrado el usuario
+        return { ok:true, found: true, data: result.rows[0]}; //Se ha encontrado el usuario
     }catch(e) {
            return { ok: false, data: e.toString() };
        }
