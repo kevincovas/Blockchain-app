@@ -67,9 +67,9 @@ function Reservations()
 	// Read From Database
 	// Hairdresser
 	let listEmployee= null;
-    if (employeeList === null) {
+    if (employeeList.length == 0 )
     listEmployee = <div>Loading employees...</div>
-    } else {
+    else {
     listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
     {employeeList.map(employee =>  <option key={employee.id} value={employee.id}>{employee.name + ' ' + employee.surname_1 }</option> )}
     </select>
@@ -77,9 +77,9 @@ function Reservations()
 	
 	// Services Available
 	let listServices= null;
-    if (servicesList === null) {
+    if (servicesList.length == 0 )
     listServices = <div>Loading available services...</div>
-    } else {
+    else {
     listServices = <select onChange={(e) => setService(e.target.value)}  > <option key="0" value="0"></option>
     {
 		servicesList.map(service =>  <option key={service.id} value={service.id}>{service.name}</option> )
@@ -89,26 +89,23 @@ function Reservations()
 	
     }	
 	
-	// Availability
-	let listAvailability = null;	
-	listAvailability = <div>Loading available times...</div>	
-	
 	// Services Selected
 	let listServicesContracted = null;
-    if (servicesContracted.length == 0) {
-    listServicesContracted = "";
-    } else {
+    if (servicesContracted.length == 0)
+    listServicesContracted = <div>Ningún servicio seleccionado</div>;
+    else {
     listServicesContracted = <ul>
     {
-		servicesContracted.map(service =>  <li key={service} > { servicesList.filter(serviceFilter => serviceFilter.id == service )[0].name }  <button value={service} onClick={removeService}>
--
-</button></li> )
-	}
-				
+		servicesContracted.map(service =>  <li key={service} > { servicesList.filter(serviceFilter => serviceFilter.id == service )[0].name }
+		<button value={service} onClick={removeService}>-</button></li> )
+	}			
     </ul>
+	}	
 	
-    }	
-	
+	// Availability
+	let listAvailability = null;	
+	if ( timeframeList.length == 0 )
+	listAvailability = <div>Loading available times...</div>	
 	
 
 	
@@ -250,7 +247,7 @@ servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
 
 servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
             ?  "Duración: " + servicesList.filter(serviceFilter => serviceFilter.id == service )[0].duration + " minutos"
-            : ''
+            : 'Duración: '
 
 }
 
@@ -269,14 +266,14 @@ Servicios contratados:
 
         <DayPicker
          
-onDayClick={ handleDayClick }	  
-locale="es"
-      months={constnt.MONTHS}
-      weekdaysLong={constnt.WEEKDAYS_LONG}
-      weekdaysShort={constnt.WEEKDAYS_SHORT}
-      firstDayOfWeek={1}
- showOutsideDays 	  
-		  selectedDays={state.selectedDay}
+		onDayClick={ handleDayClick }	  
+		locale="es"
+		months={constnt.MONTHS}
+		weekdaysLong={constnt.WEEKDAYS_LONG}
+		weekdaysShort={constnt.WEEKDAYS_SHORT}
+		firstDayOfWeek={1}
+		showOutsideDays 	  
+		selectedDays={state.selectedDay}
 		todayButton="Éste mes"
 		disabledDays={disabledDays}
 		fromMonth={new Date()}
