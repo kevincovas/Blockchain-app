@@ -51,6 +51,10 @@ function Reservations()
     </select>
     }
   	
+	// Availability
+	let listAvailability = null;
+	listAvailability = <div>Loading options...</div>
+	
 	// TODO Style ?
 	  // On click a day, change state
   function handleDayClick(day, { selected }) {
@@ -73,7 +77,17 @@ function Reservations()
 	
 	// TODO Add more UseEffects
 	// Effects to Restart Calendar
-	useEffect(() => { /* Buscaré las citas disponibles ése día */ }, [state.selectedDay]);	
+	useEffect(() => { 
+	
+	if(state.selectedDay !== null ) 
+	{	
+
+	
+	
+	
+	}
+
+    }, [state.selectedDay]);	
 	
 	// Valores Iniciales
 	useEffect(() => {  
@@ -138,10 +152,14 @@ locale="es"
             ? state.selectedDay.toLocaleDateString()
             : 'Selecciona el día'}</p>
 
+{listAvailability}
+
+
+
 
       </div>
 
-<input type="submit" value="Submit" />
+<p> <input type="submit" value="Submit" /> </p>
 
 
 </form>
