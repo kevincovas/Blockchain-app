@@ -15,7 +15,7 @@ function Reservations()
 	const [employeeList, setEmployeeList] = useState([]);
 	
 	// Services
-	const [service , setService] = useState({});
+	const [service , setService] = useState("0");
 	const [servicesList, setServicesList] = useState([]);
 	
 	// Timeframes
@@ -44,12 +44,10 @@ function Reservations()
         }
 
 	] );
-	
-	
-	}, []);
 		
-	// TODO Add more UseEffects
-	// Effects to Restart Calendar
+	}, []);
+			
+	// Effects to Restart Calendar and Read Availability
 	useEffect(() => { 
 	
 	// Load Available Schedules on this day
@@ -183,6 +181,18 @@ function Reservations()
 </label>
 
 <br />
+
+{ 
+
+JSON.parse(service).description
+
+}
+<br />
+{ 
+
+JSON.parse(service).duration
+
+}
 
 <br />
 
