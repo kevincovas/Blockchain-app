@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';/*import "./LoginAndRegisterPage.css";*/
 import * as api from '../api';
+import DayPicker from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
 
 const LOGIN = "Login";
 const REGISTER = "Register";
@@ -8,6 +10,7 @@ function LoginAndRegister({ onLogin }) {
   const [mode, setMode] = useState(LOGIN);
   const [nombre, setNombre] = useState("");
   const [apellido1, setApellido1] = useState("");
+  const [apellido2, setApellido2] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ type: "none" });
@@ -30,10 +33,13 @@ function LoginAndRegister({ onLogin }) {
     e.preventDefault();
     try {
       const { error, accessToken } = await api.login({ email, password });
+      console.log(`error: ${error}`);
+      console.log(`accessToken: ${accessToken}`);
       if (error) {
         setMessage({ type: "error", text: error });
       } else {
         onLogin(accessToken);
+        console.log(`accessToken de la funcion login ${accessToken}`);
       }
     } catch (err) {
       setMessage({ type: "error", text: err.toString() });
@@ -59,10 +65,29 @@ function LoginAndRegister({ onLogin }) {
         </label> 
 		
 		<label>
-          <div>Apellido1</div>
+          <div>Primer Apellido</div>
           <input type="text" value={apellido1} onChange={(e) => setApellido1(e.target.value)} />
         </label>
-		
+    <label>
+        <div>Segundo Apellido</div>
+        <input type="text" value={apellido2} onChange={(e) => setApellido2(e.target.value)} />
+      </label>
+    <form>
+        <label>Sexo
+        <select>
+          <option value="M">Hombre</option>
+          <option value="W">Mujer</option>
+          <option value="null">Sin expecificar</option>
+        </select>
+        </label>
+      </form>		
+      
+      
+
+      <label>
+        <div> Fecha de nacimiento</div>
+      </label>
+
 		</div>
 		
 		:  ""

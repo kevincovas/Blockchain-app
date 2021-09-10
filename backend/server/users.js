@@ -50,10 +50,10 @@ router.post("/login", async (req, res) => {
             return res.status(400).json(errorResult(`Wrong email/password combination`));
         }
 
-        /*const token = auth.createToken(USE_email);*/
-        //res.status(201).send(token);
+        const token = auth.createToken(USE_email);
+        res.status(201).send(token);
         
-        return res.json(okResult(data));
+        //return res.json(okResult(data));
     } 
 });
 

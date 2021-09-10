@@ -22,6 +22,7 @@ export const login = async ({ email, password }) => {
     body: JSON.stringify({ email, password }),
   });
   const json = await response.json();
+  console.log(`json de la funcion login de api ${JSON.stringify(json)}`);
   return json;
 }
 
