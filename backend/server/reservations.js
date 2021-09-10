@@ -34,4 +34,16 @@ router.get('/services', async (req,res) =>{
     } 
 });
 
+//Get Reservations in one Day
+router.get('/check/:date', async (req,res) => {
+    
+    const { ok, data } = await db.getReservationsByDay(req.params.date);
+    if(!ok){ //Si ha habido un error en el servidor
+        return res.status(500).json(errorResult(data));
+    } else{ //If we have reservations
+        return res.json(okResult(data));
+    } 
+        
+});
+
 module.exports = router;

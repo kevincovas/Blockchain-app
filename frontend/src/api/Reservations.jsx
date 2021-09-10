@@ -23,3 +23,16 @@ export const getServices = async (HOST) => {
   const servicesList = await response.json();
   return servicesList.results;
 }
+
+// Get Availability
+export const getAvailability = async (HOST) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch( HOST + `/reservations/check/20210918`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    },
+  });
+  const servicesList = await response.json();
+  return servicesList.results;
+}

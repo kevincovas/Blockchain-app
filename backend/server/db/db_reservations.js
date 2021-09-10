@@ -20,11 +20,11 @@ const getServices = async() => {
     
     try {
         const result = await pool.query(getServicesSQL);
-        //Comprobamos que haya servicios
+        //Check if services
         if(result.rowCount < 1) {
-           return { ok: true, found: false }; //No se han encontrado servicios
+           return { ok: true, found: false }; //Services not found
         }
-        return { ok:true, found: true, data: result.rows}; //Se han encontrado servicios
+        return { ok:true, found: true, data: result.rows}; //Services found
     }catch(e) {
            return { ok: false, data: e.toString() };
        }
@@ -34,16 +34,32 @@ const getHairdressers = async() => {
     
     try {
         const result = await pool.query(getHairdressersSQL);
-        //Comprobamos que haya peluqueros
+        //Check if employees
         if(result.rowCount < 1) {
-           return { ok: true, found: false }; //No se han encontrado peluqueros
+           return { ok: true, found: false }; //Employees not found
         }
-        return { ok:true, found: true, data: result.rows}; //Se han encontrado peluqueros
+        return { ok:true, found: true, data: result.rows}; //Employees found
     }catch(e) {
            return { ok: false, data: e.toString() };
        }
 }
 
+
+const getReservationsByDay = async(DATE) => {
+	
+	try {
+        const result = await pool.query(getReservationsByDaySQL, [DATE]);
+        //Check Reservations in one day
+        if(result.rowCount < 1) {
+           return { ok: true, found: false }; //Not reservations this day
+        }
+        return { ok:true, found: true, data: result.rows}; //We have reservations this day
+    }catch(e) {
+           return { ok: false, data: e.toString() };
+       }
+	
+}
+	
 module.exports = {
-   getHairdressers , getServices
+   getHairdressers , getServices , getReservationsByDay
 };

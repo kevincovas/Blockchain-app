@@ -30,6 +30,16 @@ function Reservations()
 	  setServicesList(servicesList);
   }
 		
+		// Availability
+		const loadAvailability = async() => {
+			
+			if(state.selectedDay !== null ) 
+			{
+			const availabilityList = await api.getAvailability(constnt.HOST);
+			}
+			
+		}
+		
 	// Read From Database
 	// Hairdresser
 	let listEmployee= null;
@@ -51,6 +61,10 @@ function Reservations()
     </select>
     }
   	
+	// Availability
+	let listAvailability = null;
+	listAvailability = <div>Loading options...</div>
+	
 	// TODO Style ?
 	  // On click a day, change state
   function handleDayClick(day, { selected }) {
@@ -70,11 +84,7 @@ function Reservations()
 	{
 	
 	}
-	
-	// TODO Add more UseEffects
-	// Effects to Restart Calendar
-	useEffect(() => { /* Buscaré las citas disponibles ése día */ }, [state.selectedDay]);	
-	
+		
 	// Valores Iniciales
 	useEffect(() => {  
 	
@@ -97,6 +107,17 @@ function Reservations()
 	
 	
 	}, []);
+	
+	
+	// TODO Add more UseEffects
+	// Effects to Restart Calendar
+	useEffect(() => { 
+	
+	// Load Available Schedules on this day
+	loadAvailability();
+	
+
+    }, [state.selectedDay]);		
 	
 	
 	return ( 
@@ -134,14 +155,11 @@ locale="es"
 		
         />
 
-		<p>{state.selectedDay
-            ? state.selectedDay.toLocaleDateString()
-            : 'Selecciona el día'}</p>
-
+{listAvailability}
 
       </div>
 
-<input type="submit" value="Submit" />
+<p> <input type="submit" value="Submit" /> </p>
 
 
 </form>
