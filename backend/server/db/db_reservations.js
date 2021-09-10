@@ -1,11 +1,11 @@
 const {pool} = require('./db');
 
 const getHairdressersSQL = `
-    select use_id , id , name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
-inner join people on people.user_id = users.use_id 
-inner join user_roles on user_roles.uro_user_id = users.use_id
-inner join roles on roles.rol_id = user_roles.uro_role_id
-where roles.rol_name = 'hairdresser';
+    select id , id , name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
+inner join people on people.user_id = users.id 
+inner join user_roles on user_roles.uro_user_id = users.id
+inner join roles on roles.id = user_roles.uro_role_id
+where roles.name = 'hairdresser';
 `;
 
 const getServicesSQL = `
