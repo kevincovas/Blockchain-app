@@ -132,17 +132,12 @@ function Reservations()
 	// Availability
 	const loadAvailability = async() => {
 			
-		if(state.selectedDay !== null ) 
+		if(state.selectedDay !== null && state.selectedDay !== undefined ) 
 		{
 
 		// Get Available timetables
-		await api.getAvailability(constnt.HOST , state.selectedDay.toISOString().slice(0, 10) )
-		.then( (value,employee) => console.log(value) );
-		
-		// (servicesContracted);
-		// console.log(employee);
-		//console.log(availabilityList);
-		
+		await api.getAvailability(constnt.HOST , state.selectedDay.toISOString().slice(0, 10) ).then( result => createTimeTable(result) );
+
 		}
 			
 	}	
@@ -150,7 +145,25 @@ function Reservations()
 // API CALLS ////////////////////////////////////////////////////////////////////////////////////
 
 // GENERAL FUNCTIONS ////////////////////////////////////////////////////////////////////////////////////
+function getTotalTime()
+{
+	// Create Temporal Total Time
+	let total_time = 0;
+	
+	// Add Time by Service
+	servicesContracted.map( service => total_time += servicesList.filter(serviceFilter => serviceFilter.id == service )[0].duration );
+	
+	// Return Total Time
+	return total_time;
+}
 
+function createTimeTable(result)
+{
+	// console.log( "result",result );
+	// console.log( "servicescontracted",servicesContracted );
+	// console.log( getTotalTime() );
+	// console.log("employee",employee);
+}
 	
 	// TODO Style ?
 	  // On click a day, change state
