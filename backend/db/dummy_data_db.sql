@@ -45,5 +45,6 @@ INSERT INTO products (PRO_name , PRO_Description , PRO_price ,  PRO_duration ,  
 
 insert into reservations(res_person_id , res_booked_employee_id , res_date_ini , res_date_end)
 values
-(  9 , 5 , '2021/09/18 13:00:00.00' , '2021/09/18 14:00:00.00'  )
+(  9 , 5 , '2021/09/18 13:00:00.00' , '2021/09/18 14:00:00.00'  ),
+(  9 , 5 , '2021/09/18 15:00:00.00' , '2021/09/18 16:00:00.00'  );
 

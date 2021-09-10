@@ -30,6 +30,16 @@ function Reservations()
 	  setServicesList(servicesList);
   }
 		
+		// Availability
+		const loadAvailability = async() => {
+			
+			if(state.selectedDay !== null ) 
+			{
+			const availabilityList = await api.getAvailability(constnt.HOST);
+			}
+			
+		}
+		
 	// Read From Database
 	// Hairdresser
 	let listEmployee= null;
@@ -74,21 +84,7 @@ function Reservations()
 	{
 	
 	}
-	
-	// TODO Add more UseEffects
-	// Effects to Restart Calendar
-	useEffect(() => { 
-	
-	if(state.selectedDay !== null ) 
-	{	
-
-	
-	
-	
-	}
-
-    }, [state.selectedDay]);	
-	
+		
 	// Valores Iniciales
 	useEffect(() => {  
 	
@@ -111,6 +107,17 @@ function Reservations()
 	
 	
 	}, []);
+	
+	
+	// TODO Add more UseEffects
+	// Effects to Restart Calendar
+	useEffect(() => { 
+	
+	// Load Available Schedules on this day
+	loadAvailability();
+	
+
+    }, [state.selectedDay]);		
 	
 	
 	return ( 
@@ -148,14 +155,7 @@ locale="es"
 		
         />
 
-		<p>{state.selectedDay
-            ? state.selectedDay.toLocaleDateString()
-            : 'Selecciona el día'}</p>
-
 {listAvailability}
-
-
-
 
       </div>
 
