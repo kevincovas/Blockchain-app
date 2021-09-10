@@ -1,9 +1,9 @@
-INSERT INTO roles (ROL_name) VALUES
+INSERT INTO roles (name) VALUES
 ('admin'),
 ('hairdresser'),
 ('customer');
 
-INSERT INTO users (USE_email, USE_password) VALUES
+INSERT INTO users (email, password) VALUES
     ('aitor.java@gmail.com', '$2a$10$Zt1J7BIh56T0xXJjwnR8cu7ydHRJH6y6/eoX0mBqde/jmtA0fFXrq'),
     ('mricomorillo@gmail.com', '$2a$10$RjALUii9I3Jx0mKTgsYhvOmx0/Z9QutVL0SXoRRiI0GUGHfLwHB62'),
     ('comabasosa.g.a@gmail.com', '$2a$10$VoI2krFcxskf1u.dMHShxeaZTsmqnmeu86gLBCffOcq2IaBTYQ0aC'),
@@ -15,7 +15,7 @@ INSERT INTO users (USE_email, USE_password) VALUES
 	('Test 1@gmail.com', '$2a$10$Haxuey8W/m96O/rU337FQuM4sJRZQHjZqIdGdMy/UOtnKd6IYYXA2'),
 	('Test 2@gmail.com', '$2a$10$py4i4fKr5chWYneADBkyX.EEIKTNW5FLf9XJ5nrWCGiFwIe2aDgx.');
 
-INSERT INTO people (PEO_name, PEO_surname_1 , PEO_user_id) VALUES
+INSERT INTO people (name, surname_1 , user_id) VALUES
     ('Aitor', 'Garzón' , 1),
     ('Maria', 'Rico' , 2),
     ('Andrea', 'Comabasosa' , 3),
@@ -27,7 +27,7 @@ INSERT INTO people (PEO_name, PEO_surname_1 , PEO_user_id) VALUES
 	('Customer 1' , 'Test 1' , 9),
 	('Customer 2' , 'Test 2' , 10);  
 	
-INSERT INTO user_roles ( URO_user_id , URO_role_id ) VALUES
+INSERT INTO user_roles ( user_id , role_id ) VALUES
 ( 1 , 1 ),
 ( 2 , 1 ),
 ( 3 , 1 ),
@@ -39,11 +39,11 @@ INSERT INTO user_roles ( URO_user_id , URO_role_id ) VALUES
 ( 9 , 3 ),
 ( 10 , 3);
 
-INSERT INTO products (PRO_name , PRO_Description , PRO_price ,  PRO_duration ,   PRO_is_service ,  PRO_is_for_women) VALUES
+INSERT INTO products (name , Description , price ,  duration ,   is_service ,  is_for_women) VALUES
 ('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false ),
 ('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false );
 
-insert into reservations(res_person_id , res_booked_employee_id , res_date_ini , res_date_end)
+insert into reservations(person_id , booked_employee_id , date_ini , date_end)
 values
 (  9 , 5 , '2021/09/18 13:00:00.00' , '2021/09/18 14:00:00.00'  ),
 (  9 , 5 , '2021/09/18 15:00:00.00' , '2021/09/18 16:00:00.00'  );
