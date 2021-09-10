@@ -87,8 +87,8 @@ CREATE TABLE reservations (
   RES_person_id INTEGER REFERENCES people(PEO_id),
   RES_booked_employee_id INTEGER REFERENCES people(PEO_id),
   RES_created_by_id INTEGER REFERENCES people(PEO_id),
-  RES_date_ini DATE,
-  RES_date_end DATE,
+  RES_date_ini timestamp,
+  RES_date_end timestamp,
   RES_missed_reservation BOOLEAN,
   RES_created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   RES_updated_at TIMESTAMP NOT NULL DEFAULT NOW()

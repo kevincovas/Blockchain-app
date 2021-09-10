@@ -9,10 +9,12 @@ where roles.rol_name = 'hairdresser';
 `;
 
 const getServicesSQL = `
-
 select pro_id , pro_name , pro_description from products where pro_is_service = true
-
 `;
+
+const getReservationsByDaySQL= `
+select * from reservations where to_char(res_date_ini , 'YYYYMMDD') = $1
+`
 
 const getServices = async() => {
     
