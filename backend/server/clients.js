@@ -21,9 +21,9 @@ router.get('/', async (req,res) =>{
 });
 
 //Get de un solo cliente
-router.get('/:PEO_id', async (req,res) => {
+router.get('/:id', async (req,res) => {
     
-    const { ok, found, data } = await db.getOneClient(req.params.PEO_id);
+    const { ok, found, data } = await db.getOneClient(req.params.id);
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
     } else if(!found){ //Si no se encuentra el cliente
@@ -38,28 +38,28 @@ router.get('/:PEO_id', async (req,res) => {
 
 //Post de un nuevo cliente
 router.post("/", async (req,res) => {
-    const {PEO_name, PEO_surname_1, PEO_surname_2, PEO_gender, PEO_birth_date, PEO_phone, PEO_observations} = req.body;
+    const {name, surname_1, surname_2, gender, birth_date, phone, observations} = req.body;
     //Validamos que lo que envian esta bien
-    if(!PEO_name){
+    if(!name){
         return res.status(400).json(errorResult("Missing 'name' field"));
     }
-    if(!PEO_surname_1){
+    if(!surname_1){
         return res.status(400).json(errorResult("Missing '1st surname' field"));
     }
-    if(!PEO_surname_2){
+    if(!surname_2){
         return res.status(400).json(errorResult("Missing '2nd surname' field"));
     }
-    if(!PEO_gender){
+    if(!gender){
         return res.status(400).json(errorResult("Missing 'gender' field"));
     }
-    if(!PEO_birth_date){
+    if(!birth_date){
         return res.status(400).json(errorResult("Missing 'birth date' field"));
     }
-    if(!PEO_phone){
+    if(!phone){
         return res.status(400).json(errorResult("Missing 'phone' field"));
     }
     try{
-        const newClient = await db.newClient(PEO_name, PEO_surname_1, PEO_surname_2, PEO_gender, PEO_birth_date, PEO_phone, PEO_observations);
+        const newClient = await db.newClient(name, surname_1, surname_2, gender, birth_date, phone, observations);
         res.json(okResult(newClient));
     }catch (e){
         res.status(500).json(errorResult(e.toString()));
@@ -67,17 +67,17 @@ router.post("/", async (req,res) => {
 });
 
 //Actualización de un cliente
-router.put("/:PEO_id" , async(req, res) => {
-    const {PEO_id} = req.params;
-    const {PEO_name, PEO_surname_1, PEO_surname_2, PEO_gender, PEO_birth_date, PEO_phone, PEO_observations} = req.body;
-    const { ok, found, data } = await db.updateClient(PEO_id, PEO_name, PEO_surname_1, PEO_surname_2, PEO_gender, PEO_birth_date, PEO_phone, PEO_observations);
+router.put("/:id" , async(req, res) => {
+    const {id} = req.params;
+    const {name, surname_1, surname_2, gender, birth_date, phone, observations} = req.body;
+    const { ok, found, data } = await db.updateClient(id, name, surname_1, surname_2, gender, birth_date, phone, observations);
 
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
     } else if(!found){ //Si no encuentra el cliente a actualizar
         return res
             .status(400)
-            .json(errorResult(`Client with ID ${PEO_id} not found`));
+            .json(errorResult(`Client with ID ${id} not found`));
     } else{ //Si se ha actualizado el cliente
         return res.json(okResult(data));
     } 
@@ -85,16 +85,16 @@ router.put("/:PEO_id" , async(req, res) => {
 });
 
 //Delete de un cliente
-router.delete("/:PEO_id" , async(req, res) => {
-    const {PEO_id} = req.params;
-    const { ok, found, data } = await db.deleteClient(PEO_id);
+router.delete("/:id" , async(req, res) => {
+    const {id} = req.params;
+    const { ok, found, data } = await db.deleteClient(id);
 
     if(!ok){ //Si ha habido un error en el servidor
         return res.status(500).json(errorResult(data));
     } else if(!found){ //Si no encuentra el cliente a eliminar
         return res
             .status(400)
-            .json(errorResult(`Client with ID ${PEO_id} not found`));
+            .json(errorResult(`Client with ID ${id} not found`));
     } else{ //Si se ha eliminado el cliente
         return res.json(okResult(data));
     } 
