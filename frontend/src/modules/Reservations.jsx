@@ -166,8 +166,14 @@ function createTimeTable(result)
 	
 	// setTimeFrameList( ['1','2'] );
 	if(result !== null && result !== undefined)
-	console.log(result);
+	{
+	// Get Time as Javascript Object
+	let test = new Date(result[0].date_ini.replace(' ', 'T'))
+	console.log( test.getHours() );
 	
+	
+	
+	}
 }
 	
 	// TODO Style ?
