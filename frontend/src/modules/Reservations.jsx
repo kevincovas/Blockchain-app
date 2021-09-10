@@ -96,7 +96,7 @@ function Reservations()
 	// Services Selected
 	let listServicesContracted = null;
     if (servicesContracted.length == 0) {
-    listServicesContracted = <div>Loading options...</div>
+    listServicesContracted = "";
     } else {
     listServicesContracted = <ul>
     {
@@ -180,7 +180,7 @@ function Reservations()
 		function removeService()
 		{
 			event.preventDefault();
-			console.log(  event.target.value );
+			console.log( event.target.value );
 			
 			
 		}
