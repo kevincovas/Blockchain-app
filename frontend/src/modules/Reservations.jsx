@@ -22,32 +22,46 @@ function Reservations()
 	const [timeframe, setTimeFrame] = useState("");
 	const [timeframeList , setTimeFrameList] = useState([]);
 	
-	// Full Lists
-	// Employee
-  const loadEmployeeList = async () => {
-    const employeeList = await api.getHairdressers(constnt.HOST);
-    setEmployeeList(employeeList);
-  }	
-    
-  // Service
-  const loadServicesList = async () => {
-	  const servicesList = await api.getServices(constnt.HOST);
-	  setServicesList(servicesList);
-  }
-  
-  
+	// Duration
+	const [duration, setDuration] = useState(0);
 
+// USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
+// Valores Iniciales
+	useEffect(() => {  
+	
+	// Peluqueros
+	loadEmployeeList();
+
+	// Servicios
+	loadServicesList();
 		
-		// Availability
-		const loadAvailability = async() => {
-			
-			if(state.selectedDay !== null ) 
-			{
-			const availabilityList = await api.getAvailability(constnt.HOST);
-			
-			}
-			
-		}
+	// Disabled Days (Weekend + Full days)
+	setDisabledDays( [ 
+	{ daysOfWeek: [0] } ,
+
+{
+                   before: new Date(),
+        }
+
+	] );
+	
+	
+	}, []);
+		
+	// TODO Add more UseEffects
+	// Effects to Restart Calendar
+	useEffect(() => { 
+	
+	// Load Available Schedules on this day
+	loadAvailability();
+	
+
+    }, [state.selectedDay]);
+
+// USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
+
+
+// FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
 		
 	// Read From Database
 	// Hairdresser
@@ -60,7 +74,7 @@ function Reservations()
     </select>
     }
 	
-	// Services
+	// Services Available
 	let listServices= null;
     if (servicesList === null) {
     listServices = <div>Loading options...</div>
@@ -69,18 +83,47 @@ function Reservations()
     {
 		servicesList.map(service =>  <option key={service.id} value={JSON.stringify(service)}>{service.name}</option> )
 	}
-		
+				
     </select>
 	
+    }	
 	
-	
-    }
-  	
 	// Availability
-	let listAvailability = null;
-	
-	
+	let listAvailability = null;	
 	listAvailability = <div>Loading options...</div>
+	
+// FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
+
+
+// API CALLS ////////////////////////////////////////////////////////////////////////////////////	
+	
+	// Employee
+  const loadEmployeeList = async () => {
+    const employeeList = await api.getHairdressers(constnt.HOST);
+    setEmployeeList(employeeList);
+  }	
+    
+  // Service
+  const loadServicesList = async () => {
+	  const servicesList = await api.getServices(constnt.HOST);
+	  setServicesList(servicesList);
+  }
+  
+	// Availability
+	const loadAvailability = async() => {
+			
+		if(state.selectedDay !== null ) 
+		{
+		const availabilityList = await api.getAvailability(constnt.HOST);
+			
+		}
+			
+	}	
+
+// API CALLS ////////////////////////////////////////////////////////////////////////////////////
+
+// GENERAL FUNCTIONS ////////////////////////////////////////////////////////////////////////////////////
+
 	
 	// TODO Style ?
 	  // On click a day, change state
@@ -108,48 +151,14 @@ function Reservations()
 		// Not submit all form
 		event.preventDefault();
 	
-	
-	let obj = JSON.parse(service);
-	console.log(obj.duration);
-	
-	
+	// Obtengo el objeto
+	let obj = JSON.parse(service);	
 	}
-	
-	// Valores Iniciales
-	useEffect(() => {  
-	
-	// Peluqueros
-	loadEmployeeList();
+		
+// GENERAL FUNCTIONS ////////////////////////////////////////////////////////////////////////////////////
 
-	// Servicios
-	loadServicesList();
-	
-	
-	// Disabled Days (Weekend + Full days)
-	setDisabledDays( [ 
-	{ daysOfWeek: [0] } ,
-
-{
-                   before: new Date(),
-        }
-
-	] );
-	
-	
-	}, []);
-	
-	
-	// TODO Add more UseEffects
-	// Effects to Restart Calendar
-	useEffect(() => { 
-	
-	// Load Available Schedules on this day
-	loadAvailability();
-	
-
-    }, [state.selectedDay]);		
-	
-	
+		
+	// Render
 	return ( 
 
 <div>
@@ -160,9 +169,11 @@ function Reservations()
           Peluquero:
  {listEmployee}           		  
 </label>
+
 <br />
+
  <label>
-          Servicios:
+          Servicios disponibles:
 		  {listServices}		 
 
 <button onClick={addService}>
@@ -170,6 +181,18 @@ function Reservations()
 </button>
 
 </label>
+
+<br />
+
+<br />
+
+<label>
+
+Servicios contratados:
+
+
+</label>
+
 
 <div>
 
