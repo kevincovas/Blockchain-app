@@ -104,7 +104,10 @@ function Reservations()
 	listAvailability = <div>Loading available times...</div>
 	else
 	{
-		timeframeList.map( timeFrame => timeFrame );
+		
+		
+	listAvailability = <ul> { timeframeList.map( timeFrame => <li key={timeFrame} >{timeFrame}</li>)  } </ul>;
+		
 	}
 	
 
@@ -161,6 +164,7 @@ function createTimeTable(result)
 	// console.log( getTotalTime() );
 	// console.log("employee",employee);
 	
+	// setTimeFrameList( ['1','2'] );
 	
 	
 }
