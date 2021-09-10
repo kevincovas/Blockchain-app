@@ -1,10 +1,10 @@
 const {pool} = require('./db');
 
 const getHairdressersSQL = `
-    select id , id , name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
-inner join people on people.user_id = users.id 
-inner join user_roles on user_roles.uro_user_id = users.id
-inner join roles on roles.id = user_roles.uro_role_id
+    select people.id , people.name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
+inner join people on people.id = users.id 
+inner join user_roles on user_roles.user_id = users.id
+inner join roles on roles.id = user_roles.role_id
 where roles.name = 'hairdresser';
 `;
 
@@ -13,7 +13,7 @@ select id , name , description from products where is_service = true
 `;
 
 const getReservationsByDaySQL= `
-select * from reservations where to_char(res_date_ini , 'YYYYMMDD') = $1
+select * from reservations where to_char(date_ini , 'YYYYMMDD') = $1
 `
 
 const getServices = async() => {
