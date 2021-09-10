@@ -1,55 +1,35 @@
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import React , { useEffect, useState } from 'react';
-import * as api from '../api';
-
-// TODO Separar Constantes en otro fichero
-// Month Translation in Spanish
-const MONTHS = [
-  'Enero',
-  'Febrero',
-  'Marzo',
-  'Abril',
-  'Mayo',
-  'Junio',
-  'Julio',
-  'Agosto',
-  'Septimebre',
-  'Octubre',
-  'Noviembre',
-  'Diciembre',
-];
-
-// TODO Separar Constantes en otro fichero
-// Week Translation in Spanish
-const WEEKDAYS_LONG = [
-  'Domingo',
-  'Lunes',
-  'Martes',
-  'Miércoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
-];
-
-// TODO Separar Constantes en otro fichero
-// Week Days in Spanish
-const WEEKDAYS_SHORT = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
+import * as api from '../api/Reservations';
+import * as constnt from '../config/const';
 
 function Reservations()
 {
-	// Setters
+	// General Status
 	const [state, setState] = useState({selectedDay: null});
 	const [disabledDays, setDisabledDays] = useState();
+	
+	// Hairdresser
 	const [employee, setEmployee] = useState("");
 	const [employeeList, setEmployeeList] = useState([]);
 	
+	// Services
+	const [servicesList, setServicesList] = useState([]);
+	
+	// Employee
   const loadEmployeeList = async () => {
-    const employeeList = await api.getHairdressers();
+    const employeeList = await api.getHairdressers(constnt.HOST);
     setEmployeeList(employeeList);
   }	
-	
-	// TODO Read From Database
+    
+  // Service
+  const loadServicesList = async () => {
+	  const servicesList = await api.getServices();
+	  setServicesList(servicesList);
+  }
+		
+	// Read From Database
 	// Variable Option Lists
 	let listEmployee= null;
     if (employeeList === null) {
@@ -137,9 +117,9 @@ function Reservations()
          
 onDayClick={ handleDayClick }	  
 locale="es"
-      months={MONTHS}
-      weekdaysLong={WEEKDAYS_LONG}
-      weekdaysShort={WEEKDAYS_SHORT}
+      months={constnt.MONTHS}
+      weekdaysLong={constnt.WEEKDAYS_LONG}
+      weekdaysShort={constnt.WEEKDAYS_SHORT}
       firstDayOfWeek={1}
  showOutsideDays 	  
 		  selectedDays={state.selectedDay}

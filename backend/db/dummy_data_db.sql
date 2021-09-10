@@ -39,8 +39,8 @@ INSERT INTO user_roles ( URO_user_id , URO_role_id ) VALUES
 ( 9 , 3 ),
 ( 10 , 3);
 
-INSERT INTO products (PRO_name ,  PRO_price ,  PRO_duration ,   PRO_is_service ,  PRO_is_for_women) VALUES
-('Corte' , 10 , 30 , true , false ),
-('Tinte' , 5 , 60 , true , false );
+INSERT INTO products (PRO_name , PRO_Description , PRO_price ,  PRO_duration ,   PRO_is_service ,  PRO_is_for_women) VALUES
+('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false ),
+('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false );
 
 

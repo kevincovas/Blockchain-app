@@ -40,6 +40,7 @@ CREATE TABLE product_categories (
 CREATE TABLE products (
   PRO_id SERIAL PRIMARY KEY, 
   PRO_name VARCHAR(100) NOT NULL, 
+  PRO_description TEXT,
   PRO_category INTEGER REFERENCES product_categories(PCA_id),
   PRO_price DECIMAL(10,2) NOT NULL, 
   PRO_duration SMALLINT,

@@ -1,4 +1,3 @@
-
 const HOST = `http://localhost:8080`
 
 export const register = async ({ email, password }) => {
@@ -35,18 +34,6 @@ export const getAllTodos = async () => {
   });
   const todoList = await response.json();
   return todoList;
-}
-
-export const getHairdressers = async () => {
-  const token = localStorage.getItem('token');
-  const response = await fetch(`${HOST}/reservations/hairdressers`, {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token}`
-    },
-  });
-  const hairdressersList = await response.json();
-  return hairdressersList.results;
 }
 
 export const addTodo = async (text) => {
