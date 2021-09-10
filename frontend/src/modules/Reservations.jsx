@@ -100,7 +100,9 @@ function Reservations()
     } else {
     listServicesContracted = <ul>
     {
-		servicesContracted.map(service =>  <li key={service} >{service}</li> )
+		servicesContracted.map(service =>  <li key={service} >{service}  <button value={service} onClick={removeService}>
+-
+</button></li> )
 	}
 				
     </ul>
@@ -175,6 +177,13 @@ function Reservations()
 
 	}
 		
+		function removeService()
+		{
+			event.preventDefault();
+			console.log(  event.target.value );
+			
+			
+		}
 		
 		
 		
