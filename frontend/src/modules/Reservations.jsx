@@ -165,7 +165,8 @@ function createTimeTable(result)
 	// console.log("employee",employee);
 	
 	// setTimeFrameList( ['1','2'] );
-	
+	if(result !== null && result !== undefined)
+	console.log(result);
 	
 }
 	
@@ -267,7 +268,6 @@ Servicios contratados:
 </label>
 
 {listServicesContracted}
-
 
 <div>
 
