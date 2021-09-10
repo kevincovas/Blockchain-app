@@ -7,7 +7,7 @@ import * as constnt from '../config/const';
 function Reservations()
 {
 	// Calendar Status
-	const [state, setState] = useState({selectedDay: null});
+	const [state, setState] = useState({selectedDay: new Date() });
 	const [disabledDays, setDisabledDays] = useState();
 	
 	// Hairdresser
@@ -24,9 +24,6 @@ function Reservations()
 	// Timeframes
 	const [timeframe, setTimeFrame] = useState("");
 	const [timeframeList , setTimeFrameList] = useState([]);
-	
-	// Duration
-	const [duration, setDuration] = useState(0);
 
 // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
 // Valores Iniciales
@@ -52,12 +49,11 @@ function Reservations()
 			
 	// Effects to Restart Calendar and Read Availability
 	useEffect(() => { 
-	
+
 	// Load Available Schedules on this day
 	loadAvailability();
-	
 
-    }, [state.selectedDay]);
+    }, [state.selectedDay , employee , servicesContracted ]);
 
 // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +101,11 @@ function Reservations()
 	// Availability
 	let listAvailability = null;	
 	if ( timeframeList.length == 0 )
-	listAvailability = <div>Loading available times...</div>	
+	listAvailability = <div>Loading available times...</div>
+	else
+	{
+		timeframeList.map( timeFrame => timeFrame );
+	}
 	
 
 	
@@ -160,6 +160,9 @@ function createTimeTable(result)
 	// console.log( "servicescontracted",servicesContracted );
 	// console.log( getTotalTime() );
 	// console.log("employee",employee);
+	
+	
+	
 }
 	
 	// TODO Style ?
@@ -174,7 +177,7 @@ function createTimeTable(result)
 	{
 		// TODO Crear Cita por WS + check todos los campos correctos
 		event.preventDefault();
-		console.log("submit");
+		console.log("Submit");
 	}
 	
 	// TODO Acciones al cambiar inputs
