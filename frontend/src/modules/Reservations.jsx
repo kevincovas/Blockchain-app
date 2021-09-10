@@ -14,10 +14,13 @@ function Reservations()
 	const [employee, setEmployee] = useState("");
 	const [employeeList, setEmployeeList] = useState([]);
 	
-	// Services
+	// Services Availables
 	const [service , setService] = useState("0");
 	const [servicesList, setServicesList] = useState([]);
-	
+		
+	// Services Contracted
+	const [servicesContracted , setServicesContracted] = useState([]);
+		
 	// Timeframes
 	const [timeframe, setTimeFrame] = useState("");
 	const [timeframeList , setTimeFrameList] = useState([]);
@@ -88,7 +91,12 @@ function Reservations()
 	
 	// Availability
 	let listAvailability = null;	
-	listAvailability = <div>Loading options...</div>
+	listAvailability = <div>Loading options...</div>	
+	
+	// Services Selected
+	
+	
+
 	
 // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
 
@@ -151,11 +159,19 @@ function Reservations()
 	
 	// Obtengo el objeto
 	let obj = JSON.parse(service);	
+	
+	// Lo Pongo a los Servicios Contratados
+	
+	
+	
+	
 	}
+		
+		
+		
 		
 // GENERAL FUNCTIONS ////////////////////////////////////////////////////////////////////////////////////
 
-		
 	// Render
 	return ( 
 
@@ -199,7 +215,6 @@ JSON.parse(service).duration
 <label>
 
 Servicios contratados:
-
 
 </label>
 
