@@ -1,4 +1,4 @@
-INSERT INTO roles (ROL_name) VALUES
+INSERT INTO roles (name) VALUES
 ('admin'),
 ('hairdresser'),
 ('customer');
@@ -27,7 +27,7 @@ INSERT INTO people (name, surname_1 , user_id) VALUES
 	('Customer 1' , 'Test 1' , 9),
 	('Customer 2' , 'Test 2' , 10);  
 	
-INSERT INTO user_roles ( URO_user_id , URO_role_id ) VALUES
+INSERT INTO user_roles ( user_id , role_id ) VALUES
 ( 1 , 1 ),
 ( 2 , 1 ),
 ( 3 , 1 ),
@@ -43,7 +43,7 @@ INSERT INTO products (name , Description , price ,  duration ,   is_service ,  i
 ('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false ),
 ('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false );
 
-insert into reservations(res_person_id , res_booked_employee_id , res_date_ini , res_date_end)
+insert into reservations(person_id , booked_employee_id , date_ini , date_end)
 values
 (  9 , 5 , '2021/09/18 13:00:00.00' , '2021/09/18 14:00:00.00'  ),
 (  9 , 5 , '2021/09/18 15:00:00.00' , '2021/09/18 16:00:00.00'  );
