@@ -13,7 +13,7 @@ select id , name , description , duration from products where is_service = true
 `;
 
 const getReservationsByDaySQL= `
-select * from reservations where to_char(date_ini , 'YYYYMMDD') = $1
+select * from reservations where to_char(date_ini , 'YYYY-MM-DD') = $1
 `
 
 const getServices = async() => {

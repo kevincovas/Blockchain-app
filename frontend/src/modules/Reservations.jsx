@@ -71,7 +71,7 @@ function Reservations()
     listEmployee = <div>Loading options...</div>
     } else {
     listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
-    {employeeList.map(employee =>  <option key={employee.id} value={employee}>{employee.name + ' ' + employee.surname_1 }</option> )}
+    {employeeList.map(employee =>  <option key={employee.id} value={employee.id}>{employee.name + ' ' + employee.surname_1 }</option> )}
     </select>
     }
 	
@@ -134,8 +134,15 @@ function Reservations()
 			
 		if(state.selectedDay !== null ) 
 		{
-		const availabilityList = await api.getAvailability(constnt.HOST);
-			
+
+		// Get Available timetables
+		await api.getAvailability(constnt.HOST , state.selectedDay.toISOString().slice(0, 10) )
+		.then( (value,employee) => console.log(value) );
+		
+		// (servicesContracted);
+		// console.log(employee);
+		//console.log(availabilityList);
+		
 		}
 			
 	}	
