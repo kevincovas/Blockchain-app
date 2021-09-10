@@ -9,7 +9,7 @@ where roles.name = 'hairdresser';
 `;
 
 const getServicesSQL = `
-select id , name , description from products where is_service = true
+select id , name , description , duration from products where is_service = true
 `;
 
 const getReservationsByDaySQL= `

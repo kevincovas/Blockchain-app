@@ -15,9 +15,14 @@ function Reservations()
 	const [employeeList, setEmployeeList] = useState([]);
 	
 	// Services
-	const [service , setService] = useState("");
+	const [service , setService] = useState({});
 	const [servicesList, setServicesList] = useState([]);
 	
+	// Timeframes
+	const [timeframe, setTimeFrame] = useState("");
+	const [timeframeList , setTimeFrameList] = useState([]);
+	
+	// Full Lists
 	// Employee
   const loadEmployeeList = async () => {
     const employeeList = await api.getHairdressers(constnt.HOST);
@@ -29,6 +34,9 @@ function Reservations()
 	  const servicesList = await api.getServices(constnt.HOST);
 	  setServicesList(servicesList);
   }
+  
+  
+
 		
 		// Availability
 		const loadAvailability = async() => {
@@ -36,6 +44,7 @@ function Reservations()
 			if(state.selectedDay !== null ) 
 			{
 			const availabilityList = await api.getAvailability(constnt.HOST);
+			
 			}
 			
 		}
@@ -47,7 +56,7 @@ function Reservations()
     listEmployee = <div>Loading options...</div>
     } else {
     listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
-    {employeeList.map(employee =>  <option key={employee.id} value={employee.id}>{employee.name + ' ' + employee.surname_1 }</option> )}
+    {employeeList.map(employee =>  <option key={employee.id} value={employee}>{employee.name + ' ' + employee.surname_1 }</option> )}
     </select>
     }
 	
@@ -57,12 +66,20 @@ function Reservations()
     listServices = <div>Loading options...</div>
     } else {
     listServices = <select onChange={(e) => setService(e.target.value)}  > <option key="0" value="0"></option>
-    {servicesList.map(service =>  <option key={service.id} value={service.id}>{service.name}</option> )}
+    {
+		servicesList.map(service =>  <option key={service.id} value={JSON.stringify(service)}>{service.name}</option> )
+	}
+		
     </select>
+	
+	
+	
     }
   	
 	// Availability
 	let listAvailability = null;
+	
+	
 	listAvailability = <div>Loading options...</div>
 	
 	// TODO Style ?
@@ -77,6 +94,7 @@ function Reservations()
 	{
 		// TODO Crear Cita por WS + check todos los campos correctos
 		event.preventDefault();
+		console.log("submit");
 	}
 	
 	// TODO Acciones al cambiar inputs
@@ -84,7 +102,19 @@ function Reservations()
 	{
 	
 	}
-		
+	
+	function addService()
+	{
+		// Not submit all form
+		event.preventDefault();
+	
+	
+	let obj = JSON.parse(service);
+	console.log(obj.duration);
+	
+	
+	}
+	
 	// Valores Iniciales
 	useEffect(() => {  
 	
@@ -134,6 +164,11 @@ function Reservations()
  <label>
           Servicios:
 		  {listServices}		 
+
+<button onClick={addService}>
++
+</button>
+
 </label>
 
 <div>
