@@ -157,8 +157,9 @@ function Reservations()
 		// Not submit all form
 		event.preventDefault();
 	
-	// Lo Pongo a los Servicios Contratados
-	
+	// Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
+	if(  servicesContracted.filter(serviceFilter => serviceFilter == service ).length <= 0 )
+	setServicesContracted( prevState => [...prevState , service] );
 
 	}
 		
