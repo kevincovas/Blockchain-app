@@ -82,7 +82,7 @@ function Reservations()
     } else {
     listServices = <select onChange={(e) => setService(e.target.value)}  > <option key="0" value="0"></option>
     {
-		servicesList.map(service =>  <option key={service.id} value={JSON.stringify(service)}>{service.name}</option> )
+		servicesList.map(service =>  <option key={service.id} value={service.id}>{service.name}</option> )
 	}
 				
     </select>
@@ -157,14 +157,9 @@ function Reservations()
 		// Not submit all form
 		event.preventDefault();
 	
-	// Obtengo el objeto
-	let obj = JSON.parse(service);	
-	
 	// Lo Pongo a los Servicios Contratados
 	
-	
-	
-	
+
 	}
 		
 		
@@ -200,13 +195,17 @@ function Reservations()
 
 { 
 
-JSON.parse(service).description
+servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
+            ?  servicesList.filter(serviceFilter => serviceFilter.id == service )[0].description
+            : 'Selecciona un servicio'
 
 }
 <br />
 { 
 
-JSON.parse(service).duration
+servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
+            ?  "Duración: " + servicesList.filter(serviceFilter => serviceFilter.id == service )[0].duration + " minutos"
+            : ''
 
 }
 
