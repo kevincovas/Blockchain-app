@@ -24,6 +24,7 @@ app.use("/clients", require('./clients'));
 app.use("/reservations", require('./reservations'));
 app.use("/users", require('./users'));
 app.use("/", require('./users'));
+app.use("/register", require('./users'));
 app.use("/login", require('./users'));
 
 //Provocamos un error para cazarlo

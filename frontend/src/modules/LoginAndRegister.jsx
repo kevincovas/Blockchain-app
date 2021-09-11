@@ -72,15 +72,13 @@ function LoginAndRegister({ onLogin }) {
         <div>Segundo Apellido</div>
         <input type="text" value={apellido2} onChange={(e) => setApellido2(e.target.value)} />
       </label>
-    <form>
-        <label>Sexo
+    <label>Sexo
         <select>
           <option value="M">Hombre</option>
           <option value="W">Mujer</option>
           <option value="null">Sin expecificar</option>
         </select>
-        </label>
-      </form>		
+        </label>	
       
       
 

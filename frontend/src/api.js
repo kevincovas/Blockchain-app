@@ -13,7 +13,6 @@ export const register = async ({ email, password }) => {
 }
 
 export const login = async ({ email, password }) => {
-  const token = localStorage.getItem('token');
   const response = await fetch(`${HOST}/login`, {
     method: "POST",
     headers: {
@@ -23,7 +22,7 @@ export const login = async ({ email, password }) => {
   });
   const json = await response.json();
   console.log(`json de la funcion login de api ${JSON.stringify(json)}`);
-  return {json, token};
+  return json;
 }
 
 export const getAllTodos = async () => {
