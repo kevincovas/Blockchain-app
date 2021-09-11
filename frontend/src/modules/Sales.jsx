@@ -18,12 +18,9 @@ function useMounted() {
 }
 
 function Sales() {
-  const [count, setCount] = useState(0);
   const [productsList, setProductsList] = useState([]);
-  const [categoriesList, setCategoriesList] = useState([]);
   const [productsSelect, setProductsSelect] = useState([]);
   const [categoriesSelect, setCategoriesSelect] = useState([]);
-  const [loadingCategories, setCategoriesLoaded] = useState([false]);
   const [saleProducts, setSaleProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0.00);
 
@@ -37,7 +34,6 @@ function Sales() {
           if (error) {
             alert(`Error: ${error_message}`);
           } else {
-            setCategoriesList(data);
             setCategoriesSelect(data);
           }
         });
@@ -172,40 +168,9 @@ function Sales() {
     setTotalPrice(finalPrice);
   }
 
-  // useEffect(() => {
-  //   if (isMounted) {
-  //     setSaleProducts((prevState) => {
-  //       // Get the selected product object from the products list using the id saved in selectedProduct when a product is clicked.
-  //       const product = productsList.find(
-  //         ({ id }) => id.toString() === selectedProduct.toString()
-  //       );
-  //       // If this product is already in saleProducts (prevStatee), add one to this product quantity
-  //       // If not, creates a fullProduct object (with quantity and total price) and adds it to the saleProducts
-  //       const index = prevState.findIndex(
-  //         (item) => product.id.toString() === item.id.toString()
-  //       );
-  //       if (index !== -1) {
-  //         // Creates a new array from prevState, modify the product quantity and final price of the product.
-  //         const products = [...prevState];
-  //         const product = { ...prevState[index] };
-  //         product.quantity = product.quantity + 1;
-  //         product.total_price = (
-  //           product.price * product.quantity
-  //         ).toFixed(2);
-  //         products[index] = product;
-  //         return products;
-  //       } else {
-  //         // Creates the new fullProduct and adds it to saleProducts
-  //         const fullProduct = {
-  //           ...product,
-  //           quantity: 1,
-  //           total_price: product.price,
-  //         };
-  //         return [...prevState, fullProduct];
-  //       }
-  //     });
-  //   }
-  // }, [selectedProduct]);
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [saleProducts]);
 
   return (
     <div className="view sales">
