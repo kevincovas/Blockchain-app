@@ -25,6 +25,7 @@ function Sales() {
   const [categoriesSelect, setCategoriesSelect] = useState([]);
   const [loadingCategories, setCategoriesLoaded] = useState([false]);
   const [saleProducts, setSaleProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0.00);
 
   const isMounted = useMounted();
 
@@ -165,6 +166,12 @@ function Sales() {
     });
   };
 
+  const calculateTotalPrice = () => {
+    var finalPrice = 0.00;
+    saleProducts.forEach(({total_price}) => finalPrice += parseFloat(total_price));
+    setTotalPrice(finalPrice);
+  }
+
   // useEffect(() => {
   //   if (isMounted) {
   //     setSaleProducts((prevState) => {
@@ -241,8 +248,8 @@ function Sales() {
               <th key="name">Producto</th>
               <th key="quantity">Quant</th>
               <th key="unitary-price">€/u.</th>
-              <th key="total_price">Precio</th>
               <th key="options">Opciones</th>
+              <th key="total_price">Precio</th>
             </tr>
           </thead>
           <tbody>
@@ -253,9 +260,6 @@ function Sales() {
                   {saleProduct.quantity}
                 </td>
                 <td key={`${saleProduct.id}-price`}>{saleProduct.price}</td>
-                <td key={`${saleProduct.id}-total_price`}>
-                  {saleProduct.total_price}
-                </td>
                 <td key={`${saleProduct.id}-options`}>
                   <div className="sale-option-action-buttons">
                     <FontAwesomeIcon
@@ -278,10 +282,19 @@ function Sales() {
                     />
                   </div>
                 </td>
+                <td key={`${saleProduct.id}-total_price`}>
+                  {saleProduct.total_price}
+                </td>
               </tr>
             ))}
+            <tr>
+              <td colSpan="5">{totalPrice.toFixed(2)}</td>
+            </tr>
           </tbody>
         </table>
+        <div>
+          <button onClick={() => calculateTotalPrice() }>Cobrar</button>
+        </div>
       </div>
     </div>
   );
