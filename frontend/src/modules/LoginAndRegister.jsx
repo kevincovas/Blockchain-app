@@ -16,19 +16,30 @@ function LoginAndRegister({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ type: "none" });
+  const [name_error, setNameError] = useState("");
 
   const register = async (e) => {
     e.preventDefault();
+    var is_wrong =false;
     try {
-      const result = await api.register({ email, password });
-      console.log(`Result user: ${JSON.stringify(result)}`);
-      const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
-      console.log(`Result client: ${JSON.stringify(result2)}`);
-      if (result.error ) {
-        setMessage({ type: "error", text: result.error });
-      }else if (result2.error){
-        setMessage({ type: "error", text: result2.error });
-      } else {
+      if(!name){
+        setNameError("This field can not be empty");
+        is_wrong = true;
+      }
+      if(!surname_1){
+        return res.status(400).json(errorResult("Missing '1st surname' field"));
+      }
+      if(!surname_2){
+        return res.status(400).json(errorResult("Missing '2nd surname' field"));
+      }
+      if(!gender){
+        return res.status(400).json(errorResult("Missing 'gender' field"));
+      }
+      if (!is_wrong) {
+        const result = await api.register({ email, password });
+        console.log(`Result user: ${JSON.stringify(result)}`);
+        const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
+        console.log(`Result client: ${JSON.stringify(result2)}`);
         setMessage({ type: "success", text: "User and client created" });
       }
     } catch (err) {
@@ -70,6 +81,7 @@ function LoginAndRegister({ onLogin }) {
           <div>Nombre</div>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
         </label> 
+        <p className="error-msg name">{name_error}</p>
 		
 		<label>
           <div>Primer Apellido</div>
@@ -79,11 +91,18 @@ function LoginAndRegister({ onLogin }) {
         <div>Segundo Apellido</div>
         <input type="text" value={surname_2} onChange={(e) => setApellido2(e.target.value)} />
       </label>
-    
     <label>
-    <div>Sexo</div>
-        <input type="text" value={gender} onChange={(e) => setGender(e.target.value)} />
-        </label>
+      <div>Sexo</div>
+      <select
+      value={gender}
+      onChange={(e) => {
+        setGender(e.target.value);
+      }}>
+          <option type="text" value="M">Hombre</option>
+          <option type="text" value="W">Mujer</option>
+          <option type="text" value="X">Sin especificar</option>
+      </select> 
+      </label>
     <label>
         <div>Teléfono</div>
         <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
@@ -123,9 +142,4 @@ function LoginAndRegister({ onLogin }) {
 
 export default LoginAndRegister;
 
-//  <div>Sexo</div>
-//<select>
-//<option type="text" value={gender} onChange={(e) => setGender(e.target.value)}>Hombre</option>
-//<option type="text" value={gender} onChange={(e) => setGender(e.target.value)}>Mujer</option>
-//<option type="text" value={gender} onChange={(e) => setGender(e.target.value)}>Sin expecificar</option>
-//</select> //
+
