@@ -72,7 +72,7 @@ router.get('/:id', async (req,res) => {
 });
 
 //Creamos un nuevo usuario
-router.post("/", async (req,res) => {
+router.post("/register", async (req,res) => {
     const {email, password} = req.body;
     if(!email){
         return res.status(400).json(errorResult("Missing 'email' field"));

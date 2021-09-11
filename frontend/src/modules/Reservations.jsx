@@ -7,7 +7,7 @@ import * as constnt from '../config/const';
 function Reservations()
 {
 	// Calendar Status
-	const [state, setState] = useState({selectedDay: null});
+	const [state, setState] = useState({selectedDay: new Date() });
 	const [disabledDays, setDisabledDays] = useState();
 	
 	// Hairdresser
@@ -24,9 +24,6 @@ function Reservations()
 	// Timeframes
 	const [timeframe, setTimeFrame] = useState("");
 	const [timeframeList , setTimeFrameList] = useState([]);
-	
-	// Duration
-	const [duration, setDuration] = useState(0);
 
 // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
 // Valores Iniciales
@@ -52,12 +49,11 @@ function Reservations()
 			
 	// Effects to Restart Calendar and Read Availability
 	useEffect(() => { 
-	
+
 	// Load Available Schedules on this day
 	loadAvailability();
-	
 
-    }, [state.selectedDay]);
+    }, [state.selectedDay , employee , servicesContracted ]);
 
 // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
 
@@ -67,19 +63,19 @@ function Reservations()
 	// Read From Database
 	// Hairdresser
 	let listEmployee= null;
-    if (employeeList === null) {
-    listEmployee = <div>Loading options...</div>
-    } else {
+    if (employeeList.length == 0 )
+    listEmployee = <div>Loading employees...</div>
+    else {
     listEmployee = <select onChange={(e) => setEmployee(e.target.value)}  > <option key="0" value="0"></option>
-    {employeeList.map(employee =>  <option key={employee.id} value={employee}>{employee.name + ' ' + employee.surname_1 }</option> )}
+    {employeeList.map(employee =>  <option key={employee.id} value={employee.id}>{employee.name + ' ' + employee.surname_1 }</option> )}
     </select>
     }
 	
 	// Services Available
 	let listServices= null;
-    if (servicesList === null) {
-    listServices = <div>Loading options...</div>
-    } else {
+    if (servicesList.length == 0 )
+    listServices = <div>Loading available services...</div>
+    else {
     listServices = <select onChange={(e) => setService(e.target.value)}  > <option key="0" value="0"></option>
     {
 		servicesList.map(service =>  <option key={service.id} value={service.id}>{service.name}</option> )
@@ -89,24 +85,30 @@ function Reservations()
 	
     }	
 	
-	// Availability
-	let listAvailability = null;	
-	listAvailability = <div>Loading options...</div>	
-	
 	// Services Selected
 	let listServicesContracted = null;
-    if (servicesContracted.length == 0) {
-    listServicesContracted = <div>Loading options...</div>
-    } else {
+    if (servicesContracted.length == 0)
+    listServicesContracted = <div>Ningún servicio seleccionado</div>;
+    else {
     listServicesContracted = <ul>
     {
-		servicesContracted.map(service =>  <li key={service} >{service}</li> )
-	}
-				
+		servicesContracted.map(service =>  <li key={service} > { servicesList.filter(serviceFilter => serviceFilter.id == service )[0].name }
+		<button value={service} onClick={removeService}>-</button></li> )
+	}			
     </ul>
+	}	
 	
-    }	
-	
+	// Availability
+	let listAvailability = null;	
+	if ( timeframeList.length == 0 )
+	listAvailability = <div>Loading available times...</div>
+	else
+	{
+		
+		
+	listAvailability = <ul> { timeframeList.map( timeFrame => <li key={timeFrame} >{timeFrame}</li>)  } </ul>;
+		
+	}
 	
 
 	
@@ -130,10 +132,12 @@ function Reservations()
 	// Availability
 	const loadAvailability = async() => {
 			
-		if(state.selectedDay !== null ) 
+		if(state.selectedDay !== null && state.selectedDay !== undefined ) 
 		{
-		const availabilityList = await api.getAvailability(constnt.HOST);
-			
+
+		// Get Available timetables
+		await api.getAvailability(constnt.HOST , state.selectedDay.toISOString().slice(0, 10) ).then( result => createTimeTable(result) );
+
 		}
 			
 	}	
@@ -141,7 +145,36 @@ function Reservations()
 // API CALLS ////////////////////////////////////////////////////////////////////////////////////
 
 // GENERAL FUNCTIONS ////////////////////////////////////////////////////////////////////////////////////
+function getTotalTime()
+{
+	// Create Temporal Total Time
+	let total_time = 0;
+	
+	// Add Time by Service
+	servicesContracted.map( service => total_time += servicesList.filter(serviceFilter => serviceFilter.id == service )[0].duration );
+	
+	// Return Total Time
+	return total_time;
+}
 
+function createTimeTable(result)
+{
+	// console.log( "result",result );
+	// console.log( "servicescontracted",servicesContracted );
+	// console.log( getTotalTime() );
+	// console.log("employee",employee);
+	
+	// setTimeFrameList( ['1','2'] );
+	if(result !== null && result !== undefined)
+	{
+	// Get Time as Javascript Object
+	let test = new Date(result[0].date_ini.replace(' ', 'T'))
+	console.log( test.getHours() );
+	
+	
+	
+	}
+}
 	
 	// TODO Style ?
 	  // On click a day, change state
@@ -155,7 +188,7 @@ function Reservations()
 	{
 		// TODO Crear Cita por WS + check todos los campos correctos
 		event.preventDefault();
-		console.log("submit");
+		console.log("Submit");
 	}
 	
 	// TODO Acciones al cambiar inputs
@@ -171,10 +204,20 @@ function Reservations()
 	
 	// Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
 	if(  servicesContracted.filter(serviceFilter => serviceFilter == service ).length <= 0 )
+	// Sólo si valor != 0
+	if (service !== "0")
 	setServicesContracted( prevState => [...prevState , service] );
 
 	}
 		
+		function removeService()
+		{
+			// Not submit form
+			event.preventDefault();
+
+			// Remove Service
+			setServicesContracted(   prevState => prevState.filter(item => item !== event.target.value)   );
+		}
 		
 		
 		
@@ -218,7 +261,7 @@ servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
 
 servicesList.filter(serviceFilter => serviceFilter.id == service )[0]
             ?  "Duración: " + servicesList.filter(serviceFilter => serviceFilter.id == service )[0].duration + " minutos"
-            : ''
+            : 'Duración: '
 
 }
 
@@ -232,19 +275,18 @@ Servicios contratados:
 
 {listServicesContracted}
 
-
 <div>
 
         <DayPicker
          
-onDayClick={ handleDayClick }	  
-locale="es"
-      months={constnt.MONTHS}
-      weekdaysLong={constnt.WEEKDAYS_LONG}
-      weekdaysShort={constnt.WEEKDAYS_SHORT}
-      firstDayOfWeek={1}
- showOutsideDays 	  
-		  selectedDays={state.selectedDay}
+		onDayClick={ handleDayClick }	  
+		locale="es"
+		months={constnt.MONTHS}
+		weekdaysLong={constnt.WEEKDAYS_LONG}
+		weekdaysShort={constnt.WEEKDAYS_SHORT}
+		firstDayOfWeek={1}
+		showOutsideDays 	  
+		selectedDays={state.selectedDay}
 		todayButton="Éste mes"
 		disabledDays={disabledDays}
 		fromMonth={new Date()}
