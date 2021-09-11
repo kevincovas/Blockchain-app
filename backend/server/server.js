@@ -25,6 +25,7 @@ app.use("/reservations", require('./reservations'));
 app.use("/users", require('./users'));
 app.use("/", require('./users'));
 app.use("/login", require('./users'));
+app.use("/sales", require('./sales'));
 
 //Provocamos un error para cazarlo
 app.get('/error', async (req,res,next) => {
