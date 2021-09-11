@@ -39,9 +39,13 @@ INSERT INTO user_roles ( user_id , role_id ) VALUES
 ( 9 , 3 ),
 ( 10 , 3);
 
-INSERT INTO products (name , Description , price ,  duration ,   is_service ,  is_for_women) VALUES
-('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false ),
-('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false );
+INSERT INTO product_categories (name) VALUES
+('Cortar'),
+('Teñir');
+
+INSERT INTO products (name , Description , price ,  duration ,   is_service ,  is_for_women, category) VALUES
+('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false, 1),
+('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false, 2);
 
 insert into reservations(person_id , booked_employee_id , date_ini , date_end)
 values

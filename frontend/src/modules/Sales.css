@@ -1,0 +1,9 @@
+select {
+    display: block;
+    margin: 20px 0;
+    min-width: 300px;
+}
+
+.view.sales{
+    margin: min(10vw, 20px);
+}
