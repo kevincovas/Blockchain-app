@@ -19,7 +19,8 @@ function LoginAndRegister({ onLogin }) {
   //Error control
   const [message, setMessage] = useState({ type: "none" });
   const [name_error, setNameError] = useState("");
-  const [surname_error, setSurnameError] = useState("");
+  const [surname1_error, setSurname1Error] = useState("");
+  const [surname2_error, setSurname2Error] = useState("");
   const [gender_error, setGenderError] = useState("");
   const [userExist_error, setUserExistError] = useState("");
 
@@ -34,11 +35,11 @@ function LoginAndRegister({ onLogin }) {
           is_wrong = true;
         }
         if(!surname_1){
-          setSurnameError("The field fisrt surname can not be empty");
+          setSurname1Error("The field fisrt surname can not be empty");
           is_wrong = true;
         }
         if(!surname_2){
-          setSurnameError("The field second surname can not be empty");
+          setSurname2Error("The field second surname can not be empty");
           is_wrong = true;
         }
         if(!gender){
