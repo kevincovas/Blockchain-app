@@ -81,7 +81,6 @@ const checkIfPersonExists = async (userId) => {
 };
 
 const createSale = async (sale) => {
-  console.log(sale);
   try {
     const result = await pool.query(createSaleSQL, Object.values(sale));
     return { error: false, error_message: "", data: result.rows[0] };

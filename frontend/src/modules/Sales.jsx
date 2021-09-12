@@ -17,6 +17,14 @@ function useMounted() {
   return isMounted;
 }
 
+const methodOfPayment = "methodOfPayment";
+const employeeId = "employeeId";
+const customerId = "customerId";
+const methodOfPaymentErrorMessage = "Por favor, escoja un método de pago.";
+const customerIdErrorMessage = "Por favor, escoja un cliente.";
+const employeeIdErrorMessage = "Por favor, escoja el peluquero que ha cobrado el servicio.";
+
+
 function Sales() {
   const [productsList, setProductsList] = useState([]);
   const [productsSelect, setProductsSelect] = useState([]);
@@ -24,14 +32,25 @@ function Sales() {
   const [customersSelect, setCustomerSelect] = useState([]);
   const [employeesSelect, setEmployeesSelect] = useState([]);
   const [saleProducts, setSaleProducts] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0.00);
+  const [totalPrice, setTotalPrice] = useState(0.0);
   const [saleCustomerId, setSaleCustomerId] = useState("");
+  const [customerIdError, setCustomerIdError] = useState("");
+  const [employeeIdError, setEmployeeIdError] = useState("");
+  const [methodOfPaymentError, setMethodOfPaymentError] = useState("");
   const [saleEmployeeId, setSaleEmployeeId] = useState("");
-  const [methodOfPayment, setMethodOfPayment] = useState("");
+  const [saleMethodOfPayment, setSaleMethodOfPayment] = useState("");
   const [observations, setObservations] = useState("");
   const [messages, setMessages] = useState([]);
 
   const isMounted = useMounted();
+
+  /*const checkGenericValue = (key, value) => {
+    if(!value){
+      const {errorMessage, setStateName} = errorMessages.filter(({id}) => id === key)[0];
+        eval(setStateName)(errorMessages);
+      }
+    }
+  }*/
 
   useEffect(() => {
     const fetchProductCategories = async () => {
@@ -66,13 +85,15 @@ function Sales() {
 
     const fetchCustomers = async () => {
       try {
-        await api.getPeopleByRole(HOST, 'customer').then(({ error, error_message, data }) => {
-          if (error) {
-            alert(`Error: ${error_message}`);
-          } else {
-            setCustomerSelect(data);
-          }
-        });
+        await api
+          .getPeopleByRole(HOST, "customer")
+          .then(({ error, error_message, data }) => {
+            if (error) {
+              alert(`Error: ${error_message}`);
+            } else {
+              setCustomerSelect(data);
+            }
+          });
       } catch (error) {
         alert(`Error getting employees: ${error.toString()}`);
       }
@@ -80,13 +101,15 @@ function Sales() {
 
     const fetchEmployees = async () => {
       try {
-        await api.getPeopleByRole(HOST, 'hairdresser').then(({ error, error_message, data }) => {
-          if (error) {
-            alert(`Error: ${error_message}`);
-          } else {
-            setEmployeesSelect(data);
-          }
-        });
+        await api
+          .getPeopleByRole(HOST, "hairdresser")
+          .then(({ error, error_message, data }) => {
+            if (error) {
+              alert(`Error: ${error_message}`);
+            } else {
+              setEmployeesSelect(data);
+            }
+          });
       } catch (error) {
         alert(error.toString());
       }
@@ -117,9 +140,7 @@ function Sales() {
         const products = [...prevState];
         const product = { ...prevState[index] };
         product.quantity = product.quantity + 1;
-        product.total_price = (
-          product.price * product.quantity
-        ).toFixed(2);
+        product.total_price = (product.price * product.quantity).toFixed(2);
         products[index] = product;
         return products;
       } else {
@@ -152,7 +173,7 @@ function Sales() {
         return products;
       }
     });
-  }; 
+  };
 
   const decreaseSaleProductQuantity = (productId) => {
     setSaleProducts((prevState) => {
@@ -167,9 +188,7 @@ function Sales() {
         const product = { ...prevState[index] };
         if (product.quantity > 1) {
           product.quantity = product.quantity - 1;
-          product.total_price = (
-            product.price * product.quantity
-          ).toFixed(2);
+          product.total_price = (product.price * product.quantity).toFixed(2);
           products[index] = product;
         } else {
           products.splice(index, 1);
@@ -191,9 +210,7 @@ function Sales() {
         const products = [...prevState];
         const product = { ...prevState[index] };
         product.quantity = product.quantity + 1;
-        product.total_price = (
-          product.price * product.quantity
-        ).toFixed(2);
+        product.total_price = (product.price * product.quantity).toFixed(2);
         products[index] = product;
         return products;
       }
@@ -201,36 +218,52 @@ function Sales() {
   };
 
   const calculateTotalPrice = () => {
-    var finalPrice = 0.00;
-    saleProducts.forEach(({total_price}) => finalPrice += parseFloat(total_price));
+    var finalPrice = 0.0;
+    saleProducts.forEach(
+      ({ total_price }) => (finalPrice += parseFloat(total_price))
+    );
     setTotalPrice(finalPrice);
-  }
+  };
 
   const saveSale = async () => {
-    if (saleProducts.length !== 0){
-      const sale = {
-        customer_id: parseInt(saleCustomerId), 
-        employee_id: parseInt(saleEmployeeId), 
-        total_price: totalPrice, 
-        method_of_payment: parseInt(methodOfPayment), 
-        observations: observations
+    if (saleProducts.length !== 0) {
+      var error = false;
+      if (!saleCustomerId) {
+        setCustomerIdError(customerIdErrorMessage);
+        error = true;
       }
-      try {
-        const {data} = await api.createSale(HOST, sale);
-        saleProducts.forEach(async({id, quantity}) => {
-          const saleProduct = {
-            sale_id: parseInt(data.id),
-            product_id: id, 
-            quantity
-          };
-          await api.addProductToSale(HOST, saleProduct);
-        })
-      } catch (error){
-        alert(error.toString());
+      if (!saleEmployeeId) {
+        setEmployeeIdError(employeeIdErrorMessage);
+        error = true;
+      }
+      if (!saleMethodOfPayment) {
+        setMethodOfPaymentError(methodOfPaymentErrorMessage);
+        error = true;
+      }
+      if(!error){
+        const sale = {
+          customer_id: parseInt(saleCustomerId),
+          employee_id: parseInt(saleEmployeeId),
+          total_price: totalPrice,
+          method_of_payment: parseInt(saleMethodOfPayment),
+          observations: observations,
+        };
+        try {
+          const { data } = await api.createSale(HOST, sale);
+          saleProducts.forEach(async ({ id, quantity }) => {
+            const saleProduct = {
+              sale_id: parseInt(data.id),
+              product_id: id,
+              quantity,
+            };
+            await api.addProductToSale(HOST, saleProduct);
+          });
+        } catch (error) {
+          alert(error.toString());
+        }
       }
     }
-    
-  }
+  };
 
   useEffect(() => {
     calculateTotalPrice();
@@ -244,8 +277,11 @@ function Sales() {
           <label>
             Selecciona el cliente:
             <select
-              onChange={(event) => {
+              onClick={(event) => {
                 setSaleCustomerId(event.target.value);
+                if(event.target.value){
+                  setCustomerIdError("");
+                }
               }}
             >
               {customersSelect.map((customer) => (
@@ -254,12 +290,16 @@ function Sales() {
                 </option>
               ))}
             </select>
+            <div className="error-msg">{customerIdError}</div>
           </label>
           <label>
-            Selecciona el peluquero:
+            Selecciona el peluquero que ha cobrado el servicio:
             <select
-              onChange={(event) => {
+              onClick={(event) => {
                 setSaleEmployeeId(event.target.value);
+                if(event.target.value){
+                  setEmployeeIdError("");
+                }
               }}
             >
               {employeesSelect.map((employee) => (
@@ -268,6 +308,7 @@ function Sales() {
                 </option>
               ))}
             </select>
+            <div className="error-msg">{employeeIdError}</div>
           </label>
           <label>
             Selecciona la categoría:
@@ -333,9 +374,7 @@ function Sales() {
                     />
                     <FontAwesomeIcon
                       icon={faTrash}
-                      onClick={(e) =>
-                        deleteSaleProduct(`${saleProduct.id}`)
-                      }
+                      onClick={(e) => deleteSaleProduct(`${saleProduct.id}`)}
                     />
                   </div>
                 </td>
@@ -349,15 +388,26 @@ function Sales() {
             </tr>
           </tbody>
         </table>
+        
         <form>
           <label>
-            <textarea onChange={(event) => setObservations(event.target.value)} cols="50" rows="7"></textarea>
+            Observaciones:
+            <textarea
+              onChange={(event) => setObservations(event.target.value)}
+              cols="50"
+              rows="7"
+            ></textarea>
           </label>
           <label>
             Selecciona el método de pago:
             <select
               onClick={(event) => {
-                setMethodOfPayment(event.target.value);
+                {
+                  setSaleMethodOfPayment(event.target.value);
+                  if(event.target.value){
+                    setMethodOfPaymentError("");
+                  }
+                }
               }}
             >
               {METHODS_OF_PAYMENT.map((method) => (
@@ -366,10 +416,11 @@ function Sales() {
                 </option>
               ))}
             </select>
+            <div className="error-msg">{methodOfPaymentError}</div>
           </label>
         </form>
         <div>
-          <button onClick={() => saveSale() }>Cobrar</button>
+          <button onClick={() => saveSale()}>Cobrar</button>
         </div>
       </div>
     </div>
