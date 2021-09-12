@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { HOST } from "../config/const";
+import { HOST, METHODS_OF_PAYMENT } from "../config/const";
 import * as api from "../api/Sales";
 import axios from "axios";
 import "./Sales.css";
@@ -21,8 +21,15 @@ function Sales() {
   const [productsList, setProductsList] = useState([]);
   const [productsSelect, setProductsSelect] = useState([]);
   const [categoriesSelect, setCategoriesSelect] = useState([]);
+  const [customersSelect, setCustomerSelect] = useState([]);
+  const [employeesSelect, setEmployeesSelect] = useState([]);
   const [saleProducts, setSaleProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0.00);
+  const [saleCustomerId, setSaleCustomerId] = useState("");
+  const [saleEmployeeId, setSaleEmployeeId] = useState("");
+  const [methodOfPayment, setMethodOfPayment] = useState("");
+  const [observations, setObservations] = useState("");
+  const [messages, setMessages] = useState([]);
 
   const isMounted = useMounted();
 
@@ -38,7 +45,7 @@ function Sales() {
           }
         });
       } catch (error) {
-        console.error(error);
+        alert(error.toString());
       }
     };
 
@@ -53,26 +60,57 @@ function Sales() {
           }
         });
       } catch (error) {
-        console.log(error);
+        alert(error.toString());
       }
     };
+
+    const fetchCustomers = async () => {
+      try {
+        await api.getPeopleByRole(HOST, 'customer').then(({ error, error_message, data }) => {
+          if (error) {
+            alert(`Error: ${error_message}`);
+          } else {
+            setCustomerSelect(data);
+          }
+        });
+      } catch (error) {
+        alert(`Error getting employees: ${error.toString()}`);
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        await api.getPeopleByRole(HOST, 'hairdresser').then(({ error, error_message, data }) => {
+          if (error) {
+            alert(`Error: ${error_message}`);
+          } else {
+            setEmployeesSelect(data);
+          }
+        });
+      } catch (error) {
+        alert(error.toString());
+      }
+    };
+
     fetchProductCategories();
     fetchProducts();
+    fetchCustomers();
+    fetchEmployees();
   }, []);
 
-  const filterProductsByCategory = (categoryID) => {
+  const filterProductsByCategory = (categoryId) => {
     const filteredProducts = productsList.filter(
-      ({ category }) => category.toString() === categoryID.toString()
+      ({ category }) => category.toString() === categoryId.toString()
     );
     setProductsSelect(filteredProducts);
   };
 
-  const addSaleProduct = (productID) => {
+  const addSaleProduct = (productId) => {
     setSaleProducts((prevState) => {
       // If this product is already in saleProducts (prevStatee), add one to this product quantity
       // If not, creates a fullProduct object (with quantity and total price) and adds it to the saleProducts
       const index = prevState.findIndex(
-        (item) => productID.toString() === item.id.toString()
+        (item) => productId.toString() === item.id.toString()
       );
       if (index !== -1) {
         // Creates a new array from prevState, modify the product quantity and final price of the product.
@@ -88,7 +126,7 @@ function Sales() {
         // Creates the new fullProduct and adds it to saleProducts
         // Get the selected product object from the products list using the id saved in selectedProduct when a product is clicked.
         const product = productsList.find(
-          ({ id }) => id.toString() === productID.toString()
+          ({ id }) => id.toString() === productId.toString()
         );
         const fullProduct = {
           ...product,
@@ -100,12 +138,12 @@ function Sales() {
     });
   };
 
-  const deleteSaleProduct = (productID) => {
+  const deleteSaleProduct = (productId) => {
     setSaleProducts((prevState) => {
       // If this product is already in saleProducts (prevStatee), add one to this product quantity
       // If not, creates a fullProduct object (with quantity and total price) and adds it to the saleProducts
       const index = prevState.findIndex(
-        (item) => productID.toString() === item.id.toString()
+        (item) => productId.toString() === item.id.toString()
       );
       if (index !== -1) {
         // Creates a new array from prevState, modify the product quantity and final price of the product.
@@ -116,12 +154,12 @@ function Sales() {
     });
   }; 
 
-  const decreaseSaleProductQuantity = (productID) => {
+  const decreaseSaleProductQuantity = (productId) => {
     setSaleProducts((prevState) => {
       // If this product is already in saleProducts (prevStatee), add one to this product quantity
       // If not, creates a fullProduct object (with quantity and total price) and adds it to the saleProducts
       const index = prevState.findIndex(
-        (item) => productID.toString() === item.id.toString()
+        (item) => productId.toString() === item.id.toString()
       );
       if (index !== -1) {
         // Creates a new array from prevState, modify the product quantity and final price of the product.
@@ -141,12 +179,12 @@ function Sales() {
     });
   };
 
-  const increaseSaleProductQuantity = (productID) => {
+  const increaseSaleProductQuantity = (productId) => {
     setSaleProducts((prevState) => {
       // If this product is already in saleProducts (prevStatee), add one to this product quantity
       // If not, creates a fullProduct object (with quantity and total price) and adds it to the saleProducts
       const index = prevState.findIndex(
-        (item) => productID.toString() === item.id.toString()
+        (item) => productId.toString() === item.id.toString()
       );
       if (index !== -1) {
         // Creates a new array from prevState, modify the product quantity and final price of the product.
@@ -168,6 +206,32 @@ function Sales() {
     setTotalPrice(finalPrice);
   }
 
+  const saveSale = async () => {
+    if (saleProducts.length !== 0){
+      const sale = {
+        customer_id: parseInt(saleCustomerId), 
+        employee_id: parseInt(saleEmployeeId), 
+        total_price: totalPrice, 
+        method_of_payment: parseInt(methodOfPayment), 
+        observations: observations
+      }
+      try {
+        const {data} = await api.createSale(HOST, sale);
+        saleProducts.forEach(async({id, quantity}) => {
+          const saleProduct = {
+            sale_id: parseInt(data.id),
+            product_id: id, 
+            quantity
+          };
+          await api.addProductToSale(HOST, saleProduct);
+        })
+      } catch (error){
+        alert(error.toString());
+      }
+    }
+    
+  }
+
   useEffect(() => {
     calculateTotalPrice();
   }, [saleProducts]);
@@ -177,6 +241,34 @@ function Sales() {
       <div className="sales column left sold-products">
         <h1>Nueva venta</h1>
         <form>
+          <label>
+            Selecciona el cliente:
+            <select
+              onChange={(event) => {
+                setSaleCustomerId(event.target.value);
+              }}
+            >
+              {customersSelect.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {`${customer.name} ${customer.surname_1} ${customer.surname_2}`}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Selecciona el peluquero:
+            <select
+              onChange={(event) => {
+                setSaleEmployeeId(event.target.value);
+              }}
+            >
+              {employeesSelect.map((employee) => (
+                <option key={employee.id} value={employee.id}>
+                  {`${employee.name} ${employee.surname_1} ${employee.surname_2}`}
+                </option>
+              ))}
+            </select>
+          </label>
           <label>
             Selecciona la categoría:
             <select
@@ -257,8 +349,27 @@ function Sales() {
             </tr>
           </tbody>
         </table>
+        <form>
+          <label>
+            <textarea onChange={(event) => setObservations(event.target.value)} cols="50" rows="7"></textarea>
+          </label>
+          <label>
+            Selecciona el método de pago:
+            <select
+              onClick={(event) => {
+                setMethodOfPayment(event.target.value);
+              }}
+            >
+              {METHODS_OF_PAYMENT.map((method) => (
+                <option key={method.id} value={method.id}>
+                  {method.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </form>
         <div>
-          <button onClick={() => calculateTotalPrice() }>Cobrar</button>
+          <button onClick={() => saveSale() }>Cobrar</button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS booked_services;
 DROP TABLE IF EXISTS reservations;
-DROP TABLE IF EXISTS products_sold;
+DROP TABLE IF EXISTS sold_products;
 DROP TABLE IF EXISTS sales;
 DROP TABLE IF EXISTS people;
 DROP TABLE IF EXISTS products;
@@ -26,8 +26,17 @@ CREATE TABLE roles (
 
 CREATE TABLE user_roles (
   id SERIAL PRIMARY KEY,  
-  user_id INTEGER REFERENCES users(id),
-  role_id INTEGER REFERENCES roles(id)
+  user_id INTEGER NOT NULL, 
+  role_id INTEGER NOT NULL, 
+
+  CONSTRAINT fk_user_roles_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_user_roles_role
+    FOREIGN KEY (role_id)
+    REFERENCES roles(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE product_categories (
@@ -41,13 +50,18 @@ CREATE TABLE products (
   id SERIAL PRIMARY KEY, 
   name VARCHAR(100) NOT NULL, 
   description TEXT,
-  category INTEGER REFERENCES product_categories(id),
+  category INTEGER NOT NULL,
   price DECIMAL(10,2) NOT NULL, 
   duration SMALLINT,
   is_service BOOLEAN,
   is_for_women BOOLEAN,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT fk_products_category
+    FOREIGN KEY (category)
+    REFERENCES product_categories(id)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE people (
@@ -59,45 +73,92 @@ CREATE TABLE people (
   birth_date DATE,
   gender CHAR,
   observations TEXT,
-  user_id INTEGER REFERENCES users(id),
+  user_id INTEGER,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(), 
+
+  CONSTRAINT fk_people_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE sales (
   id BIGSERIAL PRIMARY KEY,  
-  person_id INTEGER REFERENCES people(id),
+  customer_id INTEGER NOT NULL, 
+  employee_id INTEGER NOT NULL,
   total_import DECIMAL(10,2) NOT NULL,
   observations TEXT,
   method_of_payment SMALLINT NOT NULL,      -- Podemos definir nuestras propias variables con los tipos y asignarles enteros (Efectivo=0, Tarjeta=1...)
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT fk_sales_customer
+    FOREIGN KEY (customer_id)
+    REFERENCES people(id)
+    ON DELETE RESTRICT,
+  CONSTRAINT fk_sales_employee
+    FOREIGN KEY (employee_id)
+    REFERENCES people(id)
+    ON DELETE RESTRICT
 );
 
-CREATE TABLE products_sold (
+CREATE TABLE sold_products (
   id BIGSERIAL PRIMARY KEY,  
-  sale_id INTEGER REFERENCES sales(id),
-  product_id INTEGER REFERENCES products(id),
-  total_import DECIMAL(10,2) NOT NULL, 
-  quantity SMALLINT
+  sale_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  quantity SMALLINT,
+
+  CONSTRAINT fk_sold_products_sale
+    FOREIGN KEY (sale_id)
+    REFERENCES sales(id)
+    ON DELETE CASCADE,
+
+  CONSTRAINT fk_sold_products_product
+    FOREIGN KEY (product_id)
+    REFERENCES products(id)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE reservations (
   id BIGSERIAL PRIMARY KEY, 
-  person_id INTEGER REFERENCES people(id),
-  booked_employee_id INTEGER REFERENCES people(id),
-  created_by_id INTEGER REFERENCES people(id),
+  person_id INTEGER NOT NULL,
+  booked_employee_id INTEGER NOT NULL,
+  created_by_id INTEGER NOT NULL,
   date_ini timestamp,
   date_end timestamp,
   missed_reservation BOOLEAN,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT fk_reservation_person
+    FOREIGN KEY (person_id)
+    REFERENCES people(id)
+    ON DELETE RESTRICT,
+  CONSTRAINT fk_reservation_booked_employee
+    FOREIGN KEY (person_id)
+    REFERENCES people(id)
+    ON DELETE RESTRICT,
+  CONSTRAINT fk_reservation_created_by
+    FOREIGN KEY (person_id)
+    REFERENCES people(id)
+    ON DELETE RESTRICT
 );
 
 CREATE TABLE booked_services (
   id BIGSERIAL PRIMARY KEY,  
-  product_id INTEGER REFERENCES products(id),
-  reservation_id INTEGER REFERENCES reservations(id)
+  product_id INTEGER NOT NULL,
+  reservation_id INTEGER NOT NULL, 
+
+  CONSTRAINT fk_booked_services_product
+    FOREIGN KEY (product_id)
+    REFERENCES products(id)
+    ON DELETE RESTRICT,
+
+  CONSTRAINT fk_booked_services_reservation
+    FOREIGN KEY (reservation_id)
+    REFERENCES reservations(id)
+    ON DELETE CASCADE
 );
 
 -- Trigger that updates the updated at field when a user is updated

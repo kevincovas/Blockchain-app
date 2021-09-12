@@ -33,3 +33,14 @@ export  const WEEKDAYS_LONG = [
 // Separar Constantes en otro fichero
 // Week Days in Spanish
 export const WEEKDAYS_SHORT = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
+
+export const METHODS_OF_PAYMENT = [
+  {
+      id: 0,
+      name: "Efectivo"
+  }, 
+  {
+      id: 1, 
+      name: "Tarjeta"
+  }
+];
