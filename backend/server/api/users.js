@@ -1,6 +1,6 @@
-const db = require ('./db/db_users');
+const db = require ('../db/db_users');
 const { Router } = require('express');
-const auth = require("./auth/auth.service");
+const auth = require("../auth/auth.service");
 
 const router = new Router();
 
