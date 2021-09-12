@@ -23,6 +23,7 @@ function LoginAndRegister({ onLogin }) {
   const [surname2_error, setSurname2Error] = useState("");
   const [gender_error, setGenderError] = useState("");
   const [userExist_error, setUserExistError] = useState("");
+  const [password_error, setPasswordError] = useState("");
 
   const register = async (e) => {
     e.preventDefault();
@@ -72,7 +73,9 @@ function LoginAndRegister({ onLogin }) {
         setMessage({ type: "error", text: error });
       } else {
         onLogin(accessToken);
-        console.log(`accessToken de la funcion login ${accessToken}`);
+        if(accessToken == undefined){
+          setPasswordError("Usuario o contraseña incorrecta");
+        }
       }
     } catch (err) {
       setMessage({ type: "error", text: err.toString() });
@@ -148,6 +151,7 @@ function LoginAndRegister({ onLogin }) {
           <input type="submit" value={mode === LOGIN ? LOGIN : REGISTER} />
         </div>
       </form>
+      <p className="error-msg password">{password_error}</p>
       <div>
         <a href="#" onClick={() => setMode(mode === LOGIN ? REGISTER : LOGIN)}>
           {mode === LOGIN ? REGISTER : LOGIN}
