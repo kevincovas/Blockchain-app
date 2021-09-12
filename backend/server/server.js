@@ -21,7 +21,7 @@ app.use(morgan('dev'));
 app.use(express.static('../../frontend/dist')); 
 
 app.use("/clients", require('./clients'));
-app.use("/reservations", require('./reservations'));
+app.use("/reservations", require('./api/reservations'));
 app.use("/users", require('./users'));
 app.use("/sales", require('./sales'));
 
