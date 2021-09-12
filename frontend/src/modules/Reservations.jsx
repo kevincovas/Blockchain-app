@@ -182,12 +182,38 @@ function Reservations() {
     // console.log( getTotalTime() );
     // console.log("employee",employee);
 
-    // setTimeFrameList( ['1','2'] );
+    
+    // If Api Returned not available times
     if (result !== null && result !== undefined) {
-      // Get Time as Javascript Object
-      let test = new Date(result[0].date_ini.replace(" ", "T"));
-      console.log(test.getHours());
+
+// Tiempo
+let tiempo = getTotalTime();
+
+// Horarios
+let horarios = [ 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 ]
+
+// Set Time Table
+let dateIni = new Date(state.selectedDay);
+dateIni.setHours( horarios[0] , 0, 0);
+let dateEnd = new Date(dateIni.getTime() + tiempo * ( 60000 ) );
+
+console.log(dateIni);
+console.log(dateEnd);
+
+
+
+// console.log(horarios);
+// console.log(result);
+// console.log(tiempo);
+
+
+
+
+
+
+
     }
+  
   }
 
   // TODO Style ?
@@ -274,20 +300,10 @@ function Reservations() {
 
         <div>
           <DayPicker
-            onDayClick={handleDayClick}
-            locale="es"
-            months={constnt.MONTHS}
-            weekdaysLong={constnt.WEEKDAYS_LONG}
-            weekdaysShort={constnt.WEEKDAYS_SHORT}
-            firstDayOfWeek={1}
-            showOutsideDays
-            selectedDays={state.selectedDay}
-            todayButton="Éste mes"
-            disabledDays={disabledDays}
-            fromMonth={new Date()}
-            toMonth={
-              new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-            }
+            onDayClick={handleDayClick} locale="es" months={constnt.MONTHS} weekdaysLong={constnt.WEEKDAYS_LONG}
+            weekdaysShort={constnt.WEEKDAYS_SHORT} firstDayOfWeek={1} showOutsideDays selectedDays={state.selectedDay}
+            todayButton="Éste mes" disabledDays={disabledDays} fromMonth={new Date()}
+            toMonth={ new Date(new Date().getFullYear(), new Date().getMonth() + 2) }
           />
 
           {listAvailability}
