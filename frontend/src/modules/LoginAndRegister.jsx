@@ -23,17 +23,20 @@ function LoginAndRegister({ onLogin }) {
     var is_wrong =false;
     try {
       if(!name){
-        setNameError("This field can not be empty");
+        setNameError("The field name can not be empty");
         is_wrong = true;
       }
       if(!surname_1){
-        return res.status(400).json(errorResult("Missing '1st surname' field"));
+        setNameError("The field first surname can not be empty");
+        is_wrong = true;
       }
       if(!surname_2){
-        return res.status(400).json(errorResult("Missing '2nd surname' field"));
+        setNameError("The field second surname can not be empty");
+        is_wrong = true;
       }
       if(!gender){
-        return res.status(400).json(errorResult("Missing 'gender' field"));
+        setNameError("The field gender can not be empty");
+        is_wrong = true;
       }
       if (!is_wrong) {
         const result = await api.register({ email, password });
