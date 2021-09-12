@@ -25,6 +25,7 @@ function LoginAndRegister({ onLogin }) {
   const [userExist_error, setUserExistError] = useState("");
   const [password_error, setPasswordError] = useState("");
 
+
   const register = async (e) => {
     e.preventDefault();
     try {
@@ -32,36 +33,43 @@ function LoginAndRegister({ onLogin }) {
       const userCreated = await api.user_exist({email})
       if (!userCreated.data.exists){   
         if(!name){
-          setNameError("The field name can not be empty");
+          setNameError("El campo nombre no puede estar vacío");
           is_wrong = true;
         }
         if(!surname_1){
-          setSurname1Error("The field fisrt surname can not be empty");
+          setSurname1Error("El campo primero apellido no puede estar vacío");
           is_wrong = true;
         }
         if(!surname_2){
-          setSurname2Error("The field second surname can not be empty");
+          setSurname2Error("El campo segundo apellido no puede estar vacío");
           is_wrong = true;
         }
         if(!gender){
-          setGenderError("The field gender can not be empty");
+          setGenderError("Es obligatorio seleccionar un sexo");
           is_wrong = true;
         }
         console.log(`is_wrong: ${is_wrong}`)
         if (!is_wrong) {
           const result = await api.register({ email, password });
+          validatePassword(password);
           console.log(`Result user: ${JSON.stringify(result)}`);
           const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
           console.log(`Result client: ${JSON.stringify(result2)}`);
-          setMessage({ type: "success", text: "User and client created" });
+          setMessage({ type: "success", text: "Usuario y cliente creado" });
         }
       }else {
-        setUserExistError("This email is already registered");
+        setUserExistError("Este correo ya está registrado");
       }
       } catch (err) {
       setMessage({ type: "error", text: err.toString() });
     }
   };
+
+  function validatePassword(p) {
+    if ((p.length < 8 || (p.search(/[a-z]/i) < 0) || (p.search(/[0-9]/) < 0))) {
+        alert("La contraseña debe tener almenos 8 carácteres, una letra y un número.")
+    }
+  }
 
   const login = async (e) => {
     e.preventDefault();
