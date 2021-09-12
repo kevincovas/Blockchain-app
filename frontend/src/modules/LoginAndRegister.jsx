@@ -15,37 +15,48 @@ function LoginAndRegister({ onLogin }) {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  //Error control
   const [message, setMessage] = useState({ type: "none" });
   const [name_error, setNameError] = useState("");
+  const [surname_error, setSurnameError] = useState("");
+  const [gender_error, setGenderError] = useState("");
+  const [userExist_error, setUserExistError] = useState("");
 
   const register = async (e) => {
     e.preventDefault();
-    var is_wrong =false;
     try {
-      if(!name){
-        setNameError("The field name can not be empty");
-        is_wrong = true;
+      var is_wrong =false;
+      const userCreated = await api.user_exist({email})
+      if (!userCreated.data.exists){   
+        if(!name){
+          setNameError("The field name can not be empty");
+          is_wrong = true;
+        }
+        if(!surname_1){
+          setSurnameError("The field fisrt surname can not be empty");
+          is_wrong = true;
+        }
+        if(!surname_2){
+          setSurnameError("The field second surname can not be empty");
+          is_wrong = true;
+        }
+        if(!gender){
+          setGenderError("The field gender can not be empty");
+          is_wrong = true;
+        }
+        console.log(`is_wrong: ${is_wrong}`)
+        if (!is_wrong) {
+          const result = await api.register({ email, password });
+          console.log(`Result user: ${JSON.stringify(result)}`);
+          const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
+          console.log(`Result client: ${JSON.stringify(result2)}`);
+          setMessage({ type: "success", text: "User and client created" });
+        }
+      }else {
+        setUserExistError("This email is already registered");
       }
-      if(!surname_1){
-        setNameError("The field first surname can not be empty");
-        is_wrong = true;
-      }
-      if(!surname_2){
-        setNameError("The field second surname can not be empty");
-        is_wrong = true;
-      }
-      if(!gender){
-        setNameError("The field gender can not be empty");
-        is_wrong = true;
-      }
-      if (!is_wrong) {
-        const result = await api.register({ email, password });
-        console.log(`Result user: ${JSON.stringify(result)}`);
-        const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
-        console.log(`Result client: ${JSON.stringify(result2)}`);
-        setMessage({ type: "success", text: "User and client created" });
-      }
-    } catch (err) {
+      } catch (err) {
       setMessage({ type: "error", text: err.toString() });
     }
   };
@@ -90,10 +101,12 @@ function LoginAndRegister({ onLogin }) {
           <div>Primer Apellido</div>
           <input type="text" value={surname_1} onChange={(e) => setApellido1(e.target.value)} />
         </label>
+        <p className="error-msg surname1">{surname1_error}</p>
     <label>
         <div>Segundo Apellido</div>
         <input type="text" value={surname_2} onChange={(e) => setApellido2(e.target.value)} />
       </label>
+      <p className="error-msg surname2">{surname2_error}</p>
     <label>
       <div>Sexo</div>
       <select
@@ -106,6 +119,7 @@ function LoginAndRegister({ onLogin }) {
           <option type="text" value="X">Sin especificar</option>
       </select> 
       </label>
+      <p className="error-msg gender">{gender_error}</p>
     <label>
         <div>Teléfono</div>
         <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
@@ -138,6 +152,7 @@ function LoginAndRegister({ onLogin }) {
           {mode === LOGIN ? REGISTER : LOGIN}
         </a>
       </div>
+      <p className="error-msg userExist">{userExist_error}</p>
       <div className={`message ${message.type}`}>{message.text}</div>
     </div>
   );

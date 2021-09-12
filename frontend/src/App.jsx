@@ -42,6 +42,11 @@ function App() {
         />
         <Route
           strict
+          path="/registration"
+          render={() => (<Registration />)}
+        />
+        <Route
+          strict
           path="/login"
           render={() => <LoginAndRegister onLogin={login} />}
         />

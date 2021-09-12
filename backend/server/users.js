@@ -71,6 +71,17 @@ router.get('/:id', async (req,res) => {
     } 
 });
 
+//
+router.post("/exist", async (req,res) => {
+    const {email} = req.body;
+    try{
+        const userExist = await db.checkIfUserExists(email);
+        res.json(okResult(userExist));
+    }catch (e){
+        res.status(500).json(errorResult(e.toString()));
+    } 
+});
+
 //Creamos un nuevo usuario
 router.post("/register", async (req,res) => {
     const {email, password} = req.body;

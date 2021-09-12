@@ -25,7 +25,7 @@ export const register_client = async ({name, surname_1, surname_2, gender, birth
 }
 
 export const login = async ({ email, password }) => {
-  const response = await fetch(`${HOST}/login`, {
+  const response = await fetch(`${HOST}/users/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +33,20 @@ export const login = async ({ email, password }) => {
     body: JSON.stringify({ email, password }),
   });
   const json = await response.json();
-  console.log(`json de la funcion login de api ${JSON.stringify(json)}`);
+  
   return json;
+}
+
+export const user_exist = async ({ email}) => {
+  const response = await fetch(`${HOST}/users/exist`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+  const json = await response.json();  
+  console.log(`En la API: ${JSON.stringify(json)}`)
+  return json.results;
 }
 
