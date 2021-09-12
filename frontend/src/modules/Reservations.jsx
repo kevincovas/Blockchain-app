@@ -177,7 +177,7 @@ function Reservations() {
   }
 
   function createTimeTable(result) {
-    // console.log( "result",result );
+    console.log( "result",result );
     // console.log( "servicescontracted",servicesContracted );
     // console.log( getTotalTime() );
     // console.log("employee",employee);
@@ -191,30 +191,27 @@ let tiempo = getTotalTime();
 
 // Horarios
 let horarios = [ 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 ]
-
-// Set Time Table
-let dateIni = new Date(state.selectedDay);
-dateIni.setHours( horarios[0] , 0, 0);
-let dateEnd = new Date(dateIni.getTime() + tiempo * ( 60000 ) );
-
-console.log(dateIni);
-console.log(dateEnd);
-
-
-
-// console.log(horarios);
-// console.log(result);
-// console.log(tiempo);
-
-
-
-
-
-
+horarios.map( horario => addHorario(horario , tiempo , result) );
 
     }
   
   }
+
+function addHorario(horario , tiempo , result)
+{
+ 
+let date_ini = new Date(state.selectedDay);
+date_ini.setHours( horario , 0, 0);
+let date_end = new Date(date_ini.getTime() + tiempo * ( 60000 ) ); 
+
+// TODO Apply logic
+console.log(    result.filter( horarioCogido => 
+new Date(horarioCogido.date_ini) >= date_ini && new Date( horarioCogido.date_end ) < date_end ).length );
+
+console.log(date_ini);
+console.log(date_end); 
+
+}
 
   // TODO Style ?
   // On click a day, change state
