@@ -25,6 +25,7 @@ function LoginAndRegister({ onLogin }) {
   const [userExist_error, setUserExistError] = useState("");
   const [password_error, setPasswordError] = useState("");
 
+
   const register = async (e) => {
     e.preventDefault();
     try {
@@ -50,6 +51,7 @@ function LoginAndRegister({ onLogin }) {
         console.log(`is_wrong: ${is_wrong}`)
         if (!is_wrong) {
           const result = await api.register({ email, password });
+          validatePassword(password);
           console.log(`Result user: ${JSON.stringify(result)}`);
           const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
           console.log(`Result client: ${JSON.stringify(result2)}`);
@@ -62,6 +64,12 @@ function LoginAndRegister({ onLogin }) {
       setMessage({ type: "error", text: err.toString() });
     }
   };
+
+  function validatePassword(p) {
+    if ((p.length < 8 || (p.search(/[a-z]/i) < 0) || (p.search(/[0-9]/) < 0))) {
+        alert("La contraseña debe tener almenos 8 carácteres, una letra y un número.")
+    }
+  }
 
   const login = async (e) => {
     e.preventDefault();
