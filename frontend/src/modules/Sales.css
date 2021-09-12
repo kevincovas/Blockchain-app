@@ -1,9 +1,12 @@
-select {
+select, textarea, input {
     display: block;
     margin: 20px 0;
     min-width: 300px;
 }
 
+table{
+    margin-bottom: 20px;
+}
 .view.sales{
     margin: min(10vw, 20px);
 }
