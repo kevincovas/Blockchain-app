@@ -4,9 +4,9 @@ import { HOST } from "../../../config/const";
 function Home() {
     return (
       <div className="home">
-        <div class="container">
+        <div className="container">
             </div>
-              <h1 class="font-weight-light">PELUQUERÍA ARKUS</h1>
+              <h1 className="font-weight-light">PELUQUERÍA ARKUS</h1>
               <p>
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy text
@@ -14,7 +14,7 @@ function Home() {
                 type and scrambled it to make a type specimen book.
               </p>
           <img
-                class="img-fluid rounded mb-4 mb-lg-0"
+                className="img-fluid rounded mb-4 mb-lg-0"
                 src="http://placehold.it/900x400"
                 alt=""
           />

@@ -68,10 +68,14 @@ function App() {
       <Router>
         <Navigation />
           <Route path="/" exact component={() => <Home />} />
-          <Route path="/login" exact component={() => <LoginAndRegister />} />
+          <Route path="/login" exact component={() => <LoginAndRegister onLogin={login} />} />
           <Route path="/register" exact component={() => <LoginAndRegister />} />
-          <Route path="/reservations" exact component={() => <Reservations />} />
-          <Route path="/sales" exact component={() => <Sales />} />
+          <Route path="/reservations" render={() =>
+            isLoggedIn ? <Reservations /> : <Redirect to="/login" />}
+          />
+          <Route path="/sales" render={() => 
+          (isLoggedIn ? <Sales /> : <Redirect to="/login" />)}
+        />
       </Router>
     </div>
   );
