@@ -23,7 +23,7 @@ app.use(express.static('../../frontend/dist'));
 app.use("/clients", require('./api/clients'));
 app.use("/reservations", require('./api/reservations'));
 app.use("/users", require('./api/users'));
-app.use("/sales", require('./sales'));
+app.use("/sales", require('./api/sales'));
 
 //Provocamos un error para cazarlo
 app.get('/error', async (req,res,next) => {

@@ -1,9 +1,5 @@
-const { METHODS_OF_PAYMENT } = require("./common/config");
-
-const db = require("./db/db_sales");
+const db = require("../db/db_sales");
 const { Router } = require("express");
-const { readdirSync } = require("fs");
-const { pool } = require("./db/db");
 
 const router = new Router();
 
