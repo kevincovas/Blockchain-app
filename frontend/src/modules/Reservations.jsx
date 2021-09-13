@@ -196,7 +196,10 @@ function Reservations() {
 
   function createTimeTable(result) {
     // Horarios
-    let horarios = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+    let horarios = [
+      9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16,
+      16.5, 17, 17.5, 18, 18.5,
+    ];
     let horariosDisponibles = [];
     horarios.map(
       (horario) =>
@@ -214,50 +217,52 @@ function Reservations() {
 
   // Function to add available time on array
   function filterAvailability(horario, tiempo, result, horariosDisponibles) {
+    // Get Dates in Javascript Format
     let date_ini = new Date(state.selectedDay);
-    date_ini.setHours(horario, 0, 0);
+    date_ini.setHours(horario, Number.isInteger(horario) ? 0 : 30, 0);
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
-    // TODO por peluquero o por todos
+    // If Dates Exceeds Store limits (break + closing time), not available to book
+    if( (date_end.getHours() >= 19 && date_end.getMinutes() > 0 ) )
+    return horariosDisponibles;
+
+
     // Check if Horario available or blocked by another appointment
     let disponible = [];
 
-    // If Employee Selected
+    // Filter by Date
     if (result !== null && result !== undefined)
       disponible = result.filter(
-        (horarioBlocked) => 
+        (horarioBlocked) =>
           /* Caso 1: Inicia cuando el peluquero está ocupado */
-       (   (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
+          (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
             date_ini < new Date(horarioBlocked.date_end).getTime()) ||
           /* Caso 2: Inicia antes que el peluquero esté ocupado */
           (date_ini < new Date(horarioBlocked.date_ini).getTime() &&
-            date_end > new Date(horarioBlocked.date_ini).getTime())    )
+            date_end > new Date(horarioBlocked.date_ini).getTime())
       );
 
-
-    // If Employee Selected
-    if( employee !== "" )
-    {
-
+    // Filter by Employee
+    if (employee !== "") {
       // Employee Available
-      if( disponible.filter( horarioBlocked => horarioBlocked.booked_employee_id == employee  ).length == 0  )
-      {
+      if (
+        disponible.filter(
+          (horarioBlocked) => horarioBlocked.booked_employee_id == employee
+        ).length == 0
+      ) {
         horariosDisponibles = [
           ...horariosDisponibles,
           { id: horario, date_ini, date_end },
         ];
       }
-
     }
     // Not Employee Selected
     // TODO (If anybody is available then not possible to book)
-    else
-    {
+    else {
       horariosDisponibles = [
         ...horariosDisponibles,
         { id: horario, date_ini, date_end },
       ];
-     
     }
 
     // Return values
