@@ -1,14 +1,29 @@
+// Skeleton API
 const { pool } = require("./db");
 
+// Get Hairdressers by Role
 const getHairdressersSQL = `select people.id , people.name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
 inner join people on people.id = users.id 
 inner join user_roles on user_roles.user_id = users.id
 inner join roles on roles.id = user_roles.role_id
 where roles.name = 'hairdresser'; `;
 
+// Get Products of type Service
 const getServicesSQL = ` select id , name , description , duration from products where is_service = true `;
 
+// Get Booked Services for one specific day
 const getReservationsByDaySQL = ` select * from reservations where to_char(date_ini , 'YYYY-MM-DD') = $1 `;
+
+// Add Reservation into Database
+const addReservationSQL = ` insert into reservations ( person_id , booked_employee_id , created_by_id , date_ini , date_end )
+values ( $1 , $2 , $3 , $4 , $5 ) returning id `;
+
+// Add Booked Services into Database
+const addBookedServicesSQL = ` insert into tab1(col1,col2)
+select
+   1, u.val
+from
+   unnest(array[4,5]) as u(val); `
 
 const getServices = async () => {
   try {
@@ -49,8 +64,37 @@ const getReservationsByDay = async (DATE) => {
   }
 };
 
+// Add Reservation and obtain ID
+const addReservation = async (
+  person_id,
+  booked_employee_id,
+  created_by_id,
+  date_ini,
+  date_end
+) => {
+  try {
+    const result = await pool.query(addReservationSQL, [
+      person_id,
+      booked_employee_id,
+      created_by_id,
+      date_ini,
+      date_end,
+    ]);
+    return { ok: true, data: result.rows[0].id };
+  } catch (e) {
+    return { ok: false, data: e.toString() };
+  }
+};
+
+// Add Services to Booked Reservation
+const addBookedServices = async(booked_services) => {
+
+}
+
 module.exports = {
   getHairdressers,
   getServices,
   getReservationsByDay,
+  addReservation,
+  addBookedServices
 };

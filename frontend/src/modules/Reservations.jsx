@@ -287,14 +287,32 @@ function Reservations() {
   }
 
   // TODO Insert by API backend
-  function handleSubmit() {
+  const handleSubmit = async () => {
     // TODO Crear Cita por WS + check todos los campos correctos
     event.preventDefault();
 
     // TODO Call API
     if (timeframe != null) {
+      let person_id = 1;
+      let booked_employee_id = null;
+      let created_by_id = 1;
+      let date_ini = timeframe.date_ini;
+      let date_end = timeframe.date_end;
+      let booked_services = servicesContracted;
+
+      await api
+        .addReservation(
+          constnt.HOST,
+          person_id,
+          booked_employee_id,
+          created_by_id,
+          date_ini,
+          date_end,
+          booked_services
+        )
+        .then((result) => console.log(result));
     }
-  }
+  };
 
   function addService() {
     // Not submit all form
