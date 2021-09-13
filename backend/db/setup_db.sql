@@ -146,9 +146,9 @@ CREATE TABLE reservations (
 );
 
 CREATE TABLE booked_services (
-  id BIGSERIAL PRIMARY KEY,  
+  id BIGSERIAL PRIMARY KEY,
+  reservation_id INTEGER NOT NULL,  
   product_id INTEGER NOT NULL,
-  reservation_id INTEGER NOT NULL, 
 
   CONSTRAINT fk_booked_services_product
     FOREIGN KEY (product_id)
