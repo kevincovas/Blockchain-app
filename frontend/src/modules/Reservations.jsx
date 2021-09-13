@@ -122,7 +122,15 @@ function Reservations() {
       <ul>
         {" "}
         {timeframeList.map((timeFrame) => (
-          <li key={timeFrame.id}>{timeFrame.id}</li>
+          <li key={timeFrame.id}>
+            {timeFrame.date_ini.getHours() +
+              ":" +
+              timeFrame.date_ini.getMinutes() +
+              " - " +
+              timeFrame.date_end.getHours() +
+              ":" +
+              timeFrame.date_end.getMinutes()}
+          </li>
         ))}{" "}
       </ul>
     );
@@ -162,9 +170,7 @@ function Reservations() {
           state.selectedDay.toISOString().slice(0, 10)
         )
         .then((result) => createTimeTable(result));
-    }
-    else
-    {
+    } else {
       setTimeFrameList([]);
     }
   };
@@ -216,16 +222,16 @@ function Reservations() {
     // Check if Horario available or blocked by another appointment
     let disponible = 0;
 
-    // If Results from API
+    // If Employee Selected
     if (result !== null && result !== undefined)
       disponible = result.filter(
-        (horarioBlocked) =>
+        (horarioBlocked) => 
           /* Caso 1: Inicia cuando el peluquero está ocupado */
-          (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
+       (   (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
             date_ini < new Date(horarioBlocked.date_end).getTime()) ||
           /* Caso 2: Inicia antes que el peluquero esté ocupado */
           (date_ini < new Date(horarioBlocked.date_ini).getTime() &&
-            date_end > new Date(horarioBlocked.date_ini).getTime())
+            date_end > new Date(horarioBlocked.date_ini).getTime())    )
       ).length;
 
     // Add Horario if disponible
@@ -236,6 +242,7 @@ function Reservations() {
       ];
     }
 
+    // Return values
     return horariosDisponibles;
   }
 
