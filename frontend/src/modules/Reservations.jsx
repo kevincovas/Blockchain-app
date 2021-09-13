@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from "react";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
-import React, { useEffect, useState } from "react";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
 
@@ -220,7 +220,7 @@ function Reservations() {
 
     // TODO por peluquero o por todos
     // Check if Horario available or blocked by another appointment
-    let disponible = 0;
+    let disponible = [];
 
     // If Employee Selected
     if (result !== null && result !== undefined)
@@ -232,14 +232,32 @@ function Reservations() {
           /* Caso 2: Inicia antes que el peluquero esté ocupado */
           (date_ini < new Date(horarioBlocked.date_ini).getTime() &&
             date_end > new Date(horarioBlocked.date_ini).getTime())    )
-      ).length;
+      );
 
-    // Add Horario if disponible
-    if (disponible == 0) {
+
+    // If Employee Selected
+    if( employee !== "" )
+    {
+
+      // Employee Available
+      if( disponible.filter( horarioBlocked => horarioBlocked.booked_employee_id == employee  ).length == 0  )
+      {
+        horariosDisponibles = [
+          ...horariosDisponibles,
+          { id: horario, date_ini, date_end },
+        ];
+      }
+
+    }
+    // Not Employee Selected
+    // TODO (If anybody is available then not possible to book)
+    else
+    {
       horariosDisponibles = [
         ...horariosDisponibles,
         { id: horario, date_ini, date_end },
       ];
+     
     }
 
     // Return values
