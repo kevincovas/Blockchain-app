@@ -7,9 +7,10 @@ import * as constnt from "../config/const";
 function Reservations() {
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
+  // TODO See Calendar with full days
   const [disabledDays, setDisabledDays] = useState();
 
-  // Hairdresser
+  // Employee
   const [employee, setEmployee] = useState("");
   const [employeeList, setEmployeeList] = useState([]);
 
@@ -33,10 +34,9 @@ function Reservations() {
     // Servicios
     loadServicesList();
 
-    // Disabled Days (Weekend + Full days)
+    // TODO Disabled Days (Weekend + Full days)
     setDisabledDays([
       { daysOfWeek: [0] },
-
       {
         before: new Date(),
       },
@@ -158,11 +158,9 @@ function Reservations() {
   const loadAvailability = async () => {
     // If Services Selected
     if (
-      servicesContracted !== null &&
-      servicesContracted !== undefined &&
+      servicesContracted != null &&
       servicesContracted.length != 0 &&
-      state.selectedDay !== null &&
-      state.selectedDay !== undefined
+      state.selectedDay != null
     ) {
       // If day selected
       // Get Available timetables
@@ -197,7 +195,7 @@ function Reservations() {
   }
 
   function createTimeTable(result) {
-    // Horarios
+    // TODO Horarios según configuración
     let horarios = [
       9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16,
       16.5, 17, 17.5, 18, 18.5,
@@ -224,7 +222,7 @@ function Reservations() {
     date_ini.setHours(horario, Number.isInteger(horario) ? 0 : 30, 0);
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
-    // If Dates Exceeds Store limits (break + closing time), not available to book
+    // TODO If Dates Exceeds Store limits (break + closing time), not available to book
     if (date_end.getHours() >= 19 && date_end.getMinutes() > 0)
       return horariosDisponibles;
 
@@ -232,7 +230,7 @@ function Reservations() {
     let disponible = [];
 
     // Filter by Date
-    if (result !== null && result !== undefined)
+    if (result != null)
       disponible = result.filter(
         (horarioBlocked) =>
           /* Caso 1: Inicia cuando el peluquero está ocupado */
@@ -295,8 +293,6 @@ function Reservations() {
 
     // TODO Call API
     if (timeframe != null) {
-
-      
     }
   }
 
