@@ -21,7 +21,7 @@ function Reservations() {
   const [servicesContracted, setServicesContracted] = useState([]);
 
   // Timeframes
-  const [timeframe, setTimeFrame] = useState("");
+  const [timeframe, setTimeFrame] = useState(null);
   const [timeframeList, setTimeFrameList] = useState([]);
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
@@ -123,13 +123,15 @@ function Reservations() {
         {" "}
         {timeframeList.map((timeFrame) => (
           <li key={timeFrame.id}>
-            {timeFrame.date_ini.getHours() +
-              ":" +
-              timeFrame.date_ini.getMinutes() +
-              " - " +
-              timeFrame.date_end.getHours() +
-              ":" +
-              timeFrame.date_end.getMinutes()}
+            <button value={timeFrame.id} onClick={setTimeTableButton}>
+              {timeFrame.date_ini.getHours() +
+                ":" +
+                timeFrame.date_ini.getMinutes() +
+                " - " +
+                timeFrame.date_end.getHours() +
+                ":" +
+                timeFrame.date_end.getMinutes()}
+            </button>
           </li>
         ))}{" "}
       </ul>
@@ -223,9 +225,8 @@ function Reservations() {
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // If Dates Exceeds Store limits (break + closing time), not available to book
-    if( (date_end.getHours() >= 19 && date_end.getMinutes() > 0 ) )
-    return horariosDisponibles;
-
+    if (date_end.getHours() >= 19 && date_end.getMinutes() > 0)
+      return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
     let disponible = [];
@@ -276,14 +277,28 @@ function Reservations() {
     });
   }
 
+  // Set State of Selected TimeTable
+  function setTimeTableButton() {
+    // Not submit form
+    event.preventDefault();
+
+    // Set TimeFrame
+    setTimeFrame(
+      timeframeList.filter((prevState) => prevState.id == event.target.value)[0]
+    );
+  }
+
+  // TODO Insert by API backend
   function handleSubmit() {
     // TODO Crear Cita por WS + check todos los campos correctos
     event.preventDefault();
-    console.log("Submit");
-  }
 
-  // TODO Acciones al cambiar inputs
-  function handleChange() {}
+    // TODO Call API
+    if (timeframe != null) {
+
+      
+    }
+  }
 
   function addService() {
     // Not submit all form
