@@ -39,9 +39,7 @@ export const getAvailability = async (HOST, calendarDate) => {
 
 // Add Reservation
 export const addReservation = async ( HOST , person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services ) => {
-   
-console.log( JSON.stringify({ person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services }) );
-
+  // Add Reservation to database
   const response = await fetch(`${HOST}/reservations/add`, {
     method: "POST",
     headers: {

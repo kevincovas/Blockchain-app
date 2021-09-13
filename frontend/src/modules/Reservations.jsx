@@ -300,7 +300,12 @@ function Reservations() {
       let date_end = timeframe.date_end;
       let booked_services = servicesContracted;
 
-      await api
+      // To Save in Database
+      date_ini.setTime( date_ini.getTime() - date_ini.getTimezoneOffset()*60*1000 );
+      date_end.setTime( date_end.getTime() - date_end.getTimezoneOffset()*60*1000 );
+
+      // Book Registration
+      const inserted = await api
         .addReservation(
           constnt.HOST,
           person_id,
@@ -309,8 +314,9 @@ function Reservations() {
           date_ini,
           date_end,
           booked_services
-        )
-        .then((result) => console.log(result));
+        );
+
+        loadAvailability();    
 
 // TDOO Change Time Again
 
