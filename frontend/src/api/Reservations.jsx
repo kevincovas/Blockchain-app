@@ -42,9 +42,7 @@ export const addReservation = async ( HOST , person_id , booked_employee_id , cr
    
 console.log( JSON.stringify({ person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services }) );
 
-/*
-
-  const response = await fetch(`${HOST}/reservations/addReservation`, {
+  const response = await fetch(`${HOST}/reservations/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +51,5 @@ console.log( JSON.stringify({ person_id , booked_employee_id , created_by_id , d
   });
   const json = await response.json();
   return json;
-
-*/
 
 }
