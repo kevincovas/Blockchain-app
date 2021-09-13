@@ -78,6 +78,8 @@ const addReservation = async (
   booked_services
 ) => {
   try {
+    
+    // Add Reservation
     const result = await pool.query(addReservationSQL, [
       person_id,
       booked_employee_id,
@@ -85,11 +87,15 @@ const addReservation = async (
       date_ini,
       date_end,
     ]);
-console.log(booked_services);
+
+    // Add Booked Services
     const result2 = await pool.query(addBookedServicesSQL, [
       result.rows[0].id  ,
       booked_services
     ]);
+
+    // Send Email
+
 
     return { ok: true, data: result.rows[0].id };
   } catch (e) {

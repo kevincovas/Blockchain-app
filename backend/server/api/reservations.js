@@ -52,6 +52,7 @@ router.get("/check/:date", async (req, res) => {
 router.post("/add", async (req, res) => {
   const { person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services } = req.body;
 
+  // TODO Double Check if Reservation available at the moment
   // Add Reservation
 const {ok , data} = await db.addReservation( person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services);
 if (!ok)
@@ -62,41 +63,6 @@ else
 {
   return res.json(okResult(data));
 }
-
-
-/*
-
-
-  if(!email){
-    return res.status(400).json(errorResult("Missing 'email' field"));
-}
-if(!password){
-    return res.status(400).json(errorResult("Missing 'password' field"));
-}
-const {ok, found, data} = await db.getUserByEmail(email);
-//return res.json(okResult(data));
-if(!ok){ //Si ha habido un error en el servidor
-    return res.status(500).json(errorResult(data));
-} else if(!found){ //Si no se encuentran usuarios
-    return res
-        .status(400)
-        .json(errorResult(`User doesn't exist`));
-} else{ //Si hay usuarios
-    const password_db = data.password;
-    console.log(`password_db ${password_db}`);
-    console.log(`password ${password}`);
-    const passwordMatches = await auth.comparePasswords(password, password_db);
-    console.log(`passwordMatches ${passwordMatches}`);
-
-    if (!passwordMatches) {
-        return res.status(400).json(errorResult(`Wrong email/password combination`));
-    }
-
-    const token = auth.createToken(email);
-    res.status(201).send(token);
-
-
-    */
 
 });
 

@@ -7,8 +7,6 @@ import * as constnt from "../config/const";
 function Reservations() {
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
-  // TODO See Calendar with full days
-  const [disabledDays, setDisabledDays] = useState();
 
   // Employee
   const [employee, setEmployee] = useState("");
@@ -33,14 +31,6 @@ function Reservations() {
 
     // Servicios
     loadServicesList();
-
-    // TODO Disabled Days (Weekend + Full days)
-    setDisabledDays([
-      { daysOfWeek: [0] },
-      {
-        before: new Date(),
-      },
-    ]);
   }, []);
 
   // Effects to Restart Calendar and Read Availability
@@ -195,13 +185,9 @@ function Reservations() {
   }
 
   function createTimeTable(result) {
-    // TODO Horarios según configuración
-    let horarios = [
-      9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16,
-      16.5, 17, 17.5, 18, 18.5,
-    ];
+    // Horarios según configuración
     let horariosDisponibles = [];
-    horarios.map(
+    constnt.TIMETABLE.map(
       (horario) =>
         (horariosDisponibles = filterAvailability(
           horario,
@@ -219,7 +205,7 @@ function Reservations() {
   function filterAvailability(horario, tiempo, result, horariosDisponibles) {
     // Get Dates in Javascript Format
     let date_ini = new Date(state.selectedDay);
-    date_ini.setHours(horario, Number.isInteger(horario) ? 0 : 30, 0);
+    date_ini.setHours(horario, Number.isInteger(horario) ? 0 :  ( horario %1 ) * 60, 0);
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // TODO If Dates Exceeds Store limits (break + closing time), not available to book
@@ -286,12 +272,12 @@ function Reservations() {
     );
   }
 
-  // TODO Insert by API backend
+  // Submit Information to backed API
   const handleSubmit = async () => {
     // TODO Crear Cita por WS + check todos los campos correctos
     event.preventDefault();
 
-    // TODO Call API
+    // Call Booking API
     if (timeframe != null) {
       let person_id = 1;
       let booked_employee_id = 5;
@@ -301,26 +287,27 @@ function Reservations() {
       let booked_services = servicesContracted;
 
       // To Save in Database
-      date_ini.setTime( date_ini.getTime() - date_ini.getTimezoneOffset()*60*1000 );
-      date_end.setTime( date_end.getTime() - date_end.getTimezoneOffset()*60*1000 );
+      date_ini.setTime(
+        date_ini.getTime() - date_ini.getTimezoneOffset() * 60 * 1000
+      );
+      date_end.setTime(
+        date_end.getTime() - date_end.getTimezoneOffset() * 60 * 1000
+      );
 
+      // TODO Acabar llamada con person_id , booked_employee y created_by_id
       // Book Registration
-      const inserted = await api
-        .addReservation(
-          constnt.HOST,
-          person_id,
-          booked_employee_id,
-          created_by_id,
-          date_ini,
-          date_end,
-          booked_services
-        );
+      const inserted = await api.addReservation(
+        constnt.HOST,
+        person_id,
+        booked_employee_id,
+        created_by_id,
+        date_ini,
+        date_end,
+        booked_services
+      );
 
-        loadAvailability();    
-
-// TDOO Change Time Again
-
-
+      // Load Time Zones again
+      loadAvailability();
     }
   };
 
@@ -400,7 +387,7 @@ function Reservations() {
             showOutsideDays
             selectedDays={state.selectedDay}
             todayButton="Éste mes"
-            disabledDays={disabledDays}
+            disabledDays={[{ daysOfWeek: [0] },{before: new Date(),}]}
             fromMonth={new Date()}
             toMonth={
               new Date(new Date().getFullYear(), new Date().getMonth() + 2)
