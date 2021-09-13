@@ -1,5 +1,7 @@
 // Skeleton API
 const { pool } = require("./db");
+// Mail API
+const mailjet = require("../utils/mail");
 
 // Get Hairdressers by Role
 const getHairdressersSQL = `select people.id , people.name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
@@ -68,6 +70,42 @@ const getReservationsByDay = async (DATE) => {
   }
 };
 
+function sendMail()
+{
+  const mailjet = require("node-mailjet").connect(
+    "d1280878f3cb52d5c406cc6c4009d1d3",
+    "4e000ea74e8233bfbe68ee08770edbf4"
+  );
+  const request = mailjet.post("send", { version: "v3.1" }).request({
+    Messages: [
+      {
+        From: {
+          Email: "aitor.java@gmail.com",
+          Name: "Aitor",
+        },
+        To: [
+          {
+            Email: "aitor.java@gmail.com",
+            Name: "Aitor",
+          },
+        ],
+        Subject: "Greetings from Mailjet.",
+        TextPart: "My first Mailjet email",
+        HTMLPart:
+          "<h3>Dear passenger 1, welcome to <a href='Mailjet - Email Delivery Service for Marketing & Developer Teams'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+        CustomID: "AppGettingStartedTest",
+      },
+    ],
+  });
+  request
+    .then((result) => {
+      console.log(result.body);
+    })
+    .catch((err) => {
+      console.log(err.statusCode);
+    });
+}
+
 // Add Reservation and obtain ID
 const addReservation = async (
   person_id,
@@ -78,7 +116,7 @@ const addReservation = async (
   booked_services
 ) => {
   try {
-    
+
     // Add Reservation
     const result = await pool.query(addReservationSQL, [
       person_id,
@@ -94,7 +132,15 @@ const addReservation = async (
       booked_services
     ]);
 
-    // Send Email
+  /*  console.log(mailjet);*/
+  await mailjet.sendEmail()
+  //  const test = await mailjet();
+
+ //   sendMail();
+
+
+
+
 
 
     return { ok: true, data: result.rows[0].id };
