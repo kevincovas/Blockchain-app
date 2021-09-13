@@ -19,11 +19,15 @@ const addReservationSQL = ` insert into reservations ( person_id , booked_employ
 values ( $1 , $2 , $3 , $4 , $5 ) returning id `;
 
 // Add Booked Services into Database
-const addBookedServicesSQL = ` insert into tab1(col1,col2)
+const addBookedServicesSQL = `
+
+insert into booked_services(reservation_id , product_id)
 select
-   1, u.val
+   $1, u.val
 from
-   unnest(array[4,5]) as u(val); `
+unnest($2::integer[]) as u(val);
+
+`;
 
 const getServices = async () => {
   try {
@@ -70,7 +74,8 @@ const addReservation = async (
   booked_employee_id,
   created_by_id,
   date_ini,
-  date_end
+  date_end,
+  booked_services
 ) => {
   try {
     const result = await pool.query(addReservationSQL, [
@@ -80,6 +85,12 @@ const addReservation = async (
       date_ini,
       date_end,
     ]);
+console.log(booked_services);
+    const result2 = await pool.query(addBookedServicesSQL, [
+      result.rows[0].id  ,
+      booked_services
+    ]);
+
     return { ok: true, data: result.rows[0].id };
   } catch (e) {
     return { ok: false, data: e.toString() };
@@ -87,14 +98,19 @@ const addReservation = async (
 };
 
 // Add Services to Booked Reservation
-const addBookedServices = async(booked_services) => {
-
-}
+const addBookedServices = async (reservation_id, booked_services) => {
+  try {
+    const result = await pool.query(addBookedServicesSQL, [booked_services]);
+    return { ok: true, data: result };
+  } catch (e) {
+    return { ok: false, data: e.toString() };
+  }
+};
 
 module.exports = {
   getHairdressers,
   getServices,
   getReservationsByDay,
   addReservation,
-  addBookedServices
+  addBookedServices,
 };

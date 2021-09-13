@@ -145,10 +145,10 @@ CREATE TABLE reservations (
     ON DELETE RESTRICT
 );
 
-CREATE TABLE booked_services ( 
+CREATE TABLE booked_services (
+  id BIGSERIAL PRIMARY KEY,
+  reservation_id INTEGER NOT NULL,  
   product_id INTEGER NOT NULL,
-  reservation_id INTEGER NOT NULL, 
-  PRIMARY KEY (product_id, reservation_id),
 
   CONSTRAINT fk_booked_services_product
     FOREIGN KEY (product_id)
