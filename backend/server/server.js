@@ -20,13 +20,9 @@ app.use(morgan('dev'));
 //Servimos el fichero index.html en la raiz
 app.use(express.static('../../frontend/dist')); 
 
-app.use("/clients", require('./clients'));
-app.use("/reservations", require('./reservations'));
-app.use("/users", require('./users'));
-app.use("/", require('./users'));
-app.use("/register", require('./users'));
-app.use("/registerClient", require('./clients'));
-app.use("/login", require('./users'));
+app.use("/clients", require('./api/clients'));
+app.use("/reservations", require('./api/reservations'));
+app.use("/users", require('./api/users'));
 app.use("/sales", require('./sales'));
 
 //Provocamos un error para cazarlo

@@ -1,6 +1,6 @@
-const db = require ('./db/db_users');
+const db = require ('../db/db_users');
 const { Router } = require('express');
-const auth = require("./auth/auth.service");
+const auth = require("../auth/auth.service");
 
 const router = new Router();
 
@@ -68,6 +68,17 @@ router.get('/:id', async (req,res) => {
             .json(errorResult(`User doesn't exist`));
     } else{ //Si existe el usuario
         return res.json(okResult(data));
+    } 
+});
+
+//
+router.post("/exist", async (req,res) => {
+    const {email} = req.body;
+    try{
+        const userExist = await db.checkIfUserExists(email);
+        res.json(okResult(userExist));
+    }catch (e){
+        res.status(500).json(errorResult(e.toString()));
     } 
 });
 

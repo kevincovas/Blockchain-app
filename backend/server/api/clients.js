@@ -1,4 +1,4 @@
-const db = require ('./db/db_clients');
+const db = require ('../db/db_clients');
 const { Router } = require('express');
 
 const router = new Router();

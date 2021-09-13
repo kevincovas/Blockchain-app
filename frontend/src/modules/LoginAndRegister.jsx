@@ -10,42 +10,66 @@ function LoginAndRegister({ onLogin }) {
   const [name, setName] = useState("");
   const [surname_1, setApellido1] = useState("");
   const [surname_2, setApellido2] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("M");
   const [birth_date, setBirth_date] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  //Error control
   const [message, setMessage] = useState({ type: "none" });
   const [name_error, setNameError] = useState("");
+  const [surname1_error, setSurname1Error] = useState("");
+  const [surname2_error, setSurname2Error] = useState("");
+  const [gender_error, setGenderError] = useState("");
+  const [userExist_error, setUserExistError] = useState("");
+  const [password_error, setPasswordError] = useState("");
+
 
   const register = async (e) => {
     e.preventDefault();
-    var is_wrong =false;
     try {
-      if(!name){
-        setNameError("This field can not be empty");
-        is_wrong = true;
+      var is_wrong =false;
+      const userCreated = await api.user_exist({email})
+      if (!userCreated.data.exists){   
+        if(!name){
+          setNameError("El campo nombre no puede estar vacío");
+          is_wrong = true;
+        }
+        if(!surname_1){
+          setSurname1Error("El campo primero apellido no puede estar vacío");
+          is_wrong = true;
+        }
+        if(!surname_2){
+          setSurname2Error("El campo segundo apellido no puede estar vacío");
+          is_wrong = true;
+        }
+        if(!gender){
+          setGenderError("Es obligatorio seleccionar un sexo");
+          is_wrong = true;
+        }
+        console.log(`is_wrong: ${is_wrong}`)
+        if (!is_wrong) {
+          const result = await api.register({ email, password });
+          validatePassword(password);
+          console.log(`Result user: ${JSON.stringify(result)}`);
+          const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
+          console.log(`Result client: ${JSON.stringify(result2)}`);
+          setMessage({ type: "success", text: "Usuario y cliente creado" });
+        }
+      }else {
+        setUserExistError("Este correo ya está registrado");
       }
-      if(!surname_1){
-        return res.status(400).json(errorResult("Missing '1st surname' field"));
-      }
-      if(!surname_2){
-        return res.status(400).json(errorResult("Missing '2nd surname' field"));
-      }
-      if(!gender){
-        return res.status(400).json(errorResult("Missing 'gender' field"));
-      }
-      if (!is_wrong) {
-        const result = await api.register({ email, password });
-        console.log(`Result user: ${JSON.stringify(result)}`);
-        const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
-        console.log(`Result client: ${JSON.stringify(result2)}`);
-        setMessage({ type: "success", text: "User and client created" });
-      }
-    } catch (err) {
+      } catch (err) {
       setMessage({ type: "error", text: err.toString() });
     }
   };
+
+  function validatePassword(p) {
+    if ((p.length < 8 || (p.search(/[a-z]/i) < 0) || (p.search(/[0-9]/) < 0))) {
+        alert("La contraseña debe tener almenos 8 carácteres, una letra y un número.")
+    }
+  }
 
   const login = async (e) => {
     e.preventDefault();
@@ -57,7 +81,9 @@ function LoginAndRegister({ onLogin }) {
         setMessage({ type: "error", text: error });
       } else {
         onLogin(accessToken);
-        console.log(`accessToken de la funcion login ${accessToken}`);
+        if(accessToken == undefined){
+          setPasswordError("Usuario o contraseña incorrecta");
+        }
       }
     } catch (err) {
       setMessage({ type: "error", text: err.toString() });
@@ -87,10 +113,12 @@ function LoginAndRegister({ onLogin }) {
           <div>Primer Apellido</div>
           <input type="text" value={surname_1} onChange={(e) => setApellido1(e.target.value)} />
         </label>
+        <p className="error-msg surname1">{surname1_error}</p>
     <label>
         <div>Segundo Apellido</div>
         <input type="text" value={surname_2} onChange={(e) => setApellido2(e.target.value)} />
       </label>
+      <p className="error-msg surname2">{surname2_error}</p>
     <label>
       <div>Sexo</div>
       <select
@@ -103,6 +131,7 @@ function LoginAndRegister({ onLogin }) {
           <option type="text" value="X">Sin especificar</option>
       </select> 
       </label>
+      <p className="error-msg gender">{gender_error}</p>
     <label>
         <div>Teléfono</div>
         <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
@@ -130,11 +159,13 @@ function LoginAndRegister({ onLogin }) {
           <input type="submit" value={mode === LOGIN ? LOGIN : REGISTER} />
         </div>
       </form>
+      <p className="error-msg password">{password_error}</p>
       <div>
         <a href="#" onClick={() => setMode(mode === LOGIN ? REGISTER : LOGIN)}>
           {mode === LOGIN ? REGISTER : LOGIN}
         </a>
       </div>
+      <p className="error-msg userExist">{userExist_error}</p>
       <div className={`message ${message.type}`}>{message.text}</div>
     </div>
   );

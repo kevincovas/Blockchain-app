@@ -39,6 +39,19 @@ const getUserByEmailSQL = `
     SELECT password FROM users WHERE email = $1;
 `;
 
+const checkIfUserExistsSQL = `
+    SELECT EXISTS(SELECT * FROM users WHERE email=$1);
+`;
+
+const checkIfUserExists = async(email) => {
+    try{
+        const result = await pool.query(checkIfUserExistsSQL, [email]);
+        return { ok:true, found: true, data: result.rows[0]};
+    }catch(e){
+        return { ok: false, data: e.toString() };
+    }
+};
+
 const getUserByEmail = async(email) => {
     try {
         console.log(`email_DB_users ${email}`)
@@ -107,5 +120,6 @@ module.exports = {
     updateUser,
     deleteUser,
     getUserByEmail,
+    checkIfUserExists,
 };
 
