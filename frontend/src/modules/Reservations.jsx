@@ -122,7 +122,7 @@ function Reservations() {
       <ul>
         {" "}
         {timeframeList.map((timeFrame) => (
-          <li key={timeFrame}>{timeFrame}</li>
+          <li key={timeFrame.id}>{timeFrame.id}</li>
         ))}{" "}
       </ul>
     );
@@ -146,15 +146,22 @@ function Reservations() {
 
   // Availability
   const loadAvailability = async () => {
-    if (state.selectedDay !== null && state.selectedDay !== undefined) {
-      // Get Available timetables
-      await api
-        .getAvailability(
-          constnt.HOST,
-          state.selectedDay.toISOString().slice(0, 10)
-        )
-        .then((result) => createTimeTable(result));
-    }
+    // If Services Selected
+    if (
+      servicesContracted !== null &&
+      servicesContracted !== undefined &&
+      servicesContracted.length != 0
+    )
+      if (state.selectedDay !== null && state.selectedDay !== undefined) {
+        // If day selected
+        // Get Available timetables
+        await api
+          .getAvailability(
+            constnt.HOST,
+            state.selectedDay.toISOString().slice(0, 10)
+          )
+          .then((result) => createTimeTable(result));
+      }
   };
 
   // API CALLS ////////////////////////////////////////////////////////////////////////////////////
@@ -177,43 +184,57 @@ function Reservations() {
   }
 
   function createTimeTable(result) {
-    console.log( "result",result );
-    // console.log( "servicescontracted",servicesContracted );
-    // console.log( getTotalTime() );
-    // console.log("employee",employee);
-
-    
     // If Api Returned not available times
     if (result !== null && result !== undefined) {
+      // Tiempo
+      let tiempo = getTotalTime();
 
-// Tiempo
-let tiempo = getTotalTime();
+      // Horarios
+      let horarios = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+      let horariosDisponibles = [];
+      horarios.map(
+        (horario) =>
+          (horariosDisponibles = filterAvailability(
+            horario,
+            tiempo,
+            result,
+            horariosDisponibles
+          ))
+      );
 
-// Horarios
-let horarios = [ 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 ]
-horarios.map( horario => addHorario(horario , tiempo , result) );
+      // Set TimeFrame Component
+      setTimeFrameList(horariosDisponibles);
 
     }
-  
   }
 
-function addHorario(horario , tiempo , result)
-{
- 
-let date_ini = new Date(state.selectedDay);
-date_ini.setHours( horario , 0, 0);
-let date_end = new Date(date_ini.getTime() + tiempo * ( 60000 ) ); 
+  // Function to add available time on array
+  function filterAvailability(horario, tiempo, result, horariosDisponibles)
+  {
+    let date_ini = new Date(state.selectedDay);
+    date_ini.setHours(horario, 0, 0);
+    let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
-// TODO Apply logic
-console.log(    result.filter( horarioCogido => 
-new Date(horarioCogido.date_ini) >= date_ini && new Date( horarioCogido.date_end ) < date_end ).length );
+    // TODO por peluquero o por todos
+    // Check if Horario available or blocked by another appointment
+    let disponible = result.filter(
+      (horarioBlocked) =>
+        /* Caso 1: Inicia cuando el peluquero está ocupado */
+        (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
+          date_ini < new Date(horarioBlocked.date_end).getTime()) ||
+        /* Caso 2: Inicia antes que el peluquero esté ocupado */
+        (date_ini < new Date(horarioBlocked.date_ini).getTime() &&
+          date_end > new Date(horarioBlocked.date_ini).getTime())
+    ).length;
 
-console.log(date_ini);
-console.log(date_end); 
+    // Add Horario if disponible
+    if (disponible == 0) {
+      horariosDisponibles = [...horariosDisponibles, { id:horario , date_ini , date_end } ];
+    }
 
-}
+    return horariosDisponibles;
+  }
 
-  // TODO Style ?
   // On click a day, change state
   function handleDayClick(day, { selected }) {
     setState({
@@ -297,10 +318,20 @@ console.log(date_end);
 
         <div>
           <DayPicker
-            onDayClick={handleDayClick} locale="es" months={constnt.MONTHS} weekdaysLong={constnt.WEEKDAYS_LONG}
-            weekdaysShort={constnt.WEEKDAYS_SHORT} firstDayOfWeek={1} showOutsideDays selectedDays={state.selectedDay}
-            todayButton="Éste mes" disabledDays={disabledDays} fromMonth={new Date()}
-            toMonth={ new Date(new Date().getFullYear(), new Date().getMonth() + 2) }
+            onDayClick={handleDayClick}
+            locale="es"
+            months={constnt.MONTHS}
+            weekdaysLong={constnt.WEEKDAYS_LONG}
+            weekdaysShort={constnt.WEEKDAYS_SHORT}
+            firstDayOfWeek={1}
+            showOutsideDays
+            selectedDays={state.selectedDay}
+            todayButton="Éste mes"
+            disabledDays={disabledDays}
+            fromMonth={new Date()}
+            toMonth={
+              new Date(new Date().getFullYear(), new Date().getMonth() + 2)
+            }
           />
 
           {listAvailability}
