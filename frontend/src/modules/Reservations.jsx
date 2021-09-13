@@ -150,18 +150,23 @@ function Reservations() {
     if (
       servicesContracted !== null &&
       servicesContracted !== undefined &&
-      servicesContracted.length != 0
-    )
-      if (state.selectedDay !== null && state.selectedDay !== undefined) {
-        // If day selected
-        // Get Available timetables
-        await api
-          .getAvailability(
-            constnt.HOST,
-            state.selectedDay.toISOString().slice(0, 10)
-          )
-          .then((result) => createTimeTable(result));
-      }
+      servicesContracted.length != 0 &&
+      state.selectedDay !== null &&
+      state.selectedDay !== undefined
+    ) {
+      // If day selected
+      // Get Available timetables
+      await api
+        .getAvailability(
+          constnt.HOST,
+          state.selectedDay.toISOString().slice(0, 10)
+        )
+        .then((result) => createTimeTable(result));
+    }
+    else
+    {
+      setTimeFrameList([]);
+    }
   };
 
   // API CALLS ////////////////////////////////////////////////////////////////////////////////////
@@ -184,52 +189,51 @@ function Reservations() {
   }
 
   function createTimeTable(result) {
-    // If Api Returned not available times
-    if (result !== null && result !== undefined) {
-      // Tiempo
-      let tiempo = getTotalTime();
+    // Horarios
+    let horarios = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+    let horariosDisponibles = [];
+    horarios.map(
+      (horario) =>
+        (horariosDisponibles = filterAvailability(
+          horario,
+          getTotalTime(),
+          result,
+          horariosDisponibles
+        ))
+    );
 
-      // Horarios
-      let horarios = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-      let horariosDisponibles = [];
-      horarios.map(
-        (horario) =>
-          (horariosDisponibles = filterAvailability(
-            horario,
-            tiempo,
-            result,
-            horariosDisponibles
-          ))
-      );
-
-      // Set TimeFrame Component
-      setTimeFrameList(horariosDisponibles);
-
-    }
+    // Set TimeFrame Component
+    setTimeFrameList(horariosDisponibles);
   }
 
   // Function to add available time on array
-  function filterAvailability(horario, tiempo, result, horariosDisponibles)
-  {
+  function filterAvailability(horario, tiempo, result, horariosDisponibles) {
     let date_ini = new Date(state.selectedDay);
     date_ini.setHours(horario, 0, 0);
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // TODO por peluquero o por todos
     // Check if Horario available or blocked by another appointment
-    let disponible = result.filter(
-      (horarioBlocked) =>
-        /* Caso 1: Inicia cuando el peluquero está ocupado */
-        (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
-          date_ini < new Date(horarioBlocked.date_end).getTime()) ||
-        /* Caso 2: Inicia antes que el peluquero esté ocupado */
-        (date_ini < new Date(horarioBlocked.date_ini).getTime() &&
-          date_end > new Date(horarioBlocked.date_ini).getTime())
-    ).length;
+    let disponible = 0;
+
+    // If Results from API
+    if (result !== null && result !== undefined)
+      disponible = result.filter(
+        (horarioBlocked) =>
+          /* Caso 1: Inicia cuando el peluquero está ocupado */
+          (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
+            date_ini < new Date(horarioBlocked.date_end).getTime()) ||
+          /* Caso 2: Inicia antes que el peluquero esté ocupado */
+          (date_ini < new Date(horarioBlocked.date_ini).getTime() &&
+            date_end > new Date(horarioBlocked.date_ini).getTime())
+      ).length;
 
     // Add Horario if disponible
     if (disponible == 0) {
-      horariosDisponibles = [...horariosDisponibles, { id:horario , date_ini , date_end } ];
+      horariosDisponibles = [
+        ...horariosDisponibles,
+        { id: horario, date_ini, date_end },
+      ];
     }
 
     return horariosDisponibles;
