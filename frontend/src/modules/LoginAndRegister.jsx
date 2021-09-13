@@ -11,7 +11,7 @@ function LoginAndRegister({ onLogin }) {
   const [surname_1, setApellido1] = useState("");
   const [surname_2, setApellido2] = useState("");
   const [gender, setGender] = useState("M");
-  const [birth_date, setBirth_date] = useState("");
+  const [birth_date, setBirth_date] = useState("0001-01-01");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

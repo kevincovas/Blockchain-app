@@ -6,6 +6,8 @@ import "./App.css";
 import Reservations from "./modules/Reservations.jsx";
 import LoginAndRegister from "./modules/LoginAndRegister.jsx";
 import Sales from "./modules/Sales.jsx";
+import Home from "./modules/components/HomePage/Home.jsx";
+import Navigation from "./modules/components/HomePage/Navigation";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -20,9 +22,10 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  return (
+  /*return (
     <Router>
       <div className="App">
+        <Navigation/>
         <Route
           strict
           path="/reservations"
@@ -34,11 +37,16 @@ function App() {
           strict
           path="/sales"
           render={() => (isLoggedIn ? <Sales /> : <Redirect to="/login" />)}
-        />*/}
+        />*//*}
         <Route
           strict
           path="/sales"
           render={() => (<Sales />)}
+        />
+        <Route
+          strict
+          path="/"
+          render={() => (<Home />)}
         />
         <Route
           strict
@@ -53,6 +61,21 @@ function App() {
       </div>
     </Router>
   );
+}*/
+
+  return (
+    <div className="App">
+      <Router>
+        <Navigation />
+          <Route path="/" exact component={() => <Home />} />
+          <Route path="/login" exact component={() => <LoginAndRegister />} />
+          <Route path="/register" exact component={() => <LoginAndRegister />} />
+          <Route path="/reservations" exact component={() => <Reservations />} />
+          <Route path="/sales" exact component={() => <Sales />} />
+      </Router>
+    </div>
+  );
 }
+
 
 export default App;
