@@ -12,8 +12,8 @@ const comparePasswords = async (password, dbPassword) => {
   return await bcrypt.compare(password, dbPassword);
 };
 
-const createToken = (email) => {
-  const token = jwt.sign({ email }, JWT_SECRET, {
+const createToken = (user) => {
+  const token = jwt.sign(user, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION_TIME,
   });
   return {
@@ -41,7 +41,7 @@ const decodeToken = (token) => {
         throw err;
     }
   }
-}
+};
 
 module.exports = {
   hashPassword,
