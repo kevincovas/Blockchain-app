@@ -5,7 +5,7 @@ import "./App.css";
 
 import Reservations from "./modules/Reservations.jsx";
 import LoginAndRegister from "./modules/LoginAndRegister.jsx";
-import Sales from "./modules/Sales.jsx";
+import Sales from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
 import Clients from "./modules/components/Clients";

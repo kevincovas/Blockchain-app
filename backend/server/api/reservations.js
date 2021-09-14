@@ -48,4 +48,24 @@ router.get("/check/:date", async (req, res) => {
   }
 });
 
+//Add Reservation
+router.post("/add", async (req, res) => {
+  const { person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services } = req.body;
+
+
+  
+  // TODO Double Check if Reservation available at the moment
+  // Add Reservation
+const {ok , data} = await db.addReservation( person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services);
+if (!ok)
+{
+  return res.status(500).json(errorResult(data));
+}
+else
+{
+  return res.json(okResult(data));
+}
+
+});
+
 module.exports = router;
