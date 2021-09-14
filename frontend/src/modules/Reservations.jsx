@@ -5,7 +5,6 @@ import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
 import Dropdown from "./components/dropdown/Dropdown";
 import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import { useSnackbar } from "notistack";
 import Grid from "@material-ui/core/Grid";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,12 +12,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Container from '@material-ui/core/Container';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepContent from '@material-ui/core/StepContent';
-import StepLabel from '@material-ui/core/StepLabel';
-import Paper from '@material-ui/core/Paper';
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import "./Reservations.css";
 
 function Reservations() {
   // Calendar Status
@@ -44,7 +41,6 @@ function Reservations() {
     "Selecciona el peluquero si tienes preferencias.";
   const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
   const { enqueueSnackbar } = useSnackbar();
-
   const [employeeIdError, setEmployeeIdError] = useState(false);
   const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
     employeeIdDefaultHelperMessage
@@ -54,12 +50,10 @@ function Reservations() {
     serviceIdDefaultHelperMessage
   );
   const [open, setOpen] = useState(false);
-
   // View Alert
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   // Dismiss or Continue
   const handleClose = (action) => {
     // Continue with Reservation
@@ -68,28 +62,6 @@ function Reservations() {
       setOpen(false);
     } else handleSubmit();
   };
-
-  const [activeStep, setActiveStep] = useState(0);
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  // Temporal Style
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.secondary,
-    },
-  }));
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
@@ -144,33 +116,23 @@ function Reservations() {
   let listAvailability = null;
   if (timeframeList.length != 0) {
     listAvailability = (
-      <div className={useStyles.root}>
-        <Grid container spacing={1}>
-          {timeframeList.map((timeFrame) => (
-            <Grid item key={timeFrame.id} xs={1}>
-              <Button
-                variant="contained"
-                color="primary"
-                value={timeFrame.id}
-                /*
-                onClick={setTimeTableButton}*/
-
-                /*  onClick={handleClickOpen} */
-
-                onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
-              >
-                {timeFrame.date_ini.getHours() +
-                  ":" +
-                  timeFrame.date_ini.getMinutes() +
-                  " - " +
-                  timeFrame.date_end.getHours() +
-                  ":" +
-                  timeFrame.date_end.getMinutes()}
-              </Button>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
+      <Grid container spacing={1}>
+        {timeframeList.map((timeFrame) => (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
+            >
+              {timeFrame.date_ini.getHours() +
+                ":" +
+                timeFrame.date_ini.getMinutes() +
+                " - " +
+                timeFrame.date_end.getHours() +
+                ":" +
+                timeFrame.date_end.getMinutes()}
+            </Button>
+        ))}
+      </Grid>
     );
   }
 
@@ -359,7 +321,6 @@ function Reservations() {
 
       // Close Dialog
       setOpen(false);
-
     }
   };
 
@@ -397,116 +358,135 @@ function Reservations() {
 
   // Render
   return (
-
     <Container maxWidth="md">
-<form onSubmit={(event) => event.preventDefault()}>
+      <Paper elevation={5} className="forms-container" >
+        <form onSubmit={(event) => event.preventDefault()}>
+
+        <Paper elevation={2} className="forms-container" >
 
 
-        <Dropdown
-          setIdError={setEmployeeIdError}
-          setId={setEmployee}
-          select={employeeList}
-          helperText={employeeIdHelperMessage}
-          error={employeeIdError}
-          field="Peluquero"
-          className={"form-employee-field"}
-          setIdHelperMessage={setEmployeeIdHelperMessage}
-        />
+              <Dropdown
+                setIdError={setEmployeeIdError}
+                setId={setEmployee}
+                select={employeeList}
+                error={employeeIdError}
+                field="Peluquero"
+                className={"form-employee-field"}
+                setIdHelperMessage={setEmployeeIdHelperMessage}
+                idHelperMessage={employeeIdHelperMessage}
+              />
+
+</Paper>
+<br/>
+<Paper elevation={2} className="forms-container" >
+
+  
+              <Dropdown
+                setIdError={setServiceIdError}
+                setId={setService}
+                select={servicesList}
+                idHelperMessage={serviceIdHelperMessage}
+                field={"Servicio"}
+                error={serviceIdError}
+                className={"form-service-field"}
+                setIdHelperMessage={setServiceIdHelperMessage}
+              />
 
 
-        <Dropdown
-          setIdError={setServiceIdError}
-          setId={setService}
-          select={servicesList}
-          helperText={serviceIdHelperMessage}
-          field={"Servicio"}
-          error={serviceIdError}
-          className={"form-service-field"}
-          setIdHelperMessage={setServiceIdHelperMessage}
-        />
 
-          <Button variant="contained" color="primary" onClick={addService}>
-            +
-          </Button>
+<Button variant="contained" color="primary" onClick={addService}>
+                +
+              </Button>
 
 
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0].description
-          : "Selecciona un servicio"}
-       
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? "Duración: " +
-            servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0].duration +
-            " minutos"
-          : "Duración: "}
-      
+          {servicesList.filter(
+            (serviceFilter) => serviceFilter.id == service
+          )[0]
+            ? servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0].description
+            : "Selecciona un servicio"}
 
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? "Precio: " +
-            servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0].duration +
-            " €"
-          : "Precio: "}
+          {servicesList.filter(
+            (serviceFilter) => serviceFilter.id == service
+          )[0]
+            ? "Duración: " +
+              servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0].duration +
+              " minutos"
+            : "Duración: "}
 
-        <label>Servicios contratados:</label>
+          {servicesList.filter(
+            (serviceFilter) => serviceFilter.id == service
+          )[0]
+            ? "Precio: " +
+              servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0].duration +
+              " €"
+            : "Precio: "}
 
-        {listServicesContracted}
+          <label>Servicios contratados:</label>
 
-        <div>
-          <DayPicker
-            onDayClick={handleDayClick}
-            locale="es"
-            months={constnt.MONTHS}
-            weekdaysLong={constnt.WEEKDAYS_LONG}
-            weekdaysShort={constnt.WEEKDAYS_SHORT}
-            firstDayOfWeek={1}
-            showOutsideDays
-            selectedDays={state.selectedDay}
-            todayButton="Éste mes"
-            disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-            fromMonth={new Date()}
-            toMonth={
-              new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-            }
-          />
+          {listServicesContracted}
 
-          {listAvailability}
-        </div>
+</Paper>
+<br />
+<Paper elevation={2} className="forms-container" >
 
-        <p></p>
+            <DayPicker
+              onDayClick={handleDayClick}
+              locale="es"
+              months={constnt.MONTHS}
+              weekdaysLong={constnt.WEEKDAYS_LONG}
+              weekdaysShort={constnt.WEEKDAYS_SHORT}
+              firstDayOfWeek={1}
+              showOutsideDays
+              selectedDays={state.selectedDay}
+              todayButton="Éste mes"
+              disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+              fromMonth={new Date()}
+              toMonth={
+                new Date(new Date().getFullYear(), new Date().getMonth() + 2)
+              }
+            />
 
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Desea reservar cita?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Let Google help apps determine location. This means sending
-              anonymous location data to Google, even when no apps are running.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={(e) => handleClose(`2`)} color="primary">
-              Cancelar
-            </Button>
-            <Button onClick={(e) => handleClose(`1`)} color="primary" autoFocus>
-              Aceptar
-            </Button>
-          </DialogActions>
-        </Dialog>
+            {listAvailability}
+            
+    </Paper>
 
-</form>
-
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Desea reservar cita?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Let Google help apps determine location. This means sending
+                anonymous location data to Google, even when no apps are
+                running.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={(e) => handleClose(`2`)} color="primary">
+                Cancelar
+              </Button>
+              <Button
+                onClick={(e) => handleClose(`1`)}
+                color="primary"
+                autoFocus
+              >
+                Aceptar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </form>
+      </Paper>
     </Container>
   );
 }
