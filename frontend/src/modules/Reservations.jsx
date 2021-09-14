@@ -13,7 +13,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
-
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -90,28 +89,29 @@ function Reservations() {
   // Services Selected
   let listServicesContracted = null;
   if (servicesContracted.length == 0)
-    listServicesContracted = <div>Ningún servicio seleccionado</div>;
+    listServicesContracted = <div></div>;
   else {
     listServicesContracted = (
-      <List>
-        {servicesContracted.map((service) => (
-          <ListItem key={service}>
-            {" "}
-            {
-              servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0].name
-            }
-            <Button
-              variant="contained"
-              color="primary"
+      <div>
+        <label>Servicios contratados:</label>
+        <List>
+          {servicesContracted.map((service) => (
+            <ListItem
+              button
+              key={service}
               onClick={(e) => removeService(`${service}`)}
             >
-              -
-            </Button>
-          </ListItem>
-        ))}
-      </List>
+              <ListItemText>
+                {
+                  servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].name
+                }
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
+      </div>
     );
   }
 
@@ -434,8 +434,6 @@ function Reservations() {
                 Añadir Servicio +
               </Button>
             </p>
-
-            <label>Servicios contratados:</label>
 
             {listServicesContracted}
           </Paper>
