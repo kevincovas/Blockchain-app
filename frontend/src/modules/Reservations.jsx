@@ -16,6 +16,8 @@ import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 
 import "./Reservations.css";
 
@@ -88,12 +90,11 @@ function Reservations() {
   // Read From Database
   // Services Selected
   let listServicesContracted = null;
-  if (servicesContracted.length == 0)
-    listServicesContracted = <div></div>;
+  if (servicesContracted.length == 0) listServicesContracted = <div></div>;
   else {
     listServicesContracted = (
       <div>
-        <label>Servicios contratados:</label>
+        <label>Servicios contratados: (click para quitar servicios)</label>
         <List>
           {servicesContracted.map((service) => (
             <ListItem
@@ -101,6 +102,10 @@ function Reservations() {
               key={service}
               onClick={(e) => removeService(`${service}`)}
             >
+              <ListItemIcon>
+                <RemoveShoppingCartIcon />
+              </ListItemIcon>
+
               <ListItemText>
                 {
                   servicesList.filter(
@@ -111,7 +116,16 @@ function Reservations() {
             </ListItem>
           ))}
         </List>
+
+        <p>
+        Duración total: {getTotalTime()} minutos
+      </p>
+      <p>
+        Precio total: {getTotalTime()} €
+      </p>
+
       </div>
+
     );
   }
 
