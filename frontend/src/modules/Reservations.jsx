@@ -13,6 +13,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Container from '@material-ui/core/Container';
 
 function Reservations() {
   // Calendar Status
@@ -382,7 +383,7 @@ function Reservations() {
 
   // Render
   return (
-    <div>
+    <Container maxWidth="md">
       <form onSubmit={(event) => event.preventDefault()}>
         <Dropdown
           setIdError={setEmployeeIdError}
@@ -395,6 +396,7 @@ function Reservations() {
           setIdHelperMessage={setEmployeeIdHelperMessage}
         />
 
+
         <Dropdown
           setIdError={setServiceIdError}
           setId={setService}
@@ -406,11 +408,9 @@ function Reservations() {
           setIdHelperMessage={setServiceIdHelperMessage}
         />
 
-        <label>
           <Button variant="contained" color="primary" onClick={addService}>
             +
           </Button>
-        </label>
 
         <br />
 
@@ -483,15 +483,15 @@ function Reservations() {
           </DialogContent>
           <DialogActions>
             <Button onClick={(e) => handleClose(`2`)} color="primary">
-              Disagree
+              Cancelar
             </Button>
             <Button onClick={(e) => handleClose(`1`)} color="primary" autoFocus>
-              Agree
+              Aceptar
             </Button>
           </DialogActions>
         </Dialog>
       </form>
-    </div>
+    </Container>
   );
 }
 
