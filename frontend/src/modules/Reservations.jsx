@@ -93,9 +93,9 @@ function Reservations() {
     listServicesContracted = <div>Ningún servicio seleccionado</div>;
   else {
     listServicesContracted = (
-      <ul>
+      <List>
         {servicesContracted.map((service) => (
-          <li key={service}>
+          <ListItem key={service}>
             {" "}
             {
               servicesList.filter(
@@ -109,9 +109,9 @@ function Reservations() {
             >
               -
             </Button>
-          </li>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     );
   }
 
@@ -119,7 +119,7 @@ function Reservations() {
   let listAvailability = null;
   if (timeframeList.length != 0) {
     listAvailability = (
-      <List style={{maxHeight: '95%', overflow: 'auto'}} >
+      <List style={{ maxHeight: "95%", overflow: "auto" }}>
         {timeframeList.map((timeFrame) => (
           <ListItem
             button
@@ -393,37 +393,45 @@ function Reservations() {
               setIdHelperMessage={setServiceIdHelperMessage}
             />
 
-            <Button variant="contained" color="primary" onClick={addService}>
-              +
-            </Button>
-
             {servicesList.filter(
               (serviceFilter) => serviceFilter.id == service
             )[0]
-              ? servicesList.filter(
+              ? 
+            
+              servicesList.filter(
                   (serviceFilter) => serviceFilter.id == service
                 )[0].description
-              : "Selecciona un servicio"}
+              : ""}
 
-            {servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0]
-              ? "Duración: " +
-                servicesList.filter(
-                  (serviceFilter) => serviceFilter.id == service
-                )[0].duration +
-                " minutos"
-              : "Duración: "}
+            <p>
+              {servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0]
+                ? "Duración: " +
+                  servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].duration +
+                  " minutos"
+                : ""}
+            </p>
 
-            {servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0]
-              ? "Precio: " +
-                servicesList.filter(
-                  (serviceFilter) => serviceFilter.id == service
-                )[0].duration +
-                " €"
-              : "Precio: "}
+            <p>
+              {servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0]
+                ? "Precio: " +
+                  servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].duration +
+                  " €"
+                : ""}
+            </p>
+
+            <p>
+              <Button variant="contained" color="primary" onClick={addService}>
+                Añadir Servicio +
+              </Button>
+            </p>
 
             <label>Servicios contratados:</label>
 
