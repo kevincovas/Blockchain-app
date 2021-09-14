@@ -117,16 +117,16 @@ function Reservations() {
           ))}
         </List>
 
-        <p>
-        Duración total: {getTotalTime()} minutos
-      </p>
-      <p>
-        Precio total: {getTotalTime()} €
-      </p>
-
+        <p>Duración total: {getTotalTime()} minutos</p>
+        <p>Precio total: {getTotalPrice()} €</p>
       </div>
-
     );
+  }
+
+  // Left Zeros Function
+  function pad(num, size) {
+    var s = "00" + num;
+    return s.substr(s.length - size);
   }
 
   // Availability
@@ -142,13 +142,13 @@ function Reservations() {
           >
             <ListItemText
               primary={
-                timeFrame.date_ini.getHours() +
+                pad(timeFrame.date_ini.getHours(), 2) +
                 ":" +
-                timeFrame.date_ini.getMinutes() +
+                pad(timeFrame.date_ini.getMinutes(), 2) +
                 " - " +
-                timeFrame.date_end.getHours() +
+                pad(timeFrame.date_end.getHours(), 2) +
                 ":" +
-                timeFrame.date_end.getMinutes()
+                pad(timeFrame.date_end.getMinutes(), 2)
               }
             />
           </ListItem>
@@ -212,6 +212,22 @@ function Reservations() {
     // Return Total Time
     return total_time;
   }
+
+  function getTotalPrice() {
+    // Create Temporal Total Time
+    let total_price = 0.0;
+
+    // Add Time by Service
+    servicesContracted.map(
+      (service) =>
+        (total_price +=  parseInt(  servicesList.filter(
+          (serviceFilter) => serviceFilter.id == service
+        )[0].price) , 10 ) 
+    );
+
+    // Return Total Time
+    return total_price;
+  }  
 
   function createTimeTable(result) {
     // Horarios según configuración
@@ -438,7 +454,7 @@ function Reservations() {
                 ? "Precio: " +
                   servicesList.filter(
                     (serviceFilter) => serviceFilter.id == service
-                  )[0].duration +
+                  )[0].price +
                   " €"
                 : ""}
             </p>
