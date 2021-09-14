@@ -3,10 +3,13 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
-import Hairdressers from "./components/Hairdressers/Hairdresser";
+import Dropdown from "./components/dropdown/Dropdown";
 
 function Reservations() {
-    const employeeIdDefaultHelperMessage =    "Selecciona el peluquero que ha cobrado el servicio.";
+  
+  // Messages for Material UI
+  const employeeIdDefaultHelperMessage =    "Selecciona el peluquero si tienes preferencias.";
+  const serviceIdDefaultHelperMessage =    "Selecciona los servicios deseados.";
 
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
@@ -26,8 +29,11 @@ function Reservations() {
   const [timeframe, setTimeFrame] = useState(null);
   const [timeframeList, setTimeFrameList] = useState([]);
 
+  // Material UI
   const [employeeIdError, setEmployeeIdError] = useState(false);
   const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(employeeIdDefaultHelperMessage);
+  const [serviceIdError, setServiceIdError] = useState(false);
+  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(serviceIdDefaultHelperMessage);
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
@@ -50,41 +56,6 @@ function Reservations() {
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
 
   // Read From Database
-  // Hairdresser
-  let listEmployee = null;
-  if (employeeList.length == 0) listEmployee = <div>Loading employees...</div>;
-  else {
-    listEmployee = (
-      <select onChange={(e) => setEmployee(e.target.value)}>
-        {" "}
-        <option key="0" value="0"></option>
-        {employeeList.map((employee) => (
-          <option key={employee.id} value={employee.id}>
-            {employee.name + " " + employee.surname_1}
-          </option>
-        ))}
-      </select>
-    );
-  }
-
-  // Services Available
-  let listServices = null;
-  if (servicesList.length == 0)
-    listServices = <div>Loading available services...</div>;
-  else {
-    listServices = (
-      <select onChange={(e) => setService(e.target.value)}>
-        {" "}
-        <option key="0" value="0"></option>
-        {servicesList.map((service) => (
-          <option key={service.id} value={service.id}>
-            {service.name}
-          </option>
-        ))}
-      </select>
-    );
-  }
-
   // Services Selected
   let listServicesContracted = null;
   if (servicesContracted.length == 0)
@@ -352,19 +323,28 @@ console.log(employee);
 
     <div>
       <form onSubmit={(event) => event.preventDefault()}>
-        <Hairdressers
+        <Dropdown
           setEmployeeIdError={setEmployeeIdError}
           setEmployeeId={setEmployee}
           employeesSelect={employeeList}
           helperText={employeeIdHelperMessage}
           error={employeeIdError}
+          field="Peluquero"
           setEmployeeIdHelperMessage={setEmployeeIdHelperMessage}
         />
 
+        <Dropdown
+          setEmployeeIdError={setServiceIdError}
+          setEmployeeId={setService}
+          employeesSelect={servicesList}
+          helperText={serviceIdHelperMessage}
+          field={"Servicio"}
+          error={serviceIdError}
+          setEmployeeIdHelperMessage={setServiceIdHelperMessage}
+        />
+
         <label>
-          Servicios disponibles:
-          {listServices}
-          <button onClick={addService}>+</button>
+         <button onClick={addService}>+</button>
         </label>
 
         <br />
