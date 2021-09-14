@@ -4,13 +4,20 @@ import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
 import Dropdown from "./components/dropdown/Dropdown";
+import Button from "@material-ui/core/Button";
+import { useSnackbar } from "notistack";
+import Grid from "@material-ui/core/Grid";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import "./Reservations.css";
 
 function Reservations() {
-  
-  // Messages for Material UI
-  const employeeIdDefaultHelperMessage =    "Selecciona el peluquero si tienes preferencias.";
-  const serviceIdDefaultHelperMessage =    "Selecciona los servicios deseados.";
-
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
 
@@ -19,7 +26,7 @@ function Reservations() {
   const [employeeList, setEmployeeList] = useState([]);
 
   // Services Availables
-  const [service, setService] = useState("0");
+  const [service, setService] = useState(null);
   const [servicesList, setServicesList] = useState([]);
 
   // Services Contracted
@@ -30,10 +37,31 @@ function Reservations() {
   const [timeframeList, setTimeFrameList] = useState([]);
 
   // Material UI
+  const employeeIdDefaultHelperMessage =
+    "Selecciona el peluquero si tienes preferencias.";
+  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  const { enqueueSnackbar } = useSnackbar();
   const [employeeIdError, setEmployeeIdError] = useState(false);
-  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(employeeIdDefaultHelperMessage);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
+    employeeIdDefaultHelperMessage
+  );
   const [serviceIdError, setServiceIdError] = useState(false);
-  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(serviceIdDefaultHelperMessage);
+  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
+    serviceIdDefaultHelperMessage
+  );
+  const [open, setOpen] = useState(false);
+  // View Alert
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  // Dismiss or Continue
+  const handleClose = (action) => {
+    // Continue with Reservation
+    if (action == 2) {
+      setTimeFrame(null);
+      setOpen(false);
+    } else handleSubmit();
+  };
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
@@ -71,9 +99,13 @@ function Reservations() {
                 (serviceFilter) => serviceFilter.id == service
               )[0].name
             }
-            <button value={service} onClick={removeService}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => removeService(`${service}`)}
+            >
               -
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
@@ -82,15 +114,15 @@ function Reservations() {
 
   // Availability
   let listAvailability = null;
-  if (timeframeList.length == 0)
-    listAvailability = <div>Loading available times...</div>;
-  else {
+  if (timeframeList.length != 0) {
     listAvailability = (
-      <ul>
-        {" "}
+      <Grid container spacing={1}>
         {timeframeList.map((timeFrame) => (
-          <li key={timeFrame.id}>
-            <button value={timeFrame.id} onClick={setTimeTableButton}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
+            >
               {timeFrame.date_ini.getHours() +
                 ":" +
                 timeFrame.date_ini.getMinutes() +
@@ -98,10 +130,9 @@ function Reservations() {
                 timeFrame.date_end.getHours() +
                 ":" +
                 timeFrame.date_end.getMinutes()}
-            </button>
-          </li>
-        ))}{" "}
-      </ul>
+            </Button>
+        ))}
+      </Grid>
     );
   }
 
@@ -243,20 +274,18 @@ function Reservations() {
   }
 
   // Set State of Selected TimeTable
-  function setTimeTableButton() {
-    // Not submit form
-    event.preventDefault();
-
+  function setTimeTableButton(timeframe_in) {
     // Set TimeFrame
     setTimeFrame(
-      timeframeList.filter((prevState) => prevState.id == event.target.value)[0]
+      timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
     );
+    // Open Dialog
+    handleClickOpen();
   }
 
   // Submit Information to backed API
   const handleSubmit = async () => {
     // TODO Crear Cita por WS + check todos los campos correctos
-    event.preventDefault();
 
     // Call Booking API
     if (timeframe != null) {
@@ -289,30 +318,39 @@ function Reservations() {
 
       // Load Time Zones again
       loadAvailability();
+
+      // Close Dialog
+      setOpen(false);
     }
   };
 
+  // Add service to be booked
   function addService() {
-    // Not submit all form
-    event.preventDefault();
-console.log(employee);
-    // Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
-    if (
+    // Add to array only if possible service
+    if (service == null || (service != null && service == 0)) {
+      enqueueSnackbar("Selecciona algún producto para reservar cita.", {
+        variant: "error",
+      });
+      return;
+    }
+    // Service selected before
+    else if (
       servicesContracted.filter((serviceFilter) => serviceFilter == service)
-        .length <= 0
-    )
-      if (service !== "0")
-        // Sólo si valor != 0
-        setServicesContracted((prevState) => [...prevState, service]);
+        .length != 0
+    ) {
+      enqueueSnackbar("Ya has seleccionado ése producto.", {
+        variant: "error",
+      });
+      return;
+    }
+    // Sólo si valor no es null ni repetido
+    else setServicesContracted((prevState) => [...prevState, service]);
   }
 
-  function removeService() {
-    // Not submit form
-    event.preventDefault();
-
+  function removeService(service_in) {
     // Remove Service
     setServicesContracted((prevState) =>
-      prevState.filter((item) => item !== event.target.value)
+      prevState.filter((item) => item.toString() !== service_in)
     );
   }
 
@@ -320,82 +358,136 @@ console.log(employee);
 
   // Render
   return (
+    <Container maxWidth="md">
+      <Paper elevation={5} className="forms-container" >
+        <form onSubmit={(event) => event.preventDefault()}>
 
-    <div>
-      <form onSubmit={(event) => event.preventDefault()}>
-        <Dropdown
-          setEmployeeIdError={setEmployeeIdError}
-          setEmployeeId={setEmployee}
-          employeesSelect={employeeList}
-          helperText={employeeIdHelperMessage}
-          error={employeeIdError}
-          field="Peluquero"
-          setEmployeeIdHelperMessage={setEmployeeIdHelperMessage}
-        />
+        <Paper elevation={2} className="forms-container" >
 
-        <Dropdown
-          setEmployeeIdError={setServiceIdError}
-          setEmployeeId={setService}
-          employeesSelect={servicesList}
-          helperText={serviceIdHelperMessage}
-          field={"Servicio"}
-          error={serviceIdError}
-          setEmployeeIdHelperMessage={setServiceIdHelperMessage}
-        />
 
-        <label>
-         <button onClick={addService}>+</button>
-        </label>
+              <Dropdown
+                setIdError={setEmployeeIdError}
+                setId={setEmployee}
+                select={employeeList}
+                error={employeeIdError}
+                field="Peluquero"
+                className={"form-employee-field"}
+                setIdHelperMessage={setEmployeeIdHelperMessage}
+                idHelperMessage={employeeIdHelperMessage}
+              />
 
-        <br />
+</Paper>
+<br/>
+<Paper elevation={2} className="forms-container" >
 
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0].description
-          : "Selecciona un servicio"}
-        <br />
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? "Duración: " +
-            servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0].duration +
-            " minutos"
-          : "Duración: "}
+  
+              <Dropdown
+                setIdError={setServiceIdError}
+                setId={setService}
+                select={servicesList}
+                idHelperMessage={serviceIdHelperMessage}
+                field={"Servicio"}
+                error={serviceIdError}
+                className={"form-service-field"}
+                setIdHelperMessage={setServiceIdHelperMessage}
+              />
 
-        <br />
 
-        <label>Servicios contratados:</label>
 
-        {listServicesContracted}
+<Button variant="contained" color="primary" onClick={addService}>
+                +
+              </Button>
 
-        <div>
-          <DayPicker
-            onDayClick={handleDayClick}
-            locale="es"
-            months={constnt.MONTHS}
-            weekdaysLong={constnt.WEEKDAYS_LONG}
-            weekdaysShort={constnt.WEEKDAYS_SHORT}
-            firstDayOfWeek={1}
-            showOutsideDays
-            selectedDays={state.selectedDay}
-            todayButton="Éste mes"
-            disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-            fromMonth={new Date()}
-            toMonth={
-              new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-            }
-          />
 
-          {listAvailability}
-        </div>
+          {servicesList.filter(
+            (serviceFilter) => serviceFilter.id == service
+          )[0]
+            ? servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0].description
+            : "Selecciona un servicio"}
 
-        <p>
-          {" "}
-          <input type="submit" value="Submit" />{" "}
-        </p>
-      </form>
-    </div>
+          {servicesList.filter(
+            (serviceFilter) => serviceFilter.id == service
+          )[0]
+            ? "Duración: " +
+              servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0].duration +
+              " minutos"
+            : "Duración: "}
+
+          {servicesList.filter(
+            (serviceFilter) => serviceFilter.id == service
+          )[0]
+            ? "Precio: " +
+              servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0].duration +
+              " €"
+            : "Precio: "}
+
+          <label>Servicios contratados:</label>
+
+          {listServicesContracted}
+
+</Paper>
+<br />
+<Paper elevation={2} className="forms-container" >
+
+            <DayPicker
+              onDayClick={handleDayClick}
+              locale="es"
+              months={constnt.MONTHS}
+              weekdaysLong={constnt.WEEKDAYS_LONG}
+              weekdaysShort={constnt.WEEKDAYS_SHORT}
+              firstDayOfWeek={1}
+              showOutsideDays
+              selectedDays={state.selectedDay}
+              todayButton="Éste mes"
+              disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+              fromMonth={new Date()}
+              toMonth={
+                new Date(new Date().getFullYear(), new Date().getMonth() + 2)
+              }
+            />
+
+            {listAvailability}
+            
+    </Paper>
+
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Desea reservar cita?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Let Google help apps determine location. This means sending
+                anonymous location data to Google, even when no apps are
+                running.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={(e) => handleClose(`2`)} color="primary">
+                Cancelar
+              </Button>
+              <Button
+                onClick={(e) => handleClose(`1`)}
+                color="primary"
+                autoFocus
+              >
+                Aceptar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </form>
+      </Paper>
+    </Container>
   );
 }
 
