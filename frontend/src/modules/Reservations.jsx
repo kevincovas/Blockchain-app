@@ -378,6 +378,9 @@ function Reservations() {
               className={"form-employee-field"}
               setIdHelperMessage={setEmployeeIdHelperMessage}
               idHelperMessage={employeeIdHelperMessage}
+              optionLabel={(option) =>
+                `${option.name} ${option.surname_1} ${option.surname_2}`
+              }
             />
           </Paper>
           <br />
@@ -391,14 +394,13 @@ function Reservations() {
               error={serviceIdError}
               className={"form-service-field"}
               setIdHelperMessage={setServiceIdHelperMessage}
+              optionLabel={(option) => `${option.name}`}
             />
 
             {servicesList.filter(
               (serviceFilter) => serviceFilter.id == service
             )[0]
-              ? 
-            
-              servicesList.filter(
+              ? servicesList.filter(
                   (serviceFilter) => serviceFilter.id == service
                 )[0].description
               : ""}

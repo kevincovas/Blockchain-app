@@ -29,9 +29,7 @@ class Dropdown extends Component {
               error={this.props.IdError}
             />
           )}
-          getOptionLabel={(option) =>
-            `${option.name} ${option.surname_1} ${option.surname_2}`
-          }
+          getOptionLabel={this.props.optionLabel        }
         />
       </div>
     );
