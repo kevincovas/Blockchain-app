@@ -14,6 +14,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Container from '@material-ui/core/Container';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepContent from '@material-ui/core/StepContent';
+import StepLabel from '@material-ui/core/StepLabel';
+import Paper from '@material-ui/core/Paper';
 
 function Reservations() {
   // Calendar Status
@@ -48,8 +53,7 @@ function Reservations() {
   const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
     serviceIdDefaultHelperMessage
   );
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   // View Alert
   const handleClickOpen = () => {
@@ -63,6 +67,16 @@ function Reservations() {
       setTimeFrame(null);
       setOpen(false);
     } else handleSubmit();
+  };
+
+  const [activeStep, setActiveStep] = useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   // Temporal Style
@@ -383,8 +397,11 @@ function Reservations() {
 
   // Render
   return (
+
     <Container maxWidth="md">
-      <form onSubmit={(event) => event.preventDefault()}>
+<form onSubmit={(event) => event.preventDefault()}>
+
+
         <Dropdown
           setIdError={setEmployeeIdError}
           setId={setEmployee}
@@ -412,14 +429,13 @@ function Reservations() {
             +
           </Button>
 
-        <br />
 
         {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
           ? servicesList.filter(
               (serviceFilter) => serviceFilter.id == service
             )[0].description
           : "Selecciona un servicio"}
-        <br />
+       
         {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
           ? "Duración: " +
             servicesList.filter(
@@ -427,7 +443,7 @@ function Reservations() {
             )[0].duration +
             " minutos"
           : "Duración: "}
-        <br />
+      
 
         {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
           ? "Precio: " +
@@ -436,8 +452,6 @@ function Reservations() {
             )[0].duration +
             " €"
           : "Precio: "}
-
-        <br />
 
         <label>Servicios contratados:</label>
 
@@ -490,7 +504,9 @@ function Reservations() {
             </Button>
           </DialogActions>
         </Dialog>
-      </form>
+
+</form>
+
     </Container>
   );
 }

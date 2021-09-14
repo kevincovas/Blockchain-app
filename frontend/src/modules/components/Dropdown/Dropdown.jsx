@@ -21,8 +21,7 @@ class Dropdown extends Component {
               }
             }
           }}
-          size="small"
-          fullWidth
+        
           options={this.props.select}
           renderInput={(params) => (
             <TextField
