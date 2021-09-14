@@ -1,13 +1,15 @@
 const HOST = `http://localhost:8080`
 
-export const get_client = async () => {
-    const response = await fetch(`${HOST}/clients`, {
-      method: "GET",
+export const getClients = async (role) => {
+    const res = await fetch(`${HOST}/sales/get-people-by-role/`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({role}),
     });
-    const json = await response.json();
-    return setclientsList(json.results);
-}
+    const response = await res.json();
+    return response;
+  };
+
 

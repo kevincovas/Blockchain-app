@@ -8,7 +8,7 @@ import LoginAndRegister from "./modules/LoginAndRegister.jsx";
 import Sales from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
-import Clients from "./modules/components/Clients";
+import Clients from "./modules/clients";
 
 function App() {
   const token = localStorage.getItem("token");
