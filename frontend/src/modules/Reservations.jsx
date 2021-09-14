@@ -283,7 +283,7 @@ function Reservations() {
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // If Dates Exceeds Store limits (break + closing time), not available to book
-    if ( (date_end.getHours() >= 23 && date_end.getMinutes() > 0) || (date_end.getHours() > 23 && date_end.getMinutes() == 0) )
+    if ( (date_end.getHours() >= constnt.CLOSING_TIME && date_end.getMinutes() > 0) || (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0) )
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
