@@ -8,6 +8,7 @@ import LoginAndRegister from "./modules/LoginAndRegister.jsx";
 import Sales from "./modules/Sales.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
+import Clients from "./modules/components/Clients";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -70,6 +71,7 @@ function App() {
           <Route path="/" exact component={() => <Home />} />
           <Route path="/login" exact component={() => <LoginAndRegister onLogin={login} />} />
           <Route path="/register" exact component={() => <LoginAndRegister />} />
+          <Route path="/clients" exact component={() => <Clients />} />
           <Route path="/reservations" render={() =>
             isLoggedIn ? <Reservations /> : <Redirect to="/login" />}
           />
