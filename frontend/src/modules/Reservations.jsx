@@ -6,7 +6,6 @@ import * as constnt from "../config/const";
 import Dropdown from "./components/dropdown/Dropdown";
 import Button from "@material-ui/core/Button";
 import { useSnackbar } from "notistack";
-import Grid from "@material-ui/core/Grid";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -17,11 +16,7 @@ import Paper from "@material-ui/core/Paper";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
 
 import "./Reservations.css";
 
@@ -124,7 +119,7 @@ function Reservations() {
   let listAvailability = null;
   if (timeframeList.length != 0) {
     listAvailability = (
-      <List component="nav">
+      <List  style={{maxHeight: '95%', overflow: 'auto'}} >
         {timeframeList.map((timeFrame) => (
           <ListItem
             button
@@ -435,25 +430,27 @@ function Reservations() {
             {listServicesContracted}
           </Paper>
           <br />
-          <Paper elevation={2} className="forms-container">
-            <DayPicker
-              onDayClick={handleDayClick}
-              locale="es"
-              months={constnt.MONTHS}
-              weekdaysLong={constnt.WEEKDAYS_LONG}
-              weekdaysShort={constnt.WEEKDAYS_SHORT}
-              firstDayOfWeek={1}
-              showOutsideDays
-              selectedDays={state.selectedDay}
-              todayButton="Éste mes"
-              disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-              fromMonth={new Date()}
-              toMonth={
-                new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-              }
-            />
+          <Paper elevation={2} className="row">
+            <div className="column">
+              <DayPicker
+                onDayClick={handleDayClick}
+                locale="es"
+                months={constnt.MONTHS}
+                weekdaysLong={constnt.WEEKDAYS_LONG}
+                weekdaysShort={constnt.WEEKDAYS_SHORT}
+                firstDayOfWeek={1}
+                showOutsideDays
+                selectedDays={state.selectedDay}
+                todayButton="Éste mes"
+                disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+                fromMonth={new Date()}
+                toMonth={
+                  new Date(new Date().getFullYear(), new Date().getMonth() + 2)
+                }
+              />
+            </div>
 
-            {listAvailability}
+            <div className="column">{listAvailability}</div>
           </Paper>
 
           <Dialog

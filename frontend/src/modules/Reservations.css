@@ -7,3 +7,16 @@
 .new-sale.container {
     display: grid;
     grid-template-columns: 2fr 2fr; }
+
+    .row
+    {
+        display: flex;
+    }
+
+
+    .column {
+        text-align:center;
+        flex: 50%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+      }
