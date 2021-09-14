@@ -219,15 +219,18 @@ function Reservations() {
 
     // Add Time by Service
     servicesContracted.map(
-      (service) =>
-        (total_price +=  parseInt(  servicesList.filter(
-          (serviceFilter) => serviceFilter.id == service
-        )[0].price) , 10 ) 
+      (service) => (
+        (total_price += parseInt(
+          servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
+            .price
+        )),
+        10
+      )
     );
 
     // Return Total Time
     return total_price;
-  }  
+  }
 
   function createTimeTable(result) {
     // Horarios según configuración
@@ -461,13 +464,17 @@ function Reservations() {
 
             <p>
               <Button variant="contained" color="primary" onClick={addService}>
-                Añadir Servicio +
+                Añadir Servicio
               </Button>
             </p>
 
             {listServicesContracted}
           </Paper>
           <br />
+
+
+          {servicesContracted.length != 0 ?
+
           <Paper elevation={2} className="row">
             <div className="column">
               <DayPicker
@@ -491,6 +498,11 @@ function Reservations() {
             <div className="column">{listAvailability}</div>
           </Paper>
 
+: "" }
+
+
+
+
           <Dialog
             open={open}
             onClose={handleClose}
@@ -498,13 +510,12 @@ function Reservations() {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Desea reservar cita?"}
+              {"Está seguro de su reserva?"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Let Google help apps determine location. This means sending
-                anonymous location data to Google, even when no apps are
-                running.
+                <div>Duración total: {getTotalTime()} minutos</div>
+                <p>Precio total: {getTotalPrice()} €</p>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
