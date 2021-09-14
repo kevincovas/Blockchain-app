@@ -60,11 +60,15 @@ function ClientSearch() {
       filterClients(clientsFilter);
     }, [clientsFilter]);
 
+    useEffect(() => {
+
+    })
+
    return (
-    <div className="client view">
+    <div className="client-view">
       <h1>Clientes</h1>
       <input type="text" value={clientsFilter} onChange={(e) => setClientsFilter(e.target.value)} />
-      <div className="new-sale main-column right">
+      <div className="main-column right">
           <div className="categories-clients-container">
             <div className="clients-container">
           <Table size="small">
