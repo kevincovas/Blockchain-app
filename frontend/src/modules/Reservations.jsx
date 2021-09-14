@@ -335,7 +335,7 @@ function Reservations() {
   function addService() {
     // Add to array only if possible service
     if (service == null || (service != null && service == 0)) {
-      enqueueSnackbar("Selecciona algún producto para reservar cita.", {
+      enqueueSnackbar("Selecciona algún servicio para reservar cita.", {
         variant: "error",
       });
       return;
@@ -345,7 +345,7 @@ function Reservations() {
       servicesContracted.filter((serviceFilter) => serviceFilter == service)
         .length != 0
     ) {
-      enqueueSnackbar("Ya has seleccionado ése producto.", {
+      enqueueSnackbar("Ya has seleccionado ése servicio.", {
         variant: "error",
       });
       return;
