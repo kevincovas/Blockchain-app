@@ -125,12 +125,6 @@ function Reservations() {
     );
   }
 
-  // Left Zeros Function
-  function pad(num, size) {
-    var s = "0000" + num;
-    return s.substr(s.length - size);
-  }
-
   // Availability
   let listAvailability = null;
   if (timeframeList.length != 0) {
@@ -157,6 +151,10 @@ function Reservations() {
         ))}
       </List>
     );
+  }
+  else
+  {
+     listAvailability = ( <p>No hay citas disponibles para éste día</p> )
   }
 
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
@@ -213,6 +211,12 @@ function Reservations() {
 
     // Return Total Time
     return total_time;
+  }
+
+  // Left Zeros Function
+  function pad(num, size) {
+    var s = "0000" + num;
+    return s.substr(s.length - size);
   }
 
   function getTotalPrice() {
