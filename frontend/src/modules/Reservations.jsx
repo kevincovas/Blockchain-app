@@ -60,11 +60,13 @@ function Reservations() {
   };
   // Dismiss or Continue
   const handleClose = (action) => {
-    // Continue with Reservation
+    // Close Reservation
     if (action == 2) {
-      setTimeFrame(null);
       setOpen(false);
-    } else handleSubmit();
+      setTimeFrame(null);
+    }
+    // Continue with Reservation
+    else handleSubmit();
   };
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +127,7 @@ function Reservations() {
 
   // Left Zeros Function
   function pad(num, size) {
-    var s = "00" + num;
+    var s = "0000" + num;
     return s.substr(s.length - size);
   }
 
@@ -232,6 +234,26 @@ function Reservations() {
     return total_price;
   }
 
+  function getAppointmentString() {
+    if (timeframe != null) {
+      return (
+        pad(timeframe.date_ini.getUTCDate(), 2) +
+        "/" +
+        pad(timeframe.date_ini.getUTCMonth() + 1, 2) +
+        "/" +
+        timeframe.date_ini.getFullYear() +
+        " de " +
+        pad(timeframe.date_ini.getHours(), 2) +
+        ":" +
+        pad(timeframe.date_ini.getMinutes(), 2) +
+        " a " +
+        pad(timeframe.date_end.getHours(), 2) +
+        ":" +
+        pad(timeframe.date_end.getMinutes(), 2)
+      );
+    } else return "";
+  }
+
   function createTimeTable(result) {
     // Horarios según configuración
     let horariosDisponibles = [];
@@ -325,7 +347,11 @@ function Reservations() {
 
   // Submit Information to backed API
   const handleSubmit = async () => {
+    
     // TODO Crear Cita por WS + check todos los campos correctos
+
+    // Close Dialog
+    setOpen(false);
 
     // Call Booking API
     if (timeframe != null) {
@@ -358,9 +384,6 @@ function Reservations() {
 
       // Load Time Zones again
       loadAvailability();
-
-      // Close Dialog
-      setOpen(false);
     }
   };
 
@@ -472,36 +495,35 @@ function Reservations() {
           </Paper>
           <br />
 
+          {servicesContracted.length != 0 ? (
+            <Paper elevation={2} className="row">
+              <div className="column">
+                <DayPicker
+                  onDayClick={handleDayClick}
+                  locale="es"
+                  months={constnt.MONTHS}
+                  weekdaysLong={constnt.WEEKDAYS_LONG}
+                  weekdaysShort={constnt.WEEKDAYS_SHORT}
+                  firstDayOfWeek={1}
+                  showOutsideDays
+                  selectedDays={state.selectedDay}
+                  todayButton="Éste mes"
+                  disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+                  fromMonth={new Date()}
+                  toMonth={
+                    new Date(
+                      new Date().getFullYear(),
+                      new Date().getMonth() + 2
+                    )
+                  }
+                />
+              </div>
 
-          {servicesContracted.length != 0 ?
-
-          <Paper elevation={2} className="row">
-            <div className="column">
-              <DayPicker
-                onDayClick={handleDayClick}
-                locale="es"
-                months={constnt.MONTHS}
-                weekdaysLong={constnt.WEEKDAYS_LONG}
-                weekdaysShort={constnt.WEEKDAYS_SHORT}
-                firstDayOfWeek={1}
-                showOutsideDays
-                selectedDays={state.selectedDay}
-                todayButton="Éste mes"
-                disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-                fromMonth={new Date()}
-                toMonth={
-                  new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-                }
-              />
-            </div>
-
-            <div className="column">{listAvailability}</div>
-          </Paper>
-
-: "" }
-
-
-
+              <div className="column">{listAvailability}</div>
+            </Paper>
+          ) : (
+            ""
+          )}
 
           <Dialog
             open={open}
@@ -514,8 +536,9 @@ function Reservations() {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                <div>Duración total: {getTotalTime()} minutos</div>
-                <p>Precio total: {getTotalPrice()} €</p>
+                Fecha y Hora: {getAppointmentString()}
+                <br />
+                Precio total: {getTotalPrice()} €
               </DialogContentText>
             </DialogContent>
             <DialogActions>
