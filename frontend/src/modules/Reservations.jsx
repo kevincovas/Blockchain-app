@@ -4,13 +4,15 @@ import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
 import Dropdown from "./components/dropdown/Dropdown";
-import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, TableFooter } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import { useSnackbar } from "notistack";
 
 function Reservations() {
   // Messages for Material UI
   const employeeIdDefaultHelperMessage =
     "Selecciona el peluquero si tienes preferencias.";
   const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  const { enqueueSnackbar } = useSnackbar();
 
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
@@ -20,7 +22,7 @@ function Reservations() {
   const [employeeList, setEmployeeList] = useState([]);
 
   // Services Availables
-  const [service, setService] = useState("0");
+  const [service, setService] = useState(null);
   const [servicesList, setServicesList] = useState([]);
 
   // Services Contracted
@@ -76,7 +78,11 @@ function Reservations() {
                 (serviceFilter) => serviceFilter.id == service
               )[0].name
             }
-            <Button variant="contained" color="primary" onClick={(e) => removeService(`${service}`)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => removeService(`${service}`)}
+            >
               -
             </Button>
           </li>
@@ -94,17 +100,21 @@ function Reservations() {
       <ul>
         {" "}
         {timeframeList.map((timeFrame) => (
-          <li key={timeFrame.id}>
-            <Button  variant="contained" color="primary"  value={timeFrame.id} onClick={setTimeTableButton}>
-              {timeFrame.date_ini.getHours() +
-                ":" +
-                timeFrame.date_ini.getMinutes() +
-                " - " +
-                timeFrame.date_end.getHours() +
-                ":" +
-                timeFrame.date_end.getMinutes()}
-            </Button>
-          </li>
+          <Button
+            key={timeFrame.id}
+            variant="contained"
+            color="primary"
+            value={timeFrame.id}
+            onClick={setTimeTableButton}
+          >
+            {timeFrame.date_ini.getHours() +
+              ":" +
+              timeFrame.date_ini.getMinutes() +
+              " - " +
+              timeFrame.date_end.getHours() +
+              ":" +
+              timeFrame.date_end.getMinutes()}
+          </Button>
         ))}{" "}
       </ul>
     );
@@ -258,7 +268,7 @@ function Reservations() {
   // Submit Information to backed API
   const handleSubmit = async () => {
     // TODO Crear Cita por WS + check todos los campos correctos
-    
+
     // Call Booking API
     if (timeframe != null) {
       let person_id = 1;
@@ -294,8 +304,14 @@ function Reservations() {
   };
 
   function addService() {
-
     // Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
+    if (service == null) {
+      enqueueSnackbar("Selecciona algún producto para reservar cita.", {
+        variant: "error",
+      });
+      return;
+    }
+
     if (
       servicesContracted.filter((serviceFilter) => serviceFilter == service)
         .length <= 0
@@ -306,7 +322,6 @@ function Reservations() {
   }
 
   function removeService(service_in) {
-
     // Remove Service
     setServicesContracted((prevState) =>
       prevState.filter((item) => item.toString() !== service_in)
@@ -342,7 +357,9 @@ function Reservations() {
         />
 
         <label>
-          <Button  variant="contained" color="primary"  onClick={addService}>+</Button>
+          <Button variant="contained" color="primary" onClick={addService}>
+            +
+          </Button>
         </label>
 
         <br />
@@ -361,16 +378,16 @@ function Reservations() {
             " minutos"
           : "Duración: "}
         <br />
-        
+
         {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
           ? "Precio: " +
             servicesList.filter(
               (serviceFilter) => serviceFilter.id == service
             )[0].duration +
             " €"
-          : "Precio: "}        
+          : "Precio: "}
 
-<br/>
+        <br />
 
         <label>Servicios contratados:</label>
 
@@ -397,10 +414,7 @@ function Reservations() {
           {listAvailability}
         </div>
 
-        <p>
-          {" "}
-          <input type="submit" value="Submit" />{" "}
-        </p>
+        <p></p>
       </form>
     </div>
   );
