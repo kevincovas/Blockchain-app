@@ -70,42 +70,6 @@ const getReservationsByDay = async (DATE) => {
   }
 };
 
-function sendMail()
-{
-  const mailjet = require("node-mailjet").connect(
-    "d1280878f3cb52d5c406cc6c4009d1d3",
-    "4e000ea74e8233bfbe68ee08770edbf4"
-  );
-  const request = mailjet.post("send", { version: "v3.1" }).request({
-    Messages: [
-      {
-        From: {
-          Email: "aitor.java@gmail.com",
-          Name: "Aitor",
-        },
-        To: [
-          {
-            Email: "aitor.java@gmail.com",
-            Name: "Aitor",
-          },
-        ],
-        Subject: "Greetings from Mailjet.",
-        TextPart: "My first Mailjet email",
-        HTMLPart:
-          "<h3>Dear passenger 1, welcome to <a href='Mailjet - Email Delivery Service for Marketing & Developer Teams'>Mailjet</a>!</h3><br />May the delivery force be with you!",
-        CustomID: "AppGettingStartedTest",
-      },
-    ],
-  });
-  request
-    .then((result) => {
-      console.log(result.body);
-    })
-    .catch((err) => {
-      console.log(err.statusCode);
-    });
-}
-
 // Add Reservation and obtain ID
 const addReservation = async (
   person_id,
@@ -116,7 +80,6 @@ const addReservation = async (
   booked_services
 ) => {
   try {
-
     // Add Reservation
     const result = await pool.query(addReservationSQL, [
       person_id,
@@ -128,20 +91,34 @@ const addReservation = async (
 
     // Add Booked Services
     const result2 = await pool.query(addBookedServicesSQL, [
-      result.rows[0].id  ,
-      booked_services
+      result.rows[0].id,
+      booked_services,
     ]);
 
-  /*  console.log(mailjet);*/
-  await mailjet.sendEmail()
-  //  const test = await mailjet();
-
- //   sendMail();
+    // Create QR Code
 
 
 
-
-
+    // Send Mail
+    let from_mail = "aitor.java@gmail.com";
+    let from_name = "Aitor";
+    let to_mail = "aitor.java@gmail.com";
+    let to_name = "Aitor";
+    let subject = "Test Email";
+    let text_part = "Test Email Texto";
+    let html_part =
+      "<img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example' /> <h3>Dear passenger 1, welcome to <a href='Mailjet - Email Delivery Service for Marketing & Developer Teams'>Mailjet</a>!</h3><br />May the delivery force be with you!";
+    let custom_id = "AppGettingStartedTest";
+    await mailjet.sendEmail(
+      from_mail,
+      from_name,
+      to_mail,
+      to_name,
+      subject,
+      text_part,
+      html_part,
+      custom_id
+    );
 
     return { ok: true, data: result.rows[0].id };
   } catch (e) {
