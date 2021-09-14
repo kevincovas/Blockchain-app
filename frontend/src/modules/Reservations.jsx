@@ -14,7 +14,15 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
+
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import InboxIcon from "@material-ui/icons/Inbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+
 import "./Reservations.css";
 
 function Reservations() {
@@ -116,23 +124,27 @@ function Reservations() {
   let listAvailability = null;
   if (timeframeList.length != 0) {
     listAvailability = (
-      <Grid container spacing={1}>
+      <List component="nav">
         {timeframeList.map((timeFrame) => (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
-            >
-              {timeFrame.date_ini.getHours() +
+          <ListItem
+            button
+            key={timeFrame.id}
+            onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
+          >
+            <ListItemText
+              primary={
+                timeFrame.date_ini.getHours() +
                 ":" +
                 timeFrame.date_ini.getMinutes() +
                 " - " +
                 timeFrame.date_end.getHours() +
                 ":" +
-                timeFrame.date_end.getMinutes()}
-            </Button>
+                timeFrame.date_end.getMinutes()
+              }
+            />
+          </ListItem>
         ))}
-      </Grid>
+      </List>
     );
   }
 
@@ -359,82 +371,71 @@ function Reservations() {
   // Render
   return (
     <Container maxWidth="md">
-      <Paper elevation={5} className="forms-container" >
+      <Paper elevation={5} className="forms-container">
         <form onSubmit={(event) => event.preventDefault()}>
+          <Paper elevation={2} className="forms-container">
+            <Dropdown
+              setIdError={setEmployeeIdError}
+              setId={setEmployee}
+              select={employeeList}
+              error={employeeIdError}
+              field="Peluquero"
+              className={"form-employee-field"}
+              setIdHelperMessage={setEmployeeIdHelperMessage}
+              idHelperMessage={employeeIdHelperMessage}
+            />
+          </Paper>
+          <br />
+          <Paper elevation={2} className="forms-container">
+            <Dropdown
+              setIdError={setServiceIdError}
+              setId={setService}
+              select={servicesList}
+              idHelperMessage={serviceIdHelperMessage}
+              field={"Servicio"}
+              error={serviceIdError}
+              className={"form-service-field"}
+              setIdHelperMessage={setServiceIdHelperMessage}
+            />
 
-        <Paper elevation={2} className="forms-container" >
+            <Button variant="contained" color="primary" onClick={addService}>
+              +
+            </Button>
 
+            {servicesList.filter(
+              (serviceFilter) => serviceFilter.id == service
+            )[0]
+              ? servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0].description
+              : "Selecciona un servicio"}
 
-              <Dropdown
-                setIdError={setEmployeeIdError}
-                setId={setEmployee}
-                select={employeeList}
-                error={employeeIdError}
-                field="Peluquero"
-                className={"form-employee-field"}
-                setIdHelperMessage={setEmployeeIdHelperMessage}
-                idHelperMessage={employeeIdHelperMessage}
-              />
+            {servicesList.filter(
+              (serviceFilter) => serviceFilter.id == service
+            )[0]
+              ? "Duración: " +
+                servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0].duration +
+                " minutos"
+              : "Duración: "}
 
-</Paper>
-<br/>
-<Paper elevation={2} className="forms-container" >
+            {servicesList.filter(
+              (serviceFilter) => serviceFilter.id == service
+            )[0]
+              ? "Precio: " +
+                servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0].duration +
+                " €"
+              : "Precio: "}
 
-  
-              <Dropdown
-                setIdError={setServiceIdError}
-                setId={setService}
-                select={servicesList}
-                idHelperMessage={serviceIdHelperMessage}
-                field={"Servicio"}
-                error={serviceIdError}
-                className={"form-service-field"}
-                setIdHelperMessage={setServiceIdHelperMessage}
-              />
+            <label>Servicios contratados:</label>
 
-
-
-<Button variant="contained" color="primary" onClick={addService}>
-                +
-              </Button>
-
-
-          {servicesList.filter(
-            (serviceFilter) => serviceFilter.id == service
-          )[0]
-            ? servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0].description
-            : "Selecciona un servicio"}
-
-          {servicesList.filter(
-            (serviceFilter) => serviceFilter.id == service
-          )[0]
-            ? "Duración: " +
-              servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0].duration +
-              " minutos"
-            : "Duración: "}
-
-          {servicesList.filter(
-            (serviceFilter) => serviceFilter.id == service
-          )[0]
-            ? "Precio: " +
-              servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0].duration +
-              " €"
-            : "Precio: "}
-
-          <label>Servicios contratados:</label>
-
-          {listServicesContracted}
-
-</Paper>
-<br />
-<Paper elevation={2} className="forms-container" >
-
+            {listServicesContracted}
+          </Paper>
+          <br />
+          <Paper elevation={2} className="forms-container">
             <DayPicker
               onDayClick={handleDayClick}
               locale="es"
@@ -453,8 +454,7 @@ function Reservations() {
             />
 
             {listAvailability}
-            
-    </Paper>
+          </Paper>
 
           <Dialog
             open={open}
