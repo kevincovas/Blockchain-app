@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
+import "./Navigation.css";
 
 function Navigation(props) {
   return (
@@ -28,6 +29,15 @@ function Navigation(props) {
               >
                 <Link className="nav-link" to="/register">
                   Registrarse
+                </Link>
+              </li>
+              <li
+                className={`nav-item  ${
+                  props.location.pathname === "/clients" ? "active" : ""
+                }`}
+              >
+                <Link className="nav-link" to="/clients">
+                  Clientes
                 </Link>
               </li>
               <li

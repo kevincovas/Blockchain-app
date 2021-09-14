@@ -1,6 +1,14 @@
 // Send Email
-const sendEmail = async () => {
-
+const sendEmail = async (
+  from_mail,
+  from_name,
+  to_mail,
+  to_name,
+  subject,
+  text_part,
+  html_part,
+  custom_id
+) => {
   const mailjet = require("node-mailjet").connect(
     "d1280878f3cb52d5c406cc6c4009d1d3",
     "4e000ea74e8233bfbe68ee08770edbf4"
@@ -9,20 +17,19 @@ const sendEmail = async () => {
     Messages: [
       {
         From: {
-          Email: "aitor.java@gmail.com",
-          Name: "Aitor",
+          Email: from_mail,
+          Name: from_name,
         },
         To: [
           {
-            Email: "aitor.java@gmail.com",
-            Name: "Aitor",
+            Email: to_mail,
+            Name: to_name,
           },
         ],
-        Subject: "Greetings from Mailjet.",
-        TextPart: "My first Mailjet email",
-        HTMLPart:
-          "<h3>Dear passenger 1, welcome to <a href='Mailjet - Email Delivery Service for Marketing & Developer Teams'>Mailjet</a>!</h3><br />May the delivery force be with you!",
-        CustomID: "AppGettingStartedTest",
+        Subject: subject,
+        TextPart: text_part,
+        HTMLPart: html_part,
+        CustomID: custom_id,
       },
     ],
   });
@@ -33,8 +40,7 @@ const sendEmail = async () => {
     .catch((err) => {
       return err.statusCode;
     });
-
-}
+};
 
 module.exports = {
   sendEmail,

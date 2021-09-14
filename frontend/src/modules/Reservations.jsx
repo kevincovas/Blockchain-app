@@ -3,6 +3,23 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
+import Dropdown from "./components/dropdown/Dropdown";
+import Button from "@material-ui/core/Button";
+import { useSnackbar } from "notistack";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
+
+import "./Reservations.css";
 
 function Reservations() {
   // Calendar Status
@@ -13,7 +30,7 @@ function Reservations() {
   const [employeeList, setEmployeeList] = useState([]);
 
   // Services Availables
-  const [service, setService] = useState("0");
+  const [service, setService] = useState(null);
   const [servicesList, setServicesList] = useState([]);
 
   // Services Contracted
@@ -22,6 +39,33 @@ function Reservations() {
   // Timeframes
   const [timeframe, setTimeFrame] = useState(null);
   const [timeframeList, setTimeFrameList] = useState([]);
+
+  // Material UI
+  const employeeIdDefaultHelperMessage =
+    "Selecciona el peluquero si tienes preferencias.";
+  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  const { enqueueSnackbar } = useSnackbar();
+  const [employeeIdError, setEmployeeIdError] = useState(false);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
+    employeeIdDefaultHelperMessage
+  );
+  const [serviceIdError, setServiceIdError] = useState(false);
+  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
+    serviceIdDefaultHelperMessage
+  );
+  const [open, setOpen] = useState(false);
+  // View Alert
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  // Dismiss or Continue
+  const handleClose = (action) => {
+    // Continue with Reservation
+    if (action == 2) {
+      setTimeFrame(null);
+      setOpen(false);
+    } else handleSubmit();
+  };
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
@@ -44,87 +88,72 @@ function Reservations() {
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
 
   // Read From Database
-  // Hairdresser
-  let listEmployee = null;
-  if (employeeList.length == 0) listEmployee = <div>Loading employees...</div>;
-  else {
-    listEmployee = (
-      <select onChange={(e) => setEmployee(e.target.value)}>
-        {" "}
-        <option key="0" value="0"></option>
-        {employeeList.map((employee) => (
-          <option key={employee.id} value={employee.id}>
-            {employee.name + " " + employee.surname_1}
-          </option>
-        ))}
-      </select>
-    );
-  }
-
-  // Services Available
-  let listServices = null;
-  if (servicesList.length == 0)
-    listServices = <div>Loading available services...</div>;
-  else {
-    listServices = (
-      <select onChange={(e) => setService(e.target.value)}>
-        {" "}
-        <option key="0" value="0"></option>
-        {servicesList.map((service) => (
-          <option key={service.id} value={service.id}>
-            {service.name}
-          </option>
-        ))}
-      </select>
-    );
-  }
-
   // Services Selected
   let listServicesContracted = null;
-  if (servicesContracted.length == 0)
-    listServicesContracted = <div>Ningún servicio seleccionado</div>;
+  if (servicesContracted.length == 0) listServicesContracted = <div></div>;
   else {
     listServicesContracted = (
-      <ul>
-        {servicesContracted.map((service) => (
-          <li key={service}>
-            {" "}
-            {
-              servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0].name
-            }
-            <button value={service} onClick={removeService}>
-              -
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <label>Servicios contratados: (click para quitar servicios)</label>
+        <List>
+          {servicesContracted.map((service) => (
+            <ListItem
+              button
+              key={service}
+              onClick={(e) => removeService(`${service}`)}
+            >
+              <ListItemIcon>
+                <RemoveShoppingCartIcon />
+              </ListItemIcon>
+
+              <ListItemText>
+                {
+                  servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].name
+                }
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
+
+        <p>
+        Duración total: {getTotalTime()} minutos
+      </p>
+      <p>
+        Precio total: {getTotalTime()} €
+      </p>
+
+      </div>
+
     );
   }
 
   // Availability
   let listAvailability = null;
-  if (timeframeList.length == 0)
-    listAvailability = <div>Loading available times...</div>;
-  else {
+  if (timeframeList.length != 0) {
     listAvailability = (
-      <ul>
-        {" "}
+      <List style={{ maxHeight: "95%", overflow: "auto" }}>
         {timeframeList.map((timeFrame) => (
-          <li key={timeFrame.id}>
-            <button value={timeFrame.id} onClick={setTimeTableButton}>
-              {timeFrame.date_ini.getHours() +
+          <ListItem
+            button
+            key={timeFrame.id}
+            onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
+          >
+            <ListItemText
+              primary={
+                timeFrame.date_ini.getHours() +
                 ":" +
                 timeFrame.date_ini.getMinutes() +
                 " - " +
                 timeFrame.date_end.getHours() +
                 ":" +
-                timeFrame.date_end.getMinutes()}
-            </button>
-          </li>
-        ))}{" "}
-      </ul>
+                timeFrame.date_end.getMinutes()
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
     );
   }
 
@@ -205,7 +234,11 @@ function Reservations() {
   function filterAvailability(horario, tiempo, result, horariosDisponibles) {
     // Get Dates in Javascript Format
     let date_ini = new Date(state.selectedDay);
-    date_ini.setHours(horario, Number.isInteger(horario) ? 0 :  ( horario %1 ) * 60, 0);
+    date_ini.setHours(
+      horario,
+      Number.isInteger(horario) ? 0 : (horario % 1) * 60,
+      0
+    );
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // TODO If Dates Exceeds Store limits (break + closing time), not available to book
@@ -262,20 +295,18 @@ function Reservations() {
   }
 
   // Set State of Selected TimeTable
-  function setTimeTableButton() {
-    // Not submit form
-    event.preventDefault();
-
+  function setTimeTableButton(timeframe_in) {
     // Set TimeFrame
     setTimeFrame(
-      timeframeList.filter((prevState) => prevState.id == event.target.value)[0]
+      timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
     );
+    // Open Dialog
+    handleClickOpen();
   }
 
   // Submit Information to backed API
   const handleSubmit = async () => {
     // TODO Crear Cita por WS + check todos los campos correctos
-    event.preventDefault();
 
     // Call Booking API
     if (timeframe != null) {
@@ -308,30 +339,39 @@ function Reservations() {
 
       // Load Time Zones again
       loadAvailability();
+
+      // Close Dialog
+      setOpen(false);
     }
   };
 
+  // Add service to be booked
   function addService() {
-    // Not submit all form
-    event.preventDefault();
-
-    // Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
-    if (
+    // Add to array only if possible service
+    if (service == null || (service != null && service == 0)) {
+      enqueueSnackbar("Selecciona algún servicio para reservar cita.", {
+        variant: "error",
+      });
+      return;
+    }
+    // Service selected before
+    else if (
       servicesContracted.filter((serviceFilter) => serviceFilter == service)
-        .length <= 0
-    )
-      if (service !== "0")
-        // Sólo si valor != 0
-        setServicesContracted((prevState) => [...prevState, service]);
+        .length != 0
+    ) {
+      enqueueSnackbar("Ya has seleccionado ése servicio.", {
+        variant: "error",
+      });
+      return;
+    }
+    // Sólo si valor no es null ni repetido
+    else setServicesContracted((prevState) => [...prevState, service]);
   }
 
-  function removeService() {
-    // Not submit form
-    event.preventDefault();
-
+  function removeService(service_in) {
     // Remove Service
     setServicesContracted((prevState) =>
-      prevState.filter((item) => item !== event.target.value)
+      prevState.filter((item) => item.toString() !== service_in)
     );
   }
 
@@ -339,70 +379,134 @@ function Reservations() {
 
   // Render
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Peluquero:
-          {listEmployee}
-        </label>
+    <Container maxWidth="md">
+      <Paper elevation={5} className="forms-container">
+        <form onSubmit={(event) => event.preventDefault()}>
+          <Paper elevation={2} className="forms-container">
+            <Dropdown
+              setIdError={setEmployeeIdError}
+              setId={setEmployee}
+              select={employeeList}
+              error={employeeIdError}
+              field="Peluquero"
+              className={"form-employee-field"}
+              setIdHelperMessage={setEmployeeIdHelperMessage}
+              idHelperMessage={employeeIdHelperMessage}
+              optionLabel={(option) =>
+                `${option.name} ${option.surname_1} ${option.surname_2}`
+              }
+            />
+          </Paper>
+          <br />
+          <Paper elevation={2} className="forms-container">
+            <Dropdown
+              setIdError={setServiceIdError}
+              setId={setService}
+              select={servicesList}
+              idHelperMessage={serviceIdHelperMessage}
+              field={"Servicio"}
+              error={serviceIdError}
+              className={"form-service-field"}
+              setIdHelperMessage={setServiceIdHelperMessage}
+              optionLabel={(option) => `${option.name}`}
+            />
 
-        <br />
-
-        <label>
-          Servicios disponibles:
-          {listServices}
-          <button onClick={addService}>+</button>
-        </label>
-
-        <br />
-
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? servicesList.filter(
+            {servicesList.filter(
               (serviceFilter) => serviceFilter.id == service
-            )[0].description
-          : "Selecciona un servicio"}
-        <br />
-        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
-          ? "Duración: " +
-            servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0].duration +
-            " minutos"
-          : "Duración: "}
+            )[0]
+              ? servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0].description
+              : ""}
 
-        <br />
+            <p>
+              {servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0]
+                ? "Duración: " +
+                  servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].duration +
+                  " minutos"
+                : ""}
+            </p>
 
-        <label>Servicios contratados:</label>
+            <p>
+              {servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0]
+                ? "Precio: " +
+                  servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].duration +
+                  " €"
+                : ""}
+            </p>
 
-        {listServicesContracted}
+            <p>
+              <Button variant="contained" color="primary" onClick={addService}>
+                Añadir Servicio +
+              </Button>
+            </p>
 
-        <div>
-          <DayPicker
-            onDayClick={handleDayClick}
-            locale="es"
-            months={constnt.MONTHS}
-            weekdaysLong={constnt.WEEKDAYS_LONG}
-            weekdaysShort={constnt.WEEKDAYS_SHORT}
-            firstDayOfWeek={1}
-            showOutsideDays
-            selectedDays={state.selectedDay}
-            todayButton="Éste mes"
-            disabledDays={[{ daysOfWeek: [0] },{before: new Date(),}]}
-            fromMonth={new Date()}
-            toMonth={
-              new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-            }
-          />
+            {listServicesContracted}
+          </Paper>
+          <br />
+          <Paper elevation={2} className="row">
+            <div className="column">
+              <DayPicker
+                onDayClick={handleDayClick}
+                locale="es"
+                months={constnt.MONTHS}
+                weekdaysLong={constnt.WEEKDAYS_LONG}
+                weekdaysShort={constnt.WEEKDAYS_SHORT}
+                firstDayOfWeek={1}
+                showOutsideDays
+                selectedDays={state.selectedDay}
+                todayButton="Éste mes"
+                disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+                fromMonth={new Date()}
+                toMonth={
+                  new Date(new Date().getFullYear(), new Date().getMonth() + 2)
+                }
+              />
+            </div>
 
-          {listAvailability}
-        </div>
+            <div className="column">{listAvailability}</div>
+          </Paper>
 
-        <p>
-          {" "}
-          <input type="submit" value="Submit" />{" "}
-        </p>
-      </form>
-    </div>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Desea reservar cita?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Let Google help apps determine location. This means sending
+                anonymous location data to Google, even when no apps are
+                running.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={(e) => handleClose(`2`)} color="primary">
+                Cancelar
+              </Button>
+              <Button
+                onClick={(e) => handleClose(`1`)}
+                color="primary"
+                autoFocus
+              >
+                Aceptar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </form>
+      </Paper>
+    </Container>
   );
 }
 

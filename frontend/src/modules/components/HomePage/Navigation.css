@@ -1,0 +1,48 @@
+.navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.navigation ul li {
+    display: inline-block;
+}
+
+.navigation ul li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s linear;
+    border-radius: 1.5px;
+}
+
+.navigation ul li a:hover{
+    background:  rgb(145, 181, 202);
+}
+
+.navbar-brand {
+    display: inline-block;
+}
+
+.container{
+    position: relative;
+    margin: 0rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(191, 207, 216);
+
+}
+
+.nav-link{
+    text-decoration: none;
+    color: black;
+}
+
+.nav-link:hover{
+    background:  rgb(145, 181, 202);
+}
+
+.navbar-brand{
+    text-decoration: none;
+    color: black;
+}

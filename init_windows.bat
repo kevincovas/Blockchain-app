@@ -10,4 +10,5 @@ cd frontend
 start npm run dev
 cd ..
 code .
+start npm run compile:css:watch
 exit

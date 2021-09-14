@@ -1,0 +1,12 @@
+table {
+  margin-bottom: 20px; }
+
+input {
+  display: block;
+  min-width: 500px;
+}
+
+.client-view{
+  margin: 30px;
+}
+
