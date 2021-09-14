@@ -7,29 +7,29 @@ class Dropdown extends Component {
   // To Get Hairdressers
   render() {
     return (
-      <div className="form-employee-field">
+      <div className={this.props.className}>
         <Autocomplete
           onChange={(event, value) => {
-            if (value == null) this.props.setEmployeeId(0);
+            if (value == null) this.props.setId(0);
             else {
-              this.props.setEmployeeId(value.id);
+              this.props.setId(value.id);
               if (value.id) {
-                this.props.setEmployeeIdError(false);
-                this.props.setEmployeeIdHelperMessage(
-                  this.props.employeeIdDefaultHelperMessage
+                this.props.setIdError(false);
+                this.props.setIdHelperMessage(
+                  this.props.IdDefaultHelperMessage
                 );
               }
             }
           }}
           size="small"
           fullWidth
-          options={this.props.employeesSelect}
+          options={this.props.select}
           renderInput={(params) => (
             <TextField
               {...params}
               label={this.props.field}
-              helperText={this.props.employeeIdHelperMessage}
-              error={this.props.employeeIdError}
+              helperText={this.props.IdHelperMessage}
+              error={this.props.IdError}
             />
           )}
           getOptionLabel={(option) =>

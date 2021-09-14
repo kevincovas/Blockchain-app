@@ -4,12 +4,13 @@ import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
 import Dropdown from "./components/dropdown/Dropdown";
+import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, TableFooter } from "@material-ui/core";
 
 function Reservations() {
-  
   // Messages for Material UI
-  const employeeIdDefaultHelperMessage =    "Selecciona el peluquero si tienes preferencias.";
-  const serviceIdDefaultHelperMessage =    "Selecciona los servicios deseados.";
+  const employeeIdDefaultHelperMessage =
+    "Selecciona el peluquero si tienes preferencias.";
+  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
 
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
@@ -31,9 +32,13 @@ function Reservations() {
 
   // Material UI
   const [employeeIdError, setEmployeeIdError] = useState(false);
-  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(employeeIdDefaultHelperMessage);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
+    employeeIdDefaultHelperMessage
+  );
   const [serviceIdError, setServiceIdError] = useState(false);
-  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(serviceIdDefaultHelperMessage);
+  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
+    serviceIdDefaultHelperMessage
+  );
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
@@ -71,9 +76,9 @@ function Reservations() {
                 (serviceFilter) => serviceFilter.id == service
               )[0].name
             }
-            <button value={service} onClick={removeService}>
+            <Button variant="contained" color="primary" onClick={(e) => removeService(`${service}`)}>
               -
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
@@ -90,7 +95,7 @@ function Reservations() {
         {" "}
         {timeframeList.map((timeFrame) => (
           <li key={timeFrame.id}>
-            <button value={timeFrame.id} onClick={setTimeTableButton}>
+            <Button  variant="contained" color="primary"  value={timeFrame.id} onClick={setTimeTableButton}>
               {timeFrame.date_ini.getHours() +
                 ":" +
                 timeFrame.date_ini.getMinutes() +
@@ -98,7 +103,7 @@ function Reservations() {
                 timeFrame.date_end.getHours() +
                 ":" +
                 timeFrame.date_end.getMinutes()}
-            </button>
+            </Button>
           </li>
         ))}{" "}
       </ul>
@@ -244,9 +249,6 @@ function Reservations() {
 
   // Set State of Selected TimeTable
   function setTimeTableButton() {
-    // Not submit form
-    event.preventDefault();
-
     // Set TimeFrame
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == event.target.value)[0]
@@ -256,8 +258,7 @@ function Reservations() {
   // Submit Information to backed API
   const handleSubmit = async () => {
     // TODO Crear Cita por WS + check todos los campos correctos
-    event.preventDefault();
-
+    
     // Call Booking API
     if (timeframe != null) {
       let person_id = 1;
@@ -293,9 +294,7 @@ function Reservations() {
   };
 
   function addService() {
-    // Not submit all form
-    event.preventDefault();
-console.log(employee);
+
     // Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
     if (
       servicesContracted.filter((serviceFilter) => serviceFilter == service)
@@ -306,13 +305,11 @@ console.log(employee);
         setServicesContracted((prevState) => [...prevState, service]);
   }
 
-  function removeService() {
-    // Not submit form
-    event.preventDefault();
+  function removeService(service_in) {
 
     // Remove Service
     setServicesContracted((prevState) =>
-      prevState.filter((item) => item !== event.target.value)
+      prevState.filter((item) => item.toString() !== service_in)
     );
   }
 
@@ -320,31 +317,32 @@ console.log(employee);
 
   // Render
   return (
-
     <div>
       <form onSubmit={(event) => event.preventDefault()}>
         <Dropdown
-          setEmployeeIdError={setEmployeeIdError}
-          setEmployeeId={setEmployee}
-          employeesSelect={employeeList}
+          setIdError={setEmployeeIdError}
+          setId={setEmployee}
+          select={employeeList}
           helperText={employeeIdHelperMessage}
           error={employeeIdError}
           field="Peluquero"
-          setEmployeeIdHelperMessage={setEmployeeIdHelperMessage}
+          className={"form-employee-field"}
+          setIdHelperMessage={setEmployeeIdHelperMessage}
         />
 
         <Dropdown
-          setEmployeeIdError={setServiceIdError}
-          setEmployeeId={setService}
-          employeesSelect={servicesList}
+          setIdError={setServiceIdError}
+          setId={setService}
+          select={servicesList}
           helperText={serviceIdHelperMessage}
           field={"Servicio"}
           error={serviceIdError}
-          setEmployeeIdHelperMessage={setServiceIdHelperMessage}
+          className={"form-service-field"}
+          setIdHelperMessage={setServiceIdHelperMessage}
         />
 
         <label>
-         <button onClick={addService}>+</button>
+          <Button  variant="contained" color="primary"  onClick={addService}>+</Button>
         </label>
 
         <br />
@@ -362,8 +360,17 @@ console.log(employee);
             )[0].duration +
             " minutos"
           : "Duración: "}
-
         <br />
+        
+        {servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
+          ? "Precio: " +
+            servicesList.filter(
+              (serviceFilter) => serviceFilter.id == service
+            )[0].duration +
+            " €"
+          : "Precio: "}        
+
+<br/>
 
         <label>Servicios contratados:</label>
 
