@@ -176,6 +176,7 @@ function NewSale() {
         return [...prevState, fullProduct];
       }
     });
+    
   };
 
   const deleteSaleProduct = (productId) => {

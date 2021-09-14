@@ -1,0 +1,60 @@
+select,
+textarea,
+input {
+  display: block;
+  margin: 20px 0;
+  min-width: 300px; }
+
+table {
+  margin-bottom: 20px; }
+
+.view.new-client {
+  margin: min(10vw, 20px); }
+
+.new-client.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; }
+
+.new-client.main-column {
+  padding: 20px;
+  border: solid 1px black;
+  min-height: 70vh; }
+
+.buttons-container {
+  display: block;
+  overflow-y: auto;
+  border: solid 1px black;
+  padding: 2px; }
+  .buttons-container.products {
+    height: 80%; }
+  .buttons-container.categories {
+    height: 70%; }
+
+.MuiButton-root.product-button,
+.MuiButton-root.category-button {
+  font-size: 12px;
+  line-height: 0.8rem;
+  overflow-y: hidden;
+  width: 150px;
+  height: 50px;
+  margin: 2px;
+  background-color: antiquewhite;
+  text-transform: none; }
+  .MuiButton-root.product-button:hover,
+  .MuiButton-root.category-button:hover {
+    background-color: aquamarine; }
+
+.MuiTableHead-root .MuiTableCell-head {
+  background-color: grey;
+  color: black; }
+
+.MuiTable-root {
+  margin-top: 20px; }
+
+form.new-client-people-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; }
+  form.new-client-people-form .form-customer-field {
+    padding-right: 5px; }
+  form.new-client-people-form .form-employee-field {
+    padding-left: 5px; }
