@@ -12,8 +12,8 @@ INSERT INTO users (email, password) VALUES
 	('Cerdán@gmail.com', '$2a$10$8Yzla/tY9K.FOOnuqLSnaeXSdrTn1m9vxGuIgfx5nESWyDkc4rLOW'),
 	('Lorente1@gmail.com', '$2a$10$aSKXaosbpQz54vukNiZmyOPdubEe39cC/R6S7r.q2L81Ud4ORWwOy'),
 	('Bejarano@gmail.com', '$2a$10$f2/JnpF0nvS8HXGWwRqyJuuUDdhekJTBfJzyNRZuXV0UWHsKCH9HK'),
-	('Test 1@gmail.com', '$2a$10$Haxuey8W/m96O/rU337FQuM4sJRZQHjZqIdGdMy/UOtnKd6IYYXA2'),
-	('Test 2@gmail.com', '$2a$10$py4i4fKr5chWYneADBkyX.EEIKTNW5FLf9XJ5nrWCGiFwIe2aDgx.');
+	('Test_1@gmail.com', '$2a$10$Haxuey8W/m96O/rU337FQuM4sJRZQHjZqIdGdMy/UOtnKd6IYYXA2'),
+	('Test_2@gmail.com', '$2a$10$py4i4fKr5chWYneADBkyX.EEIKTNW5FLf9XJ5nrWCGiFwIe2aDgx.');
 
 INSERT INTO people (name, surname_1 , user_id) VALUES
     ('Aitor', 'Garzón' , 1),
