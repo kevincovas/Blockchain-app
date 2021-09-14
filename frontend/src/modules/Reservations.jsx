@@ -282,8 +282,8 @@ function Reservations() {
     );
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
-    // TODO If Dates Exceeds Store limits (break + closing time), not available to book
-    if (date_end.getHours() >= 19 && date_end.getMinutes() > 0)
+    // If Dates Exceeds Store limits (break + closing time), not available to book
+    if ( (date_end.getHours() >= 23 && date_end.getMinutes() > 0) || (date_end.getHours() > 23 && date_end.getMinutes() == 0) )
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
@@ -347,8 +347,6 @@ function Reservations() {
 
   // Submit Information to backed API
   const handleSubmit = async () => {
-    
-    // TODO Crear Cita por WS + check todos los campos correctos
 
     // Close Dialog
     setOpen(false);
