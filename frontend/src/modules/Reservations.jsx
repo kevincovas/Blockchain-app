@@ -3,8 +3,11 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
+import Hairdressers from "./components/Hairdressers/Hairdresser";
 
 function Reservations() {
+    const employeeIdDefaultHelperMessage =    "Selecciona el peluquero que ha cobrado el servicio.";
+
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
 
@@ -22,6 +25,9 @@ function Reservations() {
   // Timeframes
   const [timeframe, setTimeFrame] = useState(null);
   const [timeframeList, setTimeFrameList] = useState([]);
+
+  const [employeeIdError, setEmployeeIdError] = useState(false);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(employeeIdDefaultHelperMessage);
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
@@ -205,7 +211,11 @@ function Reservations() {
   function filterAvailability(horario, tiempo, result, horariosDisponibles) {
     // Get Dates in Javascript Format
     let date_ini = new Date(state.selectedDay);
-    date_ini.setHours(horario, Number.isInteger(horario) ? 0 :  ( horario %1 ) * 60, 0);
+    date_ini.setHours(
+      horario,
+      Number.isInteger(horario) ? 0 : (horario % 1) * 60,
+      0
+    );
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // TODO If Dates Exceeds Store limits (break + closing time), not available to book
@@ -314,7 +324,7 @@ function Reservations() {
   function addService() {
     // Not submit all form
     event.preventDefault();
-
+console.log(employee);
     // Lo Pongo a los Servicios Contratados (si no lo he contratado aún)
     if (
       servicesContracted.filter((serviceFilter) => serviceFilter == service)
@@ -339,14 +349,17 @@ function Reservations() {
 
   // Render
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Peluquero:
-          {listEmployee}
-        </label>
 
-        <br />
+    <div>
+      <form onSubmit={(event) => event.preventDefault()}>
+        <Hairdressers
+          setEmployeeIdError={setEmployeeIdError}
+          setEmployeeId={setEmployee}
+          employeesSelect={employeeList}
+          helperText={employeeIdHelperMessage}
+          error={employeeIdError}
+          setEmployeeIdHelperMessage={setEmployeeIdHelperMessage}
+        />
 
         <label>
           Servicios disponibles:
@@ -387,7 +400,7 @@ function Reservations() {
             showOutsideDays
             selectedDays={state.selectedDay}
             todayButton="Éste mes"
-            disabledDays={[{ daysOfWeek: [0] },{before: new Date(),}]}
+            disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
             fromMonth={new Date()}
             toMonth={
               new Date(new Date().getFullYear(), new Date().getMonth() + 2)
