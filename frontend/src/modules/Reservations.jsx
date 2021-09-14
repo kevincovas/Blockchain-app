@@ -119,7 +119,7 @@ function Reservations() {
   let listAvailability = null;
   if (timeframeList.length != 0) {
     listAvailability = (
-      <List  style={{maxHeight: '95%', overflow: 'auto'}} >
+      <List style={{maxHeight: '95%', overflow: 'auto'}} >
         {timeframeList.map((timeFrame) => (
           <ListItem
             button
