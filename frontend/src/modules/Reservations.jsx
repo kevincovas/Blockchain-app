@@ -52,14 +52,21 @@ function Reservations() {
 
   const [open, setOpen] = React.useState(false);
 
+  // View Alert
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  // Dismiss or Continue
+  const handleClose = (action) => {
+    // Continue with Reservation
+    if (action == 2) {
+      setTimeFrame(null);
+      setOpen(false);
+    } else handleSubmit();
   };
 
+  // Temporal Style
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -135,7 +142,9 @@ function Reservations() {
                 /*
                 onClick={setTimeTableButton}*/
 
-                onClick={handleClickOpen}
+                /*  onClick={handleClickOpen} */
+
+                onClick={(e) => setTimeTableButton(`${timeFrame.id}`)}
               >
                 {timeFrame.date_ini.getHours() +
                   ":" +
@@ -290,11 +299,13 @@ function Reservations() {
   }
 
   // Set State of Selected TimeTable
-  function setTimeTableButton() {
+  function setTimeTableButton(timeframe_in) {
     // Set TimeFrame
     setTimeFrame(
-      timeframeList.filter((prevState) => prevState.id == event.target.value)[0]
+      timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
     );
+    // Open Dialog
+    handleClickOpen();
   }
 
   // Submit Information to backed API
@@ -460,7 +471,7 @@ function Reservations() {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Use Google's location service?"}
+            {"Desea reservar cita?"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -469,10 +480,10 @@ function Reservations() {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={(e) => handleClose(`2`)} color="primary">
               Disagree
             </Button>
-            <Button onClick={handleClose} color="primary" autoFocus>
+            <Button onClick={(e) => handleClose(`1`)} color="primary" autoFocus>
               Agree
             </Button>
           </DialogActions>
