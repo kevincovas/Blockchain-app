@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSnackbar } from "notistack";
 import Grid from "@material-ui/core/Grid";
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -35,7 +34,6 @@ function Reservations() {
   const [timeframeList, setTimeFrameList] = useState([]);
 
   // Material UI
-
   const employeeIdDefaultHelperMessage =
     "Selecciona el peluquero si tienes preferencias.";
   const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
@@ -343,6 +341,10 @@ function Reservations() {
 
       // Load Time Zones again
       loadAvailability();
+
+      // Close Dialog
+      setOpen(false);
+
     }
   };
 
