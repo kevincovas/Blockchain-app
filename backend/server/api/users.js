@@ -7,6 +7,8 @@ const router = new Router();
 const okResult = (results) => ({ status: "OK", results })
 const errorResult = (details) => ({ status: "ERROR", details })
 
+const CLIENT_ROLE_NAME = "customer"
+
 //Obtenemos todos los usuarios
 router.get('/', async (req,res) =>{
     const { ok, found, data } = await db.getUsers();
@@ -49,10 +51,18 @@ router.post("/login", async (req, res) => {
         if (!passwordMatches) {
             return res.status(400).json(errorResult(`Wrong email/password combination`));
         }
+        const roles_result = await db.getUserRolesById(data.id);
 
-        const token = auth.createToken(email);
-        res.status(201).send(token);
-        
+        if(!roles_result.ok){
+            return res.status(500).json(errorResult(roles_result.data));
+        } else if (!roles_result.found){
+            return res
+                .status(400)
+                .json(errorResult(`Error al iniciar sesión. Por favor, contacte con nosotros para solucionarlo.`));
+        } else {
+            const token = auth.createToken(data, roles_result.data);
+            res.status(201).send(token);
+        }
         //return res.json(okResult(data));
     } 
 });
@@ -75,7 +85,7 @@ router.get('/:id', async (req,res) => {
 router.post("/exist", async (req,res) => {
     const {email} = req.body;
     try{
-        const userExist = await db.checkIfUserExists(email);
+        const userExist = await db.checkIfUserExistsByEmail(email);
         res.json(okResult(userExist));
     }catch (e){
         res.status(500).json(errorResult(e.toString()));
@@ -91,12 +101,25 @@ router.post("/register", async (req,res) => {
     if(!password){
         return res.status(400).json(errorResult("Missing 'password' field"));
     }
+    const userExists = await db.checkIfUserExistsByEmail(email);
+    if(!userExists.ok){
+        return res.status(500).json(errorResult(data));
+    } else if(userExists.data.exists) {
+        return res.status(400).json(errorResult("Ya existe un usuario asociado a este correo."));
+    }
     try{
         const hashedPassword = await auth.hashPassword(password);
         console.log(`Hashed password: ${hashedPassword}`);
-        const newUser = await db.newUser(email,hashedPassword);
-        res.json(okResult(newUser));
-    }catch (e){
+        const addUserResult = await db.newUser(email,hashedPassword);
+        if(!addUserResult.ok){
+            return res.status(400).json(errorResult(data));
+        }
+        const addUserRoleResult = await db.addUserRole(addUserResult.data.id, CLIENT_ROLE_NAME);
+        if(!addUserRoleResult.ok){
+            return res.status(400).json(errorResult(addUserRoleResult.data));
+        }
+        res.json(okResult(addUserResult.data));
+    } catch (e){
         res.status(500).json(errorResult(e.toString()));
     } 
 });

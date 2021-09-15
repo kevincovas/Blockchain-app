@@ -1,9 +1,10 @@
 // Get Product Categories API call
-export const getProductCategories = async (HOST) => {
+export const getProductCategories = async (HOST, token) => {
   const res = await fetch(HOST + `/sales/get-product-categories/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
   });
   const response = await res.json();
@@ -11,11 +12,12 @@ export const getProductCategories = async (HOST) => {
 };
 
 // Get Products API call
-export const getProducts = async (HOST) => {
+export const getProducts = async (HOST, token) => {
   const res = await fetch(HOST + `/sales/get-products/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
   });
   const response = await res.json();
@@ -24,11 +26,12 @@ export const getProducts = async (HOST) => {
 
 
 // Create Sale API call
-export const createSale = async (HOST, sale) => {
+export const createSale = async (HOST, token, sale) => {
   const res = await fetch(HOST + `/sales/create-sale/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify(sale),
   });
@@ -37,11 +40,12 @@ export const createSale = async (HOST, sale) => {
 };
 
 // Add Product to Sale API call
-export const addProductToSale = async (HOST, saleProduct) => {
+export const addProductToSale = async (HOST, token, saleProduct) => {
   const res = await fetch(HOST + `/sales/add-product-to-sale/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify(saleProduct),
   });
@@ -50,11 +54,12 @@ export const addProductToSale = async (HOST, saleProduct) => {
 }
 
 // Get Customers API call
-export const getPeopleByRole = async (HOST, role) => {
+export const getPeopleByRole = async (HOST, token, role) => {
   const res = await fetch(HOST + `/sales/get-people-by-role/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
     body: JSON.stringify({role}),
   });

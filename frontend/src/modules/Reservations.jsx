@@ -3,7 +3,7 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
-import Dropdown from "./components/dropdown/Dropdown";
+import Dropdown from "./components/Dropdown/Dropdown";
 import Button from "@material-ui/core/Button";
 import { useSnackbar } from "notistack";
 import Dialog from "@material-ui/core/Dialog";
