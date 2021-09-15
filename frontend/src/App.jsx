@@ -9,6 +9,11 @@ import Sales from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
 import Clients from "./modules/clients";
+import Context from "../context/context";
+
+const initialContext = {
+  saleProducts: [],
+};
 
 function App() {
   const token = localStorage.getItem("token");
@@ -38,7 +43,7 @@ function App() {
           strict
           path="/sales"
           render={() => (isLoggedIn ? <Sales /> : <Redirect to="/login" />)}
-        />*//*}
+        />*/ /*}
         <Route
           strict
           path="/sales"
@@ -65,23 +70,45 @@ function App() {
 }*/
 
   return (
-    <div className="App">
-      <Router>
-        <Navigation />
+    <Context.Provider value={initialContext}>
+      <div className="App">
+        <Router>
+          <Navigation />
           <Route path="/" exact component={() => <Home />} />
-          <Route path="/login" exact component={() => <LoginAndRegister onLogin={login} />} />
-          <Route path="/register" exact component={() => <LoginAndRegister />} />
           <Route path="/clients" exact component={() => <Clients />} />
-          <Route path="/reservations" render={() =>
-            isLoggedIn ? <Reservations /> : <Redirect to="/login" />}
+          <Route
+            path="/reservations"
+            exact
+            render={() =>
+              isLoggedIn ? (
+                <Reservations />
+              ) : (
+                <LoginAndRegister onLogin={login} />
+              )
+            }
           />
-          <Route path="/sales" render={() => 
-          (isLoggedIn ? <Sales /> : <Redirect to="/login" />)}
-        />
-      </Router>
-    </div>
+          <Route
+            path="/login"
+            render={() =>
+              isLoggedIn ? <Home /> : <LoginAndRegister onLogin={login}/>
+            }
+          />
+          <Route
+            path="/register"
+            render={() =>
+              isLoggedIn ? <Home /> : <LoginAndRegister onLogin={login}/>
+            }
+          />
+          <Route
+            path="/sales"
+            render={() =>
+              isLoggedIn ? <Sales /> : <LoginAndRegister onLogin={login} />
+            }
+          />
+        </Router>
+      </div>
+    </Context.Provider>
   );
 }
-
 
 export default App;
