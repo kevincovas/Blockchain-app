@@ -46,9 +46,3 @@ INSERT INTO product_categories (name) VALUES
 INSERT INTO products (name , Description , price ,  duration ,   is_service ,  is_for_women, category) VALUES
 ('Corte' , 'Te cortamos el pelo bien' ,  10 , 30 , true , false, 1),
 ('Tinte' , 'Te damos tinte a lo CR7 ', 5 , 60 , true , false, 2);
-
-insert into reservations(person_id , booked_employee_id , created_by_id, date_ini , date_end)
-values
-(  9 , 5 , 9, '2021/09/18 13:00:00.00' , '2021/09/18 14:00:00.00'  ),
-(  9 , 5 , 9, '2021/09/18 15:00:00.00' , '2021/09/18 16:00:00.00'  );
-
