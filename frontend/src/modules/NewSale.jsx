@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { HOST, METHODS_OF_PAYMENT } from "../config/const";
 import * as api from "../api/Sales";
 import "./NewSale.css";
@@ -16,6 +16,7 @@ import {
   TableCell,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import Context from "../../context/context";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -57,7 +58,7 @@ function NewSale() {
   const [categoriesSelect, setCategoriesSelect] = useState([]);
   const [customersSelect, setCustomerSelect] = useState([]);
   const [employeesSelect, setEmployeesSelect] = useState([]);
-  const [saleProducts, setSaleProducts] = useState([]);
+  const {saleProducts, setSaleProducts} = useContext(Context);
   const [totalPrice, setTotalPrice] = useState(0.0);
   const [saleCustomerId, setSaleCustomerId] = useState("");
   const [customerIdError, setCustomerIdError] = useState(false);
