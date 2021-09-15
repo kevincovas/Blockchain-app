@@ -72,9 +72,10 @@ router.post("/add", async (req, res) => {
   if (!ok) {
     return res.status(500).json(errorResult(data));
   } else {
+    
     // TODO Send Mail with all info
     let from_mail = "aitor.java@gmail.com";
-    let from_name = "Aitor";
+    let from_name = "Peluquería ARKUS";
     let to_mail = "aitor.java@gmail.com";
     let to_name = "Aitor";
     let subject = "Confirmación de reserva";
@@ -86,6 +87,8 @@ router.post("/add", async (req, res) => {
       <br> Peluquero: 
       <br /><br /><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data}' /> `;
     let custom_id = "AppGettingStartedTest";
+
+    // Send Mail via Mailjet
     await mailjet.sendEmail(
       from_mail,
       from_name,

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
+import * as apiSales from "../api/Sales";
 import * as constnt from "../config/const";
 import Dropdown from "./components/Dropdown/Dropdown";
 import Button from "@material-ui/core/Button";
@@ -18,20 +19,45 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
-
 import "./Reservations.css";
 
 function Reservations() {
+  // Get Token
+  const token = localStorage.getItem("token");
+  // Get Role
+
+  // Get User Id
+
+  // Customer
+  const [customer, setCustomer] = useState(0);
+  const [customerList, setCustomerList] = useState([]);
+  const customerIdDefaultHelperMessage = "Selecciona el cliente.";
+  const [customerIdError, setCustomerIdError] = useState(false);
+  const [customerIdHelperMessage, setCustomerIdHelperMessage] = useState(
+    customerIdDefaultHelperMessage
+  );
+
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
 
   // Employee
   const [employee, setEmployee] = useState(0);
   const [employeeList, setEmployeeList] = useState([]);
+  const employeeIdDefaultHelperMessage =
+    "Selecciona el peluquero si tienes preferencias.";
+  const [employeeIdError, setEmployeeIdError] = useState(false);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
+    employeeIdDefaultHelperMessage
+  );
 
   // Services Availables
   const [service, setService] = useState(null);
   const [servicesList, setServicesList] = useState([]);
+  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  const [serviceIdError, setServiceIdError] = useState(false);
+  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
+    serviceIdDefaultHelperMessage
+  );
 
   // Services Contracted
   const [servicesContracted, setServicesContracted] = useState([]);
@@ -40,19 +66,10 @@ function Reservations() {
   const [timeframe, setTimeFrame] = useState(null);
   const [timeframeList, setTimeFrameList] = useState([]);
 
-  // Material UI
-  const employeeIdDefaultHelperMessage =
-    "Selecciona el peluquero si tienes preferencias.";
-  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  // Snackbar
   const { enqueueSnackbar } = useSnackbar();
-  const [employeeIdError, setEmployeeIdError] = useState(false);
-  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
-    employeeIdDefaultHelperMessage
-  );
-  const [serviceIdError, setServiceIdError] = useState(false);
-  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
-    serviceIdDefaultHelperMessage
-  );
+
+  // Alert Frame
   const [open, setOpen] = useState(false);
   // View Alert
   const handleClickOpen = () => {
@@ -72,6 +89,9 @@ function Reservations() {
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
   useEffect(() => {
+    // Customers
+    fetchCustomers();
+
     // Peluqueros
     loadEmployeeList();
 
@@ -158,6 +178,28 @@ function Reservations() {
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
 
   // API CALLS ////////////////////////////////////////////////////////////////////////////////////
+
+  // User
+  const fetchCustomers = async () => {
+    try {
+      console.log(token);
+      await apiSales
+        .getPeopleByRole(constnt.HOST, token, "customer")
+        .then(({ error, error_message, data }) => {
+          if (error) {
+            enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
+              variant: "error",
+            });
+          } else {
+            setCustomerList(data);
+          }
+        });
+    } catch (error) {
+      enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
+        variant: "error",
+      });
+    }
+  };
 
   // Employee
   const loadEmployeeList = async () => {
@@ -322,7 +364,6 @@ function Reservations() {
       }
     }
     // Not Employee Selected (get any employee available)
-    // TODO (If anybody is available then not possible to book)
     else {
       // Hairdressers available
       let hairdressersBlocked = [];
@@ -361,8 +402,15 @@ function Reservations() {
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
     );
+
+    // Not Customer Selected
+    if (customer == 0) {
+      enqueueSnackbar("Error: Ningún cliente seleccionado.", {
+        variant: "error",
+      });
+    }
     // Open Dialog
-    handleClickOpen();
+    else handleClickOpen();
   }
 
   // Submit Information to backed API
@@ -372,8 +420,8 @@ function Reservations() {
 
     // Call Booking API
     if (timeframe != null) {
-      // Get Data to send to API
-      let person_id = 1;
+      // TODO Get Data to send to API
+      let person_id = customer;
       let booked_employee_id = timeframe.employee;
       let created_by_id = 1;
       let date_ini = timeframe.date_ini;
@@ -388,7 +436,6 @@ function Reservations() {
         date_end.getTime() - date_end.getTimezoneOffset() * 60 * 1000
       );
 
-      // TODO Acabar llamada con person_id , booked_employee y created_by_id
       // Book Registration
       const inserted = await api.addReservation(
         constnt.HOST,
@@ -444,6 +491,24 @@ function Reservations() {
         <form onSubmit={(event) => event.preventDefault()}>
           <Paper elevation={2} className="forms-container">
             <Dropdown
+              setIdError={setCustomerIdError}
+              setId={setCustomer}
+              select={customerList}
+              error={customerIdError}
+              field="Cliente"
+              className={"form-customer-field"}
+              setIdHelperMessage={setCustomerIdHelperMessage}
+              idHelperMessage={customerIdHelperMessage}
+              optionLabel={(option) =>
+                `${option.name} ${option.surname_1} ${option.surname_2}`
+              }
+            />
+          </Paper>
+
+          <br />
+
+          <Paper elevation={2} className="forms-container">
+            <Dropdown
               setIdError={setEmployeeIdError}
               setId={setEmployee}
               select={employeeList}
@@ -457,6 +522,7 @@ function Reservations() {
               }
             />
           </Paper>
+
           <br />
           <Paper elevation={2} className="forms-container">
             <Dropdown
