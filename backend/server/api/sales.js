@@ -52,8 +52,7 @@ router.post("/get-people-by-role/", authenticated, isHairdresser, async (req, re
   }
 });
 
-<<<<<<< HEAD
-router.post("/get-people-by-role-extended/", async (req, res) => {
+router.post("/get-people-by-role-extended/", authenticated, isHairdresser, async (req, res) => {
   const role = req.body;
   const { error, error_message, data } = await db.getPeopleByRoleExtended(role);
   if (error) {
@@ -63,10 +62,7 @@ router.post("/get-people-by-role-extended/", async (req, res) => {
   }
 });
 
-router.post("/create-sale/", async (req, res) => {
-=======
-router.post("/create-sale/", authenticated, isHairdresser, async (req, res) => {
->>>>>>> 7d95ac71c4539447ed04bbe1a95e4c90443d652e
+router.post("/create-sale/", authenticated, isHairdresser,async (req, res) => {
   const sale = req.body;
   // var error = false;
   // var missingFieldsErrorMessage = `missing fields: `;

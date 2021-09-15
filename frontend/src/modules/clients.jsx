@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as api from "../api/Clients";
 import "./Clients.css";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { useSnackbar } from "notistack";
 import {
   Table,
   TableHead,
@@ -36,6 +37,7 @@ const clientStructure = {
 }
 
 function ClientSearch() {
+  const token = localStorage.getItem("token");
   const [clientsList, setClientsList] = useState([]);
   const [clientsListFiltered, setclientsListFiltered] = useState([]);
   const [clientsFilter, setClientsFilter] = useState("");
@@ -43,6 +45,7 @@ function ClientSearch() {
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [clientsIdError, setclientsIdError] = useState(false);
   const [clientsIdHelperMessage, setclientsIdHelperMessage] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
 
 
@@ -51,17 +54,21 @@ function ClientSearch() {
     const fetchClients = async () => {
       try {
         await api
-          .getPeopleByRoleExtended("customer")
+          .getPeopleByRoleExtended("customer", token)
           .then(({ error, error_mesage, data }) => {
             if (error) {
-              alert.apply(`Error: ${error_message}`);
+              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`,{
+                variant: "error",
+              });
             } else {
               setClientsList(data);
               setclientsListFiltered(data);
             }
           });
       } catch (error) {
-        alert.apply(error.toString());
+        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`,{
+          variant: "error",
+        });
       }
     };
     fetchClients();
@@ -126,13 +133,13 @@ function ClientSearch() {
         <div className="clients main-column right">
           {showClientDetails ? (
             <>
-              <h3>
-                <br>Nombre: </br>
-                {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
+              <h3>Nombre: {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
               </h3>
-              <p>
-                <br></br>
-              </p>
+              <p>Teléfono: {`${clientSelected.phone}`}</p>
+              <p>Fecha de nacimiento: {`${clientSelected.birth_date}`}</p>
+              <p>Género: {`${clientSelected.gender}`}</p>
+              <p>Observaciones: {`${clientSelected.observations}`}</p>
+              <p>Id Usuario: {`${clientSelected.user_id}`}</p>
             </>
           ) : (
             <></>
