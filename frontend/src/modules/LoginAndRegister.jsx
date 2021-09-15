@@ -35,6 +35,7 @@ function LoginAndRegister({ onLogin }) {
     try {
       var is_wrong =false;
       const userCreated = await api.user_exist({email})
+      console.log(`userCreated: ${userCreated.data}`);
       if (!userCreated.data.exists){   
         if(!name){
           setNameError("El campo nombre no puede estar vacío");
@@ -54,12 +55,19 @@ function LoginAndRegister({ onLogin }) {
         }
         console.log(`is_wrong: ${is_wrong}`)
         if (!is_wrong) {
-          const result = await api.register({ email, password });
-          validatePassword(password);
-          console.log(`Result user: ${JSON.stringify(result)}`);
-          const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone});
-          console.log(`Result client: ${JSON.stringify(result2)}`);
-          setMessage({ type: "success", text: "Usuario y cliente creado" });
+          const valPassword = validatePassword(password);
+        console.log(`valPassword: ${valPassword}`);
+          if(valPassword){
+            //console.log("Password válida");
+            const result = await api.register({ email, password });
+            //console.log(`Result de crear user: ${result.data}`);
+            const user_id = result.id;
+            console.log(`User id: ${user_id}`);
+            //console.log(`Result user: ${JSON.stringify(result)}`);
+            const result2 = await api.register_client({ name, surname_1, surname_2, gender, birth_date, phone, user_id});
+            console.log(`Result client: ${JSON.stringify(result2)}`);
+            setMessage({ type: "success", text: "Usuario y cliente creado" });
+          }
         }
       }else {
         setUserExistError("Este correo ya está registrado");
@@ -72,7 +80,9 @@ function LoginAndRegister({ onLogin }) {
   function validatePassword(p) {
     if ((p.length < 8 || (p.search(/[a-z]/i) < 0) || (p.search(/[0-9]/) < 0))) {
         alert("La contraseña debe tener almenos 8 carácteres, una letra y un número.")
+        return false;
     }
+    return true;
   }
 
   const login = async (e) => {

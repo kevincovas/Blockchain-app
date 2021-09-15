@@ -38,7 +38,7 @@ router.get('/:id', async (req,res) => {
 
 //Post de un nuevo cliente
 router.post("/registerClient", async (req,res) => {
-    const {name, surname_1, surname_2, gender, birth_date, phone, observations} = req.body;
+    const {name, surname_1, surname_2, gender, birth_date, phone, user_id} = req.body;
     //Validamos que lo que envian esta bien
     if(!name){
         return res.status(400).json(errorResult("Missing 'name' field"));
@@ -55,8 +55,11 @@ router.post("/registerClient", async (req,res) => {
     if(!phone){
         return res.status(400).json(errorResult("Missing 'phone' field"));
     }
+    if (!user_id){
+        return res.status(400).json(errorResult("Missing 'user_id' field"));
+    }
     try{
-        const newClient = await db.newClient(name, surname_1, surname_2, gender, birth_date, phone, observations);
+        const newClient = await db.newClient(name, surname_1, surname_2, gender, birth_date, phone, user_id);
         res.json(okResult(newClient));
     }catch (e){
         res.status(500).json(errorResult(e.toString()));

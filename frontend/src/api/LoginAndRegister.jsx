@@ -9,16 +9,17 @@ export const register = async ({ email, password }) => {
     body: JSON.stringify({ email, password }),
   });
   const json = await response.json();
-  return json;
+  console.log(`En la API: ${JSON.stringify(json)}`)
+  return json.results;
 }
 
-export const register_client = async ({name, surname_1, surname_2, gender, birth_date, phone}) => {
+export const register_client = async ({name, surname_1, surname_2, gender, birth_date, phone, user_id}) => {
   const response = await fetch(`${HOST}/clients/registerClient`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({name, surname_1, surname_2, gender, birth_date, phone}),
+    body: JSON.stringify({name, surname_1, surname_2, gender, birth_date, phone,user_id}),
   });
   const json = await response.json();
   return json;

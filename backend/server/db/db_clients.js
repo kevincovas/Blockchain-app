@@ -37,11 +37,11 @@ const getOneClient = async(id) => {
 }
 
 const newClientSQL = `
-    INSERT INTO people (name, surname_1, surname_2, gender, birth_date, phone, observations) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;
+    INSERT INTO people (name, surname_1, surname_2, gender, birth_date, phone, user_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;
 `;
 
-const newClient = async (name, surname_1, surname_2, gender, birth_date, phone, observations) => {
-    const result = await pool.query(newClientSQL, [name, surname_1, surname_2, gender, birth_date, phone, observations]);
+const newClient = async (name, surname_1, surname_2, gender, birth_date, phone, user_id) => {
+    const result = await pool.query(newClientSQL, [name, surname_1, surname_2, gender, birth_date, phone, user_id]);
     return result.rows;
 }
 
