@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';/*import "./LoginAndRegisterP
 import * as api from '../api/LoginAndRegister';
 import 'react-day-picker/lib/style.css';
 import { useLocation } from 'react-router';
+import { useSnackbar } from "notistack";
 
 const LOGIN = "Login";
 const REGISTER = "Register";
@@ -26,6 +27,7 @@ function LoginAndRegister({ onLogin }) {
   const [gender_error, setGenderError] = useState("");
   const [userExist_error, setUserExistError] = useState("");
   const [password_error, setPasswordError] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
 
   const register = async (e) => {
@@ -80,11 +82,14 @@ function LoginAndRegister({ onLogin }) {
       console.log(`error: ${error}`);
       console.log(`accessToken: ${accessToken}`);
       if (error) {
-        setMessage({ type: "error", text: error });
+         setMessage({ type: "error", text: error });
       } else {
-        onLogin(accessToken);
         if(accessToken == undefined){
-          setPasswordError("Usuario o contraseña incorrecta");
+          enqueueSnackbar(`Usuario o contraseña incorrecta`,{
+            variant: "error",
+          });
+        }else {
+        onLogin(accessToken);
         }
       }
     } catch (err) {

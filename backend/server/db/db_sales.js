@@ -24,7 +24,7 @@ const getPeolpleByRoleSQL =
 const getTableSQL = "SELECT * FROM $1;";
 
 const getPeolpleByRoleExtendedSQL = 
-  `SELECT id, name, surname_1, COALESCE(surname_2 , '') as surname_2, phone, birth_date, gender, observations, user_id
+  `SELECT id, name, surname_1, COALESCE(surname_2 , '') as surname_2, phone, birth_date, gender, COALESCE(observations , '') as observations, user_id
     FROM people 
     WHERE id IN 
       (SELECT user_id FROM user_roles 

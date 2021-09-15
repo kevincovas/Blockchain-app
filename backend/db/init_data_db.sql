@@ -23,9 +23,11 @@ INSERT INTO people (name, surname_1 , user_id) VALUES
 	('Luis', 'Llongueras' , 5),
 	('Alberto', 'Cerdán' , 6),
 	('David', 'Lorente' , 7),
-	('Jesús', 'Bejarano' , 8),
-	('Customer 1' , 'Test 1' , 9),
-	('Customer 2' , 'Test 2' , 10);  
+	('Jesús', 'Bejarano' , 8);
+
+INSERT INTO people (name, surname_1, birth_date, gender, user_id) VALUES
+	('Pau' , 'Borrós' , '1995-07-20', 'M', 9),
+	('Judit' , 'Comabasosa', '1991-02-21', 'W', 10);  
 	
 INSERT INTO user_roles ( user_id , role_id ) VALUES
 ( 1 , 1 ),

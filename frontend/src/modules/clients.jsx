@@ -48,14 +48,17 @@ function ClientSearch() {
   const { enqueueSnackbar } = useSnackbar();
 
 
-
+  /*const Date.prototype.addHours = function(h) {
+    this.setTime(this.getTime() + (h*60*60*1000));
+    return this;
+  }*/
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
         await api
           .getPeopleByRoleExtended("customer", token)
-          .then(({ error, error_mesage, data }) => {
+          .then(({ error, error_message, data }) => {
             if (error) {
               enqueueSnackbar(`Error extrayendo clientes: ${error_message}`,{
                 variant: "error",
@@ -136,7 +139,8 @@ function ClientSearch() {
               <h3>Nombre: {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
               </h3>
               <p>Teléfono: {`${clientSelected.phone}`}</p>
-              <p>Fecha de nacimiento: {`${clientSelected.birth_date}`}</p>
+              <p>Fecha de nacimiento: {`${clientSelected.birth_date.setTime(
+                  birth_date.getTime() - birth_date.getTimezoneOffset() * 60 * 1000)}`}</p>
               <p>Género: {`${clientSelected.gender}`}</p>
               <p>Observaciones: {`${clientSelected.observations}`}</p>
               <p>Id Usuario: {`${clientSelected.user_id}`}</p>
