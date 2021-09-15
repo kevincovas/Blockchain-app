@@ -4,9 +4,17 @@ import * as api from "../api/Sales";
 import "./NewSale.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useSnackbar } from 'notistack';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, TableFooter } from "@material-ui/core";
+import { useSnackbar } from "notistack";
+import { withStyles } from "@material-ui/core/styles";
+import {
+  TextField,
+  Button,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
 const StyledTableCell = withStyles((theme) => ({
@@ -37,11 +45,13 @@ const employeeId = "employeeId";
 const customerId = "customerId";
 const methodOfPaymentErrorMessage = "Por favor, escoja un método de pago.";
 const customerIdErrorMessage = "Por favor, escoja un cliente.";
-const employeeIdErrorMessage = "Por favor, escoja el peluquero que ha cobrado el servicio.";
-const employeeIdDefaultHelperMessage = "Selecciona el peluquero que ha cobrado el servicio.";
-
+const employeeIdErrorMessage =
+  "Por favor, escoja el peluquero que ha cobrado el servicio.";
+const employeeIdDefaultHelperMessage =
+  "Selecciona el peluquero que ha cobrado el servicio.";
 
 function NewSale() {
+  const token = localStorage.getItem("token");
   const [productsList, setProductsList] = useState([]);
   const [productsSelect, setProductsSelect] = useState([]);
   const [categoriesSelect, setCategoriesSelect] = useState([]);
@@ -53,7 +63,9 @@ function NewSale() {
   const [customerIdError, setCustomerIdError] = useState(false);
   const [customerIdHelperMessage, setCustomerIdHelperMessage] = useState("");
   const [employeeIdError, setEmployeeIdError] = useState(false);
-  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(employeeIdDefaultHelperMessage);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
+    employeeIdDefaultHelperMessage
+  );
   const [methodOfPaymentError, setMethodOfPaymentError] = useState("");
   const [saleEmployeeId, setSaleEmployeeId] = useState("");
   const [saleMethodOfPayment, setSaleMethodOfPayment] = useState("");
@@ -62,6 +74,8 @@ function NewSale() {
   const { enqueueSnackbar } = useSnackbar();
 
   const isMounted = useMounted();
+
+
 
   /*const checkGenericValue = (key, value) => {
     if(!value){
@@ -74,63 +88,79 @@ function NewSale() {
   useEffect(() => {
     const fetchProductCategories = async () => {
       try {
-        await api.getProductCategories(HOST).then((response) => {
+        await api.getProductCategories(HOST, token).then((response) => {
           const { error, error_message, data } = response;
           if (error) {
-            alert(`Error: ${error_message}`);
+            enqueueSnackbar(`Error extrayendo categorías de productoa: ${error_message}`,{
+              variant: "error",
+            });
           } else {
             setCategoriesSelect(data);
           }
         });
       } catch (error) {
-        alert(error.toString());
+        enqueueSnackbar(`Error extrayendo categorías de producto: ${error.toString()}`,{
+          variant: "error",
+        });
       }
     };
 
     const fetchProducts = async () => {
       try {
-        await api.getProducts(HOST).then(({ error, error_message, data }) => {
+        await api.getProducts(HOST, token).then(({ error, error_message, data }) => {
           if (error) {
-            alert(`Error: ${error_message}`);
+            enqueueSnackbar(`Error extrayendo productos: ${error_message}`,{
+              variant: "error",
+            });
           } else {
             setProductsList(data);
             setProductsSelect(data);
           }
         });
       } catch (error) {
-        alert(error.toString());
+        enqueueSnackbar(`Error extrayendo productos: ${error.toString()}`,{
+          variant: "error",
+        });
       }
     };
 
     const fetchCustomers = async () => {
       try {
         await api
-          .getPeopleByRole(HOST, "customer")
+          .getPeopleByRole(HOST, token, "customer")
           .then(({ error, error_message, data }) => {
             if (error) {
-              alert(`Error: ${error_message}`);
+              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`,{
+                variant: "error",
+              });
             } else {
               setCustomerSelect(data);
             }
           });
       } catch (error) {
-        alert(`Error getting employees: ${error.toString()}`);
+        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`,{
+          variant: "error",
+        });
       }
     };
 
     const fetchEmployees = async () => {
       try {
         await api
-          .getPeopleByRole(HOST, "hairdresser")
+          .getPeopleByRole(HOST, token, "hairdresser")
           .then(({ error, error_message, data }) => {
             if (error) {
-              alert(`Error: ${error_message}`);
+              nqueueSnackbar(`Error extrayendo peluqueros: ${error_message}`,{
+                variant: "error",
+              });
             } else {
               setEmployeesSelect(data);
             }
           });
       } catch (error) {
-        alert(error.toString());
+        enqueueSnackbar(`Error extrayendo peluqueros: ${error.toString()}`,{
+          variant: "error",
+        });
       }
     };
 
@@ -261,7 +291,7 @@ function NewSale() {
         setMethodOfPaymentError(methodOfPaymentErrorMessage);
         error = true;
       }
-      if(!error){
+      if (!error) {
         const sale = {
           customer_id: parseInt(saleCustomerId),
           employee_id: parseInt(saleEmployeeId),
@@ -270,21 +300,23 @@ function NewSale() {
           observations: observations,
         };
         try {
-          const { data } = await api.createSale(HOST, sale);
+          const { data } = await api.createSale(HOST, token, sale);
           saleProducts.forEach(async ({ id, quantity }) => {
             const saleProduct = {
               sale_id: parseInt(data.id),
               product_id: id,
               quantity,
             };
-            await api.addProductToSale(HOST, saleProduct);
+            await api.addProductToSale(HOST, token, saleProduct);
           });
         } catch (error) {
           alert(error.toString());
         }
       }
     } else {
-      enqueueSnackbar("Selecciona algun producto para seguir con la  venta.", {variant: 'error'});
+      enqueueSnackbar("Selecciona algun producto para seguir con la  venta.", {
+        variant: "error",
+      });
     }
   };
 
@@ -297,12 +329,15 @@ function NewSale() {
       <h1>Nueva venta</h1>
       <div className="new-sale container">
         <div className="new-sale main-column left">
-          <form className="new-sale-people-form" onSubmit={(event) => event.preventDefault()}>
+          <form
+            className="new-sale-people-form"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <div className="form-customer-field">
               <Autocomplete
                 onChange={(event, value) => {
                   setSaleCustomerId(value.id);
-                  if(value.id){
+                  if (value.id) {
                     setCustomerIdError(false);
                     setCustomerIdHelperMessage("");
                   }
@@ -310,24 +345,42 @@ function NewSale() {
                 size="small"
                 fullWidth
                 options={customersSelect}
-                renderInput={(params)=> <TextField {...params} label="Cliente" helperText={customerIdHelperMessage} error={customerIdError}/>}
-                getOptionLabel={option => `${option.name} ${option.surname_1} ${option.surname_2}`}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Cliente"
+                    helperText={customerIdHelperMessage}
+                    error={customerIdError}
+                  />
+                )}
+                getOptionLabel={(option) =>
+                  `${option.name} ${option.surname_1} ${option.surname_2}`
+                }
               />
             </div>
             <div className="form-employee-field">
               <Autocomplete
                 onChange={(event, value) => {
                   setSaleEmployeeId(value.id);
-                  if(value.id){
+                  if (value.id) {
                     setEmployeeIdError(false);
-                    setEmployeeIdHelperMessage(employeeIdDefaultHelperMessage );
+                    setEmployeeIdHelperMessage(employeeIdDefaultHelperMessage);
                   }
                 }}
                 size="small"
                 fullWidth
                 options={employeesSelect}
-                renderInput={(params)=> <TextField {...params} label="Peluquero" helperText={employeeIdHelperMessage} error={employeeIdError}/>}
-                getOptionLabel={option => `${option.name} ${option.surname_1} ${option.surname_2}`}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Peluquero"
+                    helperText={employeeIdHelperMessage}
+                    error={employeeIdError}
+                  />
+                )}
+                getOptionLabel={(option) =>
+                  `${option.name} ${option.surname_1} ${option.surname_2}`
+                }
               />
             </div>
           </form>
@@ -344,11 +397,15 @@ function NewSale() {
             <TableBody>
               {saleProducts.map((saleProduct) => (
                 <TableRow key={saleProduct.id}>
-                  <StyledTableCell key={`${saleProduct.id}-name`}>{saleProduct.name}</StyledTableCell>
+                  <StyledTableCell key={`${saleProduct.id}-name`}>
+                    {saleProduct.name}
+                  </StyledTableCell>
                   <StyledTableCell key={`${saleProduct.id}-quantity`}>
                     {saleProduct.quantity}
                   </StyledTableCell>
-                  <StyledTableCell key={`${saleProduct.id}-price`}>{saleProduct.price}</StyledTableCell>
+                  <StyledTableCell key={`${saleProduct.id}-price`}>
+                    {saleProduct.price}
+                  </StyledTableCell>
                   <StyledTableCell key={`${saleProduct.id}-options`}>
                     <div className="sale-option-action-buttons">
                       <FontAwesomeIcon
@@ -385,8 +442,8 @@ function NewSale() {
                 </StyledTableCell>
               </TableRow>
             </TableFooter> */}
-          </Table>        
-            {/*<label>
+          </Table>
+          {/*<label>
               Observaciones:
               <textarea
                 onChange={(event) => setObservations(event.target.value)}
@@ -416,7 +473,7 @@ function NewSale() {
             </label>
             <div>
               <button type="button" onClick={() => saveSale()}>Cobrar</button>
-                </div>*/}
+            </div>*/}
         </div>
         <div className="new-sale main-column right">
           <div className="categories-products-container">
@@ -424,21 +481,29 @@ function NewSale() {
               <p>Productos:</p>
               <div className="buttons-container categories">
                 {productsSelect.map((product) => (
-                  <Button className="product-button" key={product.id} onClick={() => {
-                    addSaleProduct(product.id);
-                  }}>
+                  <Button
+                    className="product-button"
+                    key={product.id}
+                    onClick={() => {
+                      addSaleProduct(product.id);
+                    }}
+                  >
                     {product.name}
                   </Button>
                 ))}
-              </div>  
+              </div>
             </div>
             <div className="categories-container">
               <p>Categorias:</p>
               <div className="buttons-container categories">
                 {categoriesSelect.map((category) => (
-                  <Button className="category-button" key={category.id} onClick={() => {
-                    filterProductsByCategory(category.id);
-                  }}>
+                  <Button
+                    className="category-button"
+                    key={category.id}
+                    onClick={() => {
+                      filterProductsByCategory(category.id);
+                    }}
+                  >
                     {category.name.toUpperCase()}
                   </Button>
                 ))}

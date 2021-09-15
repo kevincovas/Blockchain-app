@@ -14,7 +14,7 @@ const authenticated = catchErrors(async (req, res, next) => {
   const token = authHeader.slice("Bearer ".length);
   const user = auth.decodeToken(token);
 
-  const userExists = await checkIfUserExistsByEmail(user.id, user.roles[0].id);
+  const userExists = await checkIfUserExistsByEmail(user.email);
   if (!userExists.data.exists) {
     errUnauthorized(`User not found.`);
   }
@@ -33,7 +33,7 @@ const isHairdresser = catchErrors(async (req, res, next) => {
   const token = authHeader.slice("Bearer ".length);
   const user = auth.decodeToken(token);
 
-  const userIsHairdresser = await checkUserRole(user.id);
+  const userIsHairdresser = await checkUserRole(user.id, user.roles[0].id);
   if (!userIsHairdresser) {
     errUnauthorized(`Permission required.`);
   }
