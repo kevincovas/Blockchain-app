@@ -1,5 +1,6 @@
 const db = require("../db/db_sales");
 const { Router } = require("express");
+const { isHairdresser, authenticated } = require("../auth/auth.middlewares");
 
 const router = new Router();
 
@@ -14,7 +15,7 @@ const errorResult = (error_message) => ({
   data: [],
 });
 
-router.get("/get-product-categories/", async (req, res) => {
+router.get("/get-product-categories/", authenticated, isHairdresser, async (req, res) => {
   const { error, error_message, data } = await db.getProductCategories();
   if (error) {
     return res.status(500).json(errorResult(error_message));
@@ -23,7 +24,7 @@ router.get("/get-product-categories/", async (req, res) => {
   }
 });
 
-router.get("/get-products/", async (req, res) => {
+router.get("/get-products/",authenticated , isHairdresser, async (req, res) => {
   const { error, error_message, data } = await db.getProducts();
   if (error) {
     return res.status(500).json(errorResult(error_message));
@@ -32,7 +33,7 @@ router.get("/get-products/", async (req, res) => {
   }
 });
 
-router.get("/get-sales/", async (req, res) => {
+router.get("/get-sales/", authenticated, isHairdresser, async (req, res) => {
   const { error, error_message, data } = await db.getSales();
   if (error) {
     return res.status(500).json(errorResult(error_message));
@@ -41,7 +42,7 @@ router.get("/get-sales/", async (req, res) => {
   }
 });
 
-router.post("/get-people-by-role/", async (req, res) => {
+router.post("/get-people-by-role/", authenticated, isHairdresser, async (req, res) => {
   const role = req.body;
   const { error, error_message, data } = await db.getPeopleByRole(role);
   if (error) {
@@ -51,6 +52,7 @@ router.post("/get-people-by-role/", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 router.post("/get-people-by-role-extended/", async (req, res) => {
   const role = req.body;
   const { error, error_message, data } = await db.getPeopleByRoleExtended(role);
@@ -62,36 +64,39 @@ router.post("/get-people-by-role-extended/", async (req, res) => {
 });
 
 router.post("/create-sale/", async (req, res) => {
+=======
+router.post("/create-sale/", authenticated, isHairdresser, async (req, res) => {
+>>>>>>> 7d95ac71c4539447ed04bbe1a95e4c90443d652e
   const sale = req.body;
-  // var error = false; 
+  // var error = false;
   // var missingFieldsErrorMessage = `missing fields: `;
   // if(customerId){
   //   const customerExists = await db.checkIfPersonExists(customerId);
   // } else {
-    
+
   // }
-  const {error, error_message, data} = await db.createSale(sale);
-  if(error){
+  const { error, error_message, data } = await db.createSale(sale);
+  if (error) {
     return res.status(500).json(errorResult(error_message));
   } else {
-    return res.json(okResult(data))
+    return res.json(okResult(data));
   }
 });
 
-router.post("/add-product-to-sale/", async (req, res) => {
+router.post("/add-product-to-sale/", authenticated, isHairdresser, async (req, res) => {
   const soldProduct = req.body;
-  // var error = false; 
+  // var error = false;
   // var missingFieldsErrorMessage = `missing fields: `;
   // if(customerId){
   //   const customerExists = await db.checkIfPersonExists(customerId);
   // } else {
-    
+
   // }
-  const {error, error_message, data} = await db.addProductToSale(soldProduct);
-  if(error){
+  const { error, error_message, data } = await db.addProductToSale(soldProduct);
+  if (error) {
     return res.status(500).json(errorResult(error_message));
   } else {
-    return res.json(okResult(data))
+    return res.json(okResult(data));
   }
 });
 

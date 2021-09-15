@@ -3,7 +3,7 @@ import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
 import * as constnt from "../config/const";
-import Dropdown from "./components/dropdown/Dropdown";
+import Dropdown from "./components/Dropdown/Dropdown";
 import Button from "@material-ui/core/Button";
 import { useSnackbar } from "notistack";
 import Dialog from "@material-ui/core/Dialog";
@@ -125,12 +125,6 @@ function Reservations() {
     );
   }
 
-  // Left Zeros Function
-  function pad(num, size) {
-    var s = "0000" + num;
-    return s.substr(s.length - size);
-  }
-
   // Availability
   let listAvailability = null;
   if (timeframeList.length != 0) {
@@ -157,6 +151,10 @@ function Reservations() {
         ))}
       </List>
     );
+  }
+  else
+  {
+     listAvailability = ( <p>No hay citas disponibles para éste día</p> )
   }
 
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
@@ -213,6 +211,12 @@ function Reservations() {
 
     // Return Total Time
     return total_time;
+  }
+
+  // Left Zeros Function
+  function pad(num, size) {
+    var s = "0000" + num;
+    return s.substr(s.length - size);
   }
 
   function getTotalPrice() {
@@ -283,7 +287,7 @@ function Reservations() {
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // If Dates Exceeds Store limits (break + closing time), not available to book
-    if ( (date_end.getHours() >= 23 && date_end.getMinutes() > 0) || (date_end.getHours() > 23 && date_end.getMinutes() == 0) )
+    if ( (date_end.getHours() >= constnt.CLOSING_TIME && date_end.getMinutes() > 0) || (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0) )
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
