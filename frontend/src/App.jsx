@@ -20,8 +20,14 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
   const login = (token) => {
+	
+	// Only store token if not undefined or null
+	if(token != null)
+	{		
     localStorage.setItem("token", token);
     setIsLoggedIn(true);
+	}
+	
   };
   const logout = () => {
     localStorage.removeItem("token");

@@ -35,7 +35,16 @@ const getOneUser = async (id) => {
 };
 
 const getUserByEmailSQL = `
-  SELECT id, email, password FROM users WHERE email = $1;
+
+SELECT users.id as id ,  people.id as people_id ,
+email, password ,  string_agg(roles.name::text, '/')
+FROM users 
+LEFT JOIN people on people.user_id = users.id
+LEFT JOIN user_roles on user_roles.user_id = users.id
+LEFT JOIN roles on roles.id = roles.id
+WHERE email = $1
+group by users.id , email , password , people.id
+
 `;
 
 const getUserByEmail = async (email) => {
