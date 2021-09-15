@@ -26,7 +26,7 @@ function Reservations() {
   const [state, setState] = useState({ selectedDay: new Date() });
 
   // Employee
-  const [employee, setEmployee] = useState("");
+  const [employee, setEmployee] = useState(0);
   const [employeeList, setEmployeeList] = useState([]);
 
   // Services Availables
@@ -151,10 +151,8 @@ function Reservations() {
         ))}
       </List>
     );
-  }
-  else
-  {
-     listAvailability = ( <p>No hay citas disponibles para éste día</p> )
+  } else {
+    listAvailability = <p>No hay citas disponibles para éste día</p>;
   }
 
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
@@ -287,7 +285,11 @@ function Reservations() {
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // If Dates Exceeds Store limits (break + closing time), not available to book
-    if ( (date_end.getHours() >= constnt.CLOSING_TIME && date_end.getMinutes() > 0) || (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0) )
+    if (
+      (date_end.getHours() >= constnt.CLOSING_TIME &&
+        date_end.getMinutes() > 0) ||
+      (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0)
+    )
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
@@ -306,7 +308,7 @@ function Reservations() {
       );
 
     // Filter by Employee
-    if (employee !== "") {
+    if ((employee != null) && (employee != 0)) {
       // Employee Available
       if (
         disponible.filter(
@@ -315,17 +317,21 @@ function Reservations() {
       ) {
         horariosDisponibles = [
           ...horariosDisponibles,
-          { id: horario, date_ini, date_end },
+          { id: horario, date_ini, date_end , employee },
         ];
       }
     }
     // Not Employee Selected
     // TODO (If anybody is available then not possible to book)
     else {
+
+
       horariosDisponibles = [
         ...horariosDisponibles,
-        { id: horario, date_ini, date_end },
+        { id: horario, date_ini, date_end  },
       ];
+
+
     }
 
     // Return values
@@ -351,12 +357,12 @@ function Reservations() {
 
   // Submit Information to backed API
   const handleSubmit = async () => {
-
     // Close Dialog
     setOpen(false);
 
     // Call Booking API
     if (timeframe != null) {
+      // Get Data to send to API
       let person_id = 1;
       let booked_employee_id = 5;
       let created_by_id = 1;

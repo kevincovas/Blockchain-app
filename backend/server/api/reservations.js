@@ -51,27 +51,40 @@ router.get("/check/:date", async (req, res) => {
 
 //Add Reservation
 router.post("/add", async (req, res) => {
-  const { person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services } = req.body;
+  const {
+    person_id,
+    booked_employee_id,
+    created_by_id,
+    date_ini,
+    date_end,
+    booked_services,
+  } = req.body;
 
-  // TODO Double Check if Reservation available at the moment
   // Add Reservation
-const {ok , data} = await db.addReservation( person_id , booked_employee_id , created_by_id , date_ini , date_end , booked_services);
-if (!ok)
-{
-  return res.status(500).json(errorResult(data));
-}
-else
-{
-
-    // Send Mail
+  const { ok, data } = await db.addReservation(
+    person_id,
+    booked_employee_id,
+    created_by_id,
+    date_ini,
+    date_end,
+    booked_services
+  );
+  if (!ok) {
+    return res.status(500).json(errorResult(data));
+  } else {
+    // TODO Send Mail with all info
     let from_mail = "aitor.java@gmail.com";
     let from_name = "Aitor";
     let to_mail = "aitor.java@gmail.com";
     let to_name = "Aitor";
-    let subject = "Test Email";
+    let subject = "Confirmación de reserva";
     let text_part = "Test Email Texto";
-    let html_part =
-      "<img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example' /> <h3>Dear passenger 1, welcome to <a href='Mailjet - Email Delivery Service for Marketing & Developer Teams'>Mailjet</a>!</h3><br />May the delivery force be with you!";
+    let html_part = `<h3>Confirmación de reserva</h3>
+      <br />Le confirmamos su reserva:
+      <br> Número de reserva: ${data}
+      <br> Fecha: 
+      <br> Peluquero: 
+      <br /><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data}' /> `;
     let custom_id = "AppGettingStartedTest";
     await mailjet.sendEmail(
       from_mail,
@@ -84,9 +97,8 @@ else
       custom_id
     );
 
-  return res.json(okResult(data));
-}
-
+    return res.json(okResult(data));
+  }
 });
 
 module.exports = router;
