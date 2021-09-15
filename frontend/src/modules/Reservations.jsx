@@ -60,11 +60,13 @@ function Reservations() {
   };
   // Dismiss or Continue
   const handleClose = (action) => {
-    // Continue with Reservation
+    // Close Reservation
     if (action == 2) {
-      setTimeFrame(null);
       setOpen(false);
-    } else handleSubmit();
+      setTimeFrame(null);
+    }
+    // Continue with Reservation
+    else handleSubmit();
   };
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
@@ -117,15 +119,9 @@ function Reservations() {
           ))}
         </List>
 
-        <p>
-        Duración total: {getTotalTime()} minutos
-      </p>
-      <p>
-        Precio total: {getTotalTime()} €
-      </p>
-
+        <p>Duración total: {getTotalTime()} minutos</p>
+        <p>Precio total: {getTotalPrice()} €</p>
       </div>
-
     );
   }
 
@@ -142,19 +138,23 @@ function Reservations() {
           >
             <ListItemText
               primary={
-                timeFrame.date_ini.getHours() +
+                pad(timeFrame.date_ini.getHours(), 2) +
                 ":" +
-                timeFrame.date_ini.getMinutes() +
+                pad(timeFrame.date_ini.getMinutes(), 2) +
                 " - " +
-                timeFrame.date_end.getHours() +
+                pad(timeFrame.date_end.getHours(), 2) +
                 ":" +
-                timeFrame.date_end.getMinutes()
+                pad(timeFrame.date_end.getMinutes(), 2)
               }
             />
           </ListItem>
         ))}
       </List>
     );
+  }
+  else
+  {
+     listAvailability = ( <p>No hay citas disponibles para éste día</p> )
   }
 
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
@@ -213,6 +213,51 @@ function Reservations() {
     return total_time;
   }
 
+  // Left Zeros Function
+  function pad(num, size) {
+    var s = "0000" + num;
+    return s.substr(s.length - size);
+  }
+
+  function getTotalPrice() {
+    // Create Temporal Total Time
+    let total_price = 0.0;
+
+    // Add Time by Service
+    servicesContracted.map(
+      (service) => (
+        (total_price += parseInt(
+          servicesList.filter((serviceFilter) => serviceFilter.id == service)[0]
+            .price
+        )),
+        10
+      )
+    );
+
+    // Return Total Time
+    return total_price;
+  }
+
+  function getAppointmentString() {
+    if (timeframe != null) {
+      return (
+        pad(timeframe.date_ini.getUTCDate(), 2) +
+        "/" +
+        pad(timeframe.date_ini.getUTCMonth() + 1, 2) +
+        "/" +
+        timeframe.date_ini.getFullYear() +
+        " de " +
+        pad(timeframe.date_ini.getHours(), 2) +
+        ":" +
+        pad(timeframe.date_ini.getMinutes(), 2) +
+        " a " +
+        pad(timeframe.date_end.getHours(), 2) +
+        ":" +
+        pad(timeframe.date_end.getMinutes(), 2)
+      );
+    } else return "";
+  }
+
   function createTimeTable(result) {
     // Horarios según configuración
     let horariosDisponibles = [];
@@ -241,8 +286,8 @@ function Reservations() {
     );
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
-    // TODO If Dates Exceeds Store limits (break + closing time), not available to book
-    if (date_end.getHours() >= 19 && date_end.getMinutes() > 0)
+    // If Dates Exceeds Store limits (break + closing time), not available to book
+    if ( (date_end.getHours() >= constnt.CLOSING_TIME && date_end.getMinutes() > 0) || (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0) )
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
@@ -306,7 +351,9 @@ function Reservations() {
 
   // Submit Information to backed API
   const handleSubmit = async () => {
-    // TODO Crear Cita por WS + check todos los campos correctos
+
+    // Close Dialog
+    setOpen(false);
 
     // Call Booking API
     if (timeframe != null) {
@@ -339,9 +386,6 @@ function Reservations() {
 
       // Load Time Zones again
       loadAvailability();
-
-      // Close Dialog
-      setOpen(false);
     }
   };
 
@@ -438,42 +482,50 @@ function Reservations() {
                 ? "Precio: " +
                   servicesList.filter(
                     (serviceFilter) => serviceFilter.id == service
-                  )[0].duration +
+                  )[0].price +
                   " €"
                 : ""}
             </p>
 
             <p>
               <Button variant="contained" color="primary" onClick={addService}>
-                Añadir Servicio +
+                Añadir Servicio
               </Button>
             </p>
 
             {listServicesContracted}
           </Paper>
           <br />
-          <Paper elevation={2} className="row">
-            <div className="column">
-              <DayPicker
-                onDayClick={handleDayClick}
-                locale="es"
-                months={constnt.MONTHS}
-                weekdaysLong={constnt.WEEKDAYS_LONG}
-                weekdaysShort={constnt.WEEKDAYS_SHORT}
-                firstDayOfWeek={1}
-                showOutsideDays
-                selectedDays={state.selectedDay}
-                todayButton="Éste mes"
-                disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-                fromMonth={new Date()}
-                toMonth={
-                  new Date(new Date().getFullYear(), new Date().getMonth() + 2)
-                }
-              />
-            </div>
 
-            <div className="column">{listAvailability}</div>
-          </Paper>
+          {servicesContracted.length != 0 ? (
+            <Paper elevation={2} className="row">
+              <div className="column">
+                <DayPicker
+                  onDayClick={handleDayClick}
+                  locale="es"
+                  months={constnt.MONTHS}
+                  weekdaysLong={constnt.WEEKDAYS_LONG}
+                  weekdaysShort={constnt.WEEKDAYS_SHORT}
+                  firstDayOfWeek={1}
+                  showOutsideDays
+                  selectedDays={state.selectedDay}
+                  todayButton="Éste mes"
+                  disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+                  fromMonth={new Date()}
+                  toMonth={
+                    new Date(
+                      new Date().getFullYear(),
+                      new Date().getMonth() + 2
+                    )
+                  }
+                />
+              </div>
+
+              <div className="column">{listAvailability}</div>
+            </Paper>
+          ) : (
+            ""
+          )}
 
           <Dialog
             open={open}
@@ -482,13 +534,13 @@ function Reservations() {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Desea reservar cita?"}
+              {"Está seguro de su reserva?"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Let Google help apps determine location. This means sending
-                anonymous location data to Google, even when no apps are
-                running.
+                Fecha y Hora: {getAppointmentString()}
+                <br />
+                Precio total: {getTotalPrice()} €
               </DialogContentText>
             </DialogContent>
             <DialogActions>

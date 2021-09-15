@@ -11,7 +11,7 @@ inner join roles on roles.id = user_roles.role_id
 where roles.name = 'hairdresser'; `;
 
 // Get Products of type Service
-const getServicesSQL = ` select id , name , description , duration from products where is_service = true `;
+const getServicesSQL = ` select id , name , description , duration , price from products where is_service = true `;
 
 // Get Booked Services for one specific day
 const getReservationsByDaySQL = ` select * from reservations where to_char(date_ini , 'YYYY-MM-DD') = $1 `;
