@@ -84,7 +84,7 @@ router.post("/add", async (req, res) => {
       <br> Número de reserva: ${data}
       <br> Fecha: 
       <br> Peluquero: 
-      <br /><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data}' /> `;
+      <br /><br /><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data}' /> `;
     let custom_id = "AppGettingStartedTest";
     await mailjet.sendEmail(
       from_mail,

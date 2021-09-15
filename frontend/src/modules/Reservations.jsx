@@ -293,11 +293,11 @@ function Reservations() {
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
-    let disponible = [];
+    let noDisponible = [];
 
     // Filter by Date
     if (result != null)
-      disponible = result.filter(
+      noDisponible = result.filter(
         (horarioBlocked) =>
           /* Caso 1: Inicia cuando el peluquero está ocupado */
           (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
@@ -308,35 +308,45 @@ function Reservations() {
       );
 
     // Filter by Employee
-    if ((employee != null) && (employee != 0)) {
+    if (employee != null && employee != 0) {
       // Employee Available
       if (
-        disponible.filter(
+        noDisponible.filter(
           (horarioBlocked) => horarioBlocked.booked_employee_id == employee
         ).length == 0
       ) {
         horariosDisponibles = [
           ...horariosDisponibles,
-          { id: horario, date_ini, date_end , employee },
+          { id: horario, date_ini, date_end, employee },
         ];
       }
     }
-    // Not Employee Selected
+    // Not Employee Selected (get any employee available)
     // TODO (If anybody is available then not possible to book)
     else {
-
-
-      horariosDisponibles = [
-        ...horariosDisponibles,
-        { id: horario, date_ini, date_end  },
-      ];
-
-
+      // Hairdressers available
+      let hairdressersBlocked = [];
+      noDisponible.map((temp) =>
+        hairdressersBlocked.push(temp.booked_employee_id)
+      );
+      let checker_temp = employeeList.filter(
+        (employee) => !hairdressersBlocked.includes(employee.id)
+      );
+      if (checker_temp.length > 0) {
+        // Add horario
+        horariosDisponibles = [
+          ...horariosDisponibles,
+          { id: horario, date_ini, date_end, employee: checker_temp[0].id },
+        ];
+      }
     }
 
     // Return values
     return horariosDisponibles;
   }
+
+  //
+  function getOneEmployee() {}
 
   // On click a day, change state
   function handleDayClick(day, { selected }) {
@@ -364,7 +374,7 @@ function Reservations() {
     if (timeframe != null) {
       // Get Data to send to API
       let person_id = 1;
-      let booked_employee_id = 5;
+      let booked_employee_id = timeframe.employee;
       let created_by_id = 1;
       let date_ini = timeframe.date_ini;
       let date_end = timeframe.date_end;
@@ -547,6 +557,21 @@ function Reservations() {
                 Fecha y Hora: {getAppointmentString()}
                 <br />
                 Precio total: {getTotalPrice()} €
+                <br />
+                Peluquero:{" "}
+                {timeframe == null
+                  ? ""
+                  : employeeList.filter(
+                      (employee_temp) => employee_temp.id == timeframe.employee
+                    )[0].name +
+                    " " +
+                    employeeList.filter(
+                      (employee_temp) => employee_temp.id == timeframe.employee
+                    )[0].surname_1 +
+                    " " +
+                    employeeList.filter(
+                      (employee_temp) => employee_temp.id == timeframe.employee
+                    )[0].surname_2}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
