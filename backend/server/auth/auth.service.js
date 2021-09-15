@@ -21,6 +21,7 @@ const createToken = (user, roles) => {
     accessToken: token,
     tokenType: "Bearer",
     expiresIn: JWT_EXPIRATION_TIME,
+    roles: roles
   };
 };
 

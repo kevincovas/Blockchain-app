@@ -20,54 +20,19 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
   const login = (token) => {
+	
+	// Only store token if not undefined or null
+	if(token != null)
+	{		
     localStorage.setItem("token", token);
     setIsLoggedIn(true);
+	}
+	
   };
   const logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
   };
-
-  /*return (
-    <Router>
-      <div className="App">
-        <Navigation/>
-        <Route
-          strict
-          path="/reservations"
-          render={() =>
-            isLoggedIn ? <Reservations /> : <Redirect to="/login" />
-          }
-        />
-        {/*<Route
-          strict
-          path="/sales"
-          render={() => (isLoggedIn ? <Sales /> : <Redirect to="/login" />)}
-        />*/ /*}
-        <Route
-          strict
-          path="/sales"
-          render={() => (<Sales />)}
-        />
-        <Route
-          strict
-          path="/"
-          render={() => (<Home />)}
-        />
-        <Route
-          strict
-          path="/registration"
-          render={() => (<Registration />)}
-        />
-        <Route
-          strict
-          path="/login"
-          render={() => <LoginAndRegister onLogin={login} />}
-        />
-      </div>
-    </Router>
-  );
-}*/
 
   return (
     <Context.Provider value={initialContext}>

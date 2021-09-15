@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import * as api from "../api/Reservations";
+import * as apiSales from "../api/Sales";
 import * as constnt from "../config/const";
 import Dropdown from "./components/Dropdown/Dropdown";
 import Button from "@material-ui/core/Button";
@@ -18,20 +19,45 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
-
 import "./Reservations.css";
 
 function Reservations() {
+  // Get Token
+  const token = localStorage.getItem("token");
+  // Get Role
+
+  // Get User Id
+
+  // Customer
+  const [customer, setCustomer] = useState(0);
+  const [customerList, setCustomerList] = useState([]);
+  const customerIdDefaultHelperMessage = "Selecciona el cliente.";
+  const [customerIdError, setCustomerIdError] = useState(false);
+  const [customerIdHelperMessage, setCustomerIdHelperMessage] = useState(
+    customerIdDefaultHelperMessage
+  );
+
   // Calendar Status
   const [state, setState] = useState({ selectedDay: new Date() });
 
   // Employee
-  const [employee, setEmployee] = useState("");
+  const [employee, setEmployee] = useState(0);
   const [employeeList, setEmployeeList] = useState([]);
+  const employeeIdDefaultHelperMessage =
+    "Selecciona el peluquero si tienes preferencias.";
+  const [employeeIdError, setEmployeeIdError] = useState(false);
+  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
+    employeeIdDefaultHelperMessage
+  );
 
   // Services Availables
   const [service, setService] = useState(null);
   const [servicesList, setServicesList] = useState([]);
+  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  const [serviceIdError, setServiceIdError] = useState(false);
+  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
+    serviceIdDefaultHelperMessage
+  );
 
   // Services Contracted
   const [servicesContracted, setServicesContracted] = useState([]);
@@ -40,19 +66,10 @@ function Reservations() {
   const [timeframe, setTimeFrame] = useState(null);
   const [timeframeList, setTimeFrameList] = useState([]);
 
-  // Material UI
-  const employeeIdDefaultHelperMessage =
-    "Selecciona el peluquero si tienes preferencias.";
-  const serviceIdDefaultHelperMessage = "Selecciona los servicios deseados.";
+  // Snackbar
   const { enqueueSnackbar } = useSnackbar();
-  const [employeeIdError, setEmployeeIdError] = useState(false);
-  const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
-    employeeIdDefaultHelperMessage
-  );
-  const [serviceIdError, setServiceIdError] = useState(false);
-  const [serviceIdHelperMessage, setServiceIdHelperMessage] = useState(
-    serviceIdDefaultHelperMessage
-  );
+
+  // Alert Frame
   const [open, setOpen] = useState(false);
   // View Alert
   const handleClickOpen = () => {
@@ -72,6 +89,9 @@ function Reservations() {
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
   useEffect(() => {
+    // Customers
+    fetchCustomers();
+
     // Peluqueros
     loadEmployeeList();
 
@@ -151,15 +171,35 @@ function Reservations() {
         ))}
       </List>
     );
-  }
-  else
-  {
-     listAvailability = ( <p>No hay citas disponibles para éste día</p> )
+  } else {
+    listAvailability = <p>No hay citas disponibles para éste día</p>;
   }
 
   // FILL LISTS ////////////////////////////////////////////////////////////////////////////////////
 
   // API CALLS ////////////////////////////////////////////////////////////////////////////////////
+
+  // User
+  const fetchCustomers = async () => {
+    try {
+      console.log(token);
+      await apiSales
+        .getPeopleByRole(constnt.HOST, token, "customer")
+        .then(({ error, error_message, data }) => {
+          if (error) {
+            enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
+              variant: "error",
+            });
+          } else {
+            setCustomerList(data);
+          }
+        });
+    } catch (error) {
+      enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
+        variant: "error",
+      });
+    }
+  };
 
   // Employee
   const loadEmployeeList = async () => {
@@ -287,15 +327,19 @@ function Reservations() {
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
 
     // If Dates Exceeds Store limits (break + closing time), not available to book
-    if ( (date_end.getHours() >= constnt.CLOSING_TIME && date_end.getMinutes() > 0) || (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0) )
+    if (
+      (date_end.getHours() >= constnt.CLOSING_TIME &&
+        date_end.getMinutes() > 0) ||
+      (date_end.getHours() > constnt.CLOSING_TIME && date_end.getMinutes() == 0)
+    )
       return horariosDisponibles;
 
     // Check if Horario available or blocked by another appointment
-    let disponible = [];
+    let noDisponible = [];
 
     // Filter by Date
     if (result != null)
-      disponible = result.filter(
+      noDisponible = result.filter(
         (horarioBlocked) =>
           /* Caso 1: Inicia cuando el peluquero está ocupado */
           (date_ini >= new Date(horarioBlocked.date_ini).getTime() &&
@@ -306,31 +350,44 @@ function Reservations() {
       );
 
     // Filter by Employee
-    if (employee !== "") {
+    if (employee != null && employee != 0) {
       // Employee Available
       if (
-        disponible.filter(
+        noDisponible.filter(
           (horarioBlocked) => horarioBlocked.booked_employee_id == employee
         ).length == 0
       ) {
         horariosDisponibles = [
           ...horariosDisponibles,
-          { id: horario, date_ini, date_end },
+          { id: horario, date_ini, date_end, employee },
         ];
       }
     }
-    // Not Employee Selected
-    // TODO (If anybody is available then not possible to book)
+    // Not Employee Selected (get any employee available)
     else {
-      horariosDisponibles = [
-        ...horariosDisponibles,
-        { id: horario, date_ini, date_end },
-      ];
+      // Hairdressers available
+      let hairdressersBlocked = [];
+      noDisponible.map((temp) =>
+        hairdressersBlocked.push(temp.booked_employee_id)
+      );
+      let checker_temp = employeeList.filter(
+        (employee) => !hairdressersBlocked.includes(employee.id)
+      );
+      if (checker_temp.length > 0) {
+        // Add horario
+        horariosDisponibles = [
+          ...horariosDisponibles,
+          { id: horario, date_ini, date_end, employee: checker_temp[0].id },
+        ];
+      }
     }
 
     // Return values
     return horariosDisponibles;
   }
+
+  //
+  function getOneEmployee() {}
 
   // On click a day, change state
   function handleDayClick(day, { selected }) {
@@ -345,20 +402,27 @@ function Reservations() {
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
     );
+
+    // Not Customer Selected
+    if (customer == 0) {
+      enqueueSnackbar("Error: Ningún cliente seleccionado.", {
+        variant: "error",
+      });
+    }
     // Open Dialog
-    handleClickOpen();
+    else handleClickOpen();
   }
 
   // Submit Information to backed API
   const handleSubmit = async () => {
-
     // Close Dialog
     setOpen(false);
 
     // Call Booking API
     if (timeframe != null) {
-      let person_id = 1;
-      let booked_employee_id = 5;
+      // TODO Get Data to send to API
+      let person_id = customer;
+      let booked_employee_id = timeframe.employee;
       let created_by_id = 1;
       let date_ini = timeframe.date_ini;
       let date_end = timeframe.date_end;
@@ -372,7 +436,6 @@ function Reservations() {
         date_end.getTime() - date_end.getTimezoneOffset() * 60 * 1000
       );
 
-      // TODO Acabar llamada con person_id , booked_employee y created_by_id
       // Book Registration
       const inserted = await api.addReservation(
         constnt.HOST,
@@ -428,6 +491,24 @@ function Reservations() {
         <form onSubmit={(event) => event.preventDefault()}>
           <Paper elevation={2} className="forms-container">
             <Dropdown
+              setIdError={setCustomerIdError}
+              setId={setCustomer}
+              select={customerList}
+              error={customerIdError}
+              field="Cliente"
+              className={"form-customer-field"}
+              setIdHelperMessage={setCustomerIdHelperMessage}
+              idHelperMessage={customerIdHelperMessage}
+              optionLabel={(option) =>
+                `${option.name} ${option.surname_1} ${option.surname_2}`
+              }
+            />
+          </Paper>
+
+          <br />
+
+          <Paper elevation={2} className="forms-container">
+            <Dropdown
               setIdError={setEmployeeIdError}
               setId={setEmployee}
               select={employeeList}
@@ -441,6 +522,7 @@ function Reservations() {
               }
             />
           </Paper>
+
           <br />
           <Paper elevation={2} className="forms-container">
             <Dropdown
@@ -541,6 +623,21 @@ function Reservations() {
                 Fecha y Hora: {getAppointmentString()}
                 <br />
                 Precio total: {getTotalPrice()} €
+                <br />
+                Peluquero:{" "}
+                {timeframe == null
+                  ? ""
+                  : employeeList.filter(
+                      (employee_temp) => employee_temp.id == timeframe.employee
+                    )[0].name +
+                    " " +
+                    employeeList.filter(
+                      (employee_temp) => employee_temp.id == timeframe.employee
+                    )[0].surname_1 +
+                    " " +
+                    employeeList.filter(
+                      (employee_temp) => employee_temp.id == timeframe.employee
+                    )[0].surname_2}
               </DialogContentText>
             </DialogContent>
             <DialogActions>

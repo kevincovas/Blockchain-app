@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as api from "../api/Clients";
 import "./Clients.css";
+import * as moment from 'moment';
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { useSnackbar } from "notistack";
 import {
@@ -23,7 +24,6 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-const clientsIdErrorMessage = "Por favor, escoja un cliente.";
 
 const clientStructure = {
   name: "",
@@ -43,15 +43,7 @@ function ClientSearch() {
   const [clientsFilter, setClientsFilter] = useState("");
   const [clientSelected, setClientSelected] = useState(clientStructure);
   const [showClientDetails, setShowClientDetails] = useState(false);
-  const [clientsIdError, setclientsIdError] = useState(false);
-  const [clientsIdHelperMessage, setclientsIdHelperMessage] = useState("");
   const { enqueueSnackbar } = useSnackbar();
-
-
-  /*const Date.prototype.addHours = function(h) {
-    this.setTime(this.getTime() + (h*60*60*1000));
-    return this;
-  }*/
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -139,8 +131,7 @@ function ClientSearch() {
               <h3>Nombre: {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
               </h3>
               <p>Teléfono: {`${clientSelected.phone}`}</p>
-              <p>Fecha de nacimiento: {`${clientSelected.birth_date.setTime(
-                  birth_date.getTime() - birth_date.getTimezoneOffset() * 60 * 1000)}`}</p>
+              <p>Fecha de nacimiento: {`${moment(clientSelected.birth_date).format('DD-MM-YYYY')}`}</p>
               <p>Género: {`${clientSelected.gender}`}</p>
               <p>Observaciones: {`${clientSelected.observations}`}</p>
               <p>Id Usuario: {`${clientSelected.user_id}`}</p>
