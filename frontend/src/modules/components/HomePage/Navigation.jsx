@@ -6,7 +6,7 @@ function Navigation(props) {
   return (
     <div className="navigation">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <div className="container">
+        <div className="navigation container">
           <Link className="navbar-brand" to="/">
             Peluquería ARKUS
           </Link>

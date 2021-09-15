@@ -23,6 +23,13 @@ const getPeolpleByRoleSQL =
 
 const getTableSQL = "SELECT * FROM $1;";
 
+const getPeolpleByRoleExtendedSQL = 
+  `SELECT id, name, surname_1, COALESCE(surname_2 , '') as surname_2, phone, birth_date, gender, observations, user_id
+    FROM people 
+    WHERE id IN 
+      (SELECT user_id FROM user_roles 
+        WHERE role_id=
+          (SELECT id FROM roles WHERE name=$1));`
 
 // GET functions
 const getProductCategories = async () => {
@@ -60,6 +67,16 @@ const getPeopleByRole = async ({role}) => {
     return { error: true, error_message: e.toString(), data: [] };
   }
 };
+
+const getPeopleByRoleExtended = async ({role}) => {
+  try {
+    const result = await pool.query(getPeolpleByRoleExtendedSQL, [role]);
+    return { error: false, error_message: "", data: result.rows };
+  } catch (e) {
+    return { error: true, error_message: e.toString(), data: [] };
+  }
+};
+
 
 
 const checkIfPersonExists = async (userId) => {
@@ -105,4 +122,5 @@ module.exports = {
   createSale,
   addProductToSale,
   getPeopleByRole,
+  getPeopleByRoleExtended,
 };

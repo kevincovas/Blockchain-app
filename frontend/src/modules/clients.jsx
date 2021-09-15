@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import * as api from "../api/Clients";
-import "./clients.css";
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, TableFooter } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-
+import "./Clients.css";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@material-ui/core";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -18,59 +22,84 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-
 const clientsIdErrorMessage = "Por favor, escoja un cliente.";
 
+const clientStructure = {
+  name: "",
+  surname_1:"",
+  surname_2:"",
+  phone:"",
+  birth_date:"",
+  gender:"",
+  observations:"",
+  user_id:"",
+}
 
 function ClientSearch() {
   const [clientsList, setClientsList] = useState([]);
   const [clientsListFiltered, setclientsListFiltered] = useState([]);
   const [clientsFilter, setClientsFilter] = useState("");
-  const [clientSelected, setClietSelected] = useState({});
+  const [clientSelected, setClientSelected] = useState(clientStructure);
+  const [showClientDetails, setShowClientDetails] = useState(false);
   const [clientsIdError, setclientsIdError] = useState(false);
   const [clientsIdHelperMessage, setclientsIdHelperMessage] = useState("");
 
 
+
+
   useEffect(() => {
-    const fetchClients = async() => {
+    const fetchClients = async () => {
       try {
-        await api.getClients("customer").then (({ error, error_mesage, data}) => {
-        if(error) {
-          alert.apply(`Error: ${error_message}`);
-        }else {
-          setClientsList(data);
-          setclientsListFiltered(data);
-        }
-      });
-      } catch(error) {
+        await api
+          .getPeopleByRoleExtended("customer")
+          .then(({ error, error_mesage, data }) => {
+            if (error) {
+              alert.apply(`Error: ${error_message}`);
+            } else {
+              setClientsList(data);
+              setclientsListFiltered(data);
+            }
+          });
+      } catch (error) {
         alert.apply(error.toString());
       }
-    }
-      fetchClients();
-    }, []);
+    };
+    fetchClients();
+  }, []);
 
-    useEffect(() => { 
-      const filterClients = (text) => {
-        const filteredClients = clientsList.filter(({ name, surname_1, surname_2 }) => 
-        name.toString().toUpperCase().includes(text.toString().toUpperCase()) || 
-        surname_1.toString().toUpperCase().includes(text.toString().toUpperCase()) ||
-        surname_2.toString().toUpperCase().includes(text.toString().toUpperCase()));
-        setclientsListFiltered(filteredClients);
-      };
-      filterClients(clientsFilter);
-    }, [clientsFilter]);
+  useEffect(() => {
+    const filterClients = (text) => {
+      const filteredClients = clientsList.filter(
+        ({ name, surname_1, surname_2 }) =>
+          name
+            .toString()
+            .toUpperCase()
+            .includes(text.toString().toUpperCase()) ||
+          surname_1
+            .toString()
+            .toUpperCase()
+            .includes(text.toString().toUpperCase()) ||
+          surname_2
+            .toString()
+            .toUpperCase()
+            .includes(text.toString().toUpperCase())
+      );
+      setclientsListFiltered(filteredClients);
+    };
+    filterClients(clientsFilter);
+  }, [clientsFilter]);
 
-    useEffect(() => {
-
-    })
-
-   return (
-    <div className="client-view">
+  
+  return (
+    <div className="clients view">
       <h1>Clientes</h1>
-      <input type="text" value={clientsFilter} onChange={(e) => setClientsFilter(e.target.value)} />
-      <div className="main-column right">
-          <div className="categories-clients-container">
-            <div className="clients-container">
+      <input
+        type="text"
+        value={clientsFilter}
+        onChange={(e) => setClientsFilter(e.target.value)}
+      />
+      <div className="clients container">
+        <div className="clients main-column left">
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -80,12 +109,34 @@ function ClientSearch() {
             <TableBody>
               {clientsListFiltered.map((client) => (
                 <TableRow key={client.id}>
-                  <StyledTableCell>{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
-                </TableRow>))}
+                  <StyledTableCell onClick={()=>
+                    {
+                      console.log("estoy en el onclick");
+                      if(!showClientDetails){
+                        setShowClientDetails(true);
+                      }
+                      setClientSelected(client);
+                    }
+                  }>{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
+                </TableRow>
+              ))}
             </TableBody>
-
-          </Table>    
-            </div>
+          </Table>
+        </div>
+        <div className="clients main-column right">
+          {showClientDetails ? (
+            <>
+              <h3>
+                <br>Nombre: </br>
+                {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
+              </h3>
+              <p>
+                <br></br>
+              </p>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
@@ -93,4 +144,3 @@ function ClientSearch() {
 }
 
 export default ClientSearch;
-

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';/*import "./LoginAndRegisterPage.css";*/
 import * as api from '../api/LoginAndRegister';
 import 'react-day-picker/lib/style.css';
+import { useLocation } from 'react-router';
 
 const LOGIN = "Login";
 const REGISTER = "Register";
@@ -15,6 +16,7 @@ function LoginAndRegister({ onLogin }) {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const location = useLocation();
 
   //Error control
   const [message, setMessage] = useState({ type: "none" });
@@ -89,6 +91,14 @@ function LoginAndRegister({ onLogin }) {
       setMessage({ type: "error", text: err.toString() });
     }
   }
+
+  useEffect(()=> {
+    if(location.pathname.includes("login")) {
+      setMode(LOGIN);
+    }else{
+      setMode(REGISTER);
+    }
+  },[]);
 
   return (
     <div className="register-page">

@@ -23,7 +23,7 @@
     display: inline-block;
 }
 
-.container{
+.navigation.container{
     position: relative;
     margin: 0rem auto;
     display: flex;

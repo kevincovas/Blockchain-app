@@ -51,6 +51,16 @@ router.post("/get-people-by-role/", async (req, res) => {
   }
 });
 
+router.post("/get-people-by-role-extended/", async (req, res) => {
+  const role = req.body;
+  const { error, error_message, data } = await db.getPeopleByRoleExtended(role);
+  if (error) {
+    return res.status(500).json(errorResult(error_message));
+  } else {
+    return res.json(okResult(data));
+  }
+});
+
 router.post("/create-sale/", async (req, res) => {
   const sale = req.body;
   // var error = false; 
