@@ -198,6 +198,7 @@ function Reservations() {
               variant: "error",
             });
           } else {
+            console.log(result.results);
             setCustomerList(result.results);
           }
         });
@@ -407,6 +408,7 @@ function Reservations() {
 
   // Set State of Selected TimeTable
   function setTimeTableButton(timeframe_in) {
+    user_id;
     // Set TimeFrame
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
@@ -430,7 +432,6 @@ function Reservations() {
     // Call Booking API
     if (timeframe != null) {
       // Get Data to send to API
-
       // Person Variable if Customer or Admin
       let person_id = customer;
       if (JSON.parse(person).role == "customer")
