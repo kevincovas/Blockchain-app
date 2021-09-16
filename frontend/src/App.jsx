@@ -9,7 +9,7 @@ import Login from "./modules/Login.jsx";
 import Sales from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
-import Clients from "./modules/Clients";
+import Clients from "./modules/clients";
 import Context from "../context/context";
 
 function App() {

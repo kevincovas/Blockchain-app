@@ -15,12 +15,10 @@ const comparePasswords = async (password, dbPassword) => {
 
 const createToken = (user, person) => {
   const token = jwt.sign({user, person}, JWT_SECRET, {
-    expiresIn: JWT_EXPIRATION_TIME,
   });
   return {
     accessToken: token,
     tokenType: "Bearer",
-    expiresIn: JWT_EXPIRATION_TIME,
     person,
     user
   };
