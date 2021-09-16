@@ -103,6 +103,42 @@ router.get("/:id", async (req, res) => {
 });
 
 //Cambiar contraseña
+router.post("/changePassword", async (req, res) => {
+  const { email, password,newPassword, confirmNewPassword } = req.body;
+  console.log(`newPassword: ${newPassword}`);
+  console.log(`confirmNewPassword: ${confirmNewPassword}`);
+  if (!password) {
+    return res.status(400).json(errorResult("Missing 'password' field"));
+  }
+  if (!newPassword) {
+    return res.status(400).json(errorResult("Missing 'newPassword' field"));
+  }
+  if (!confirmNewPassword) {
+    return res.status(400).json(errorResult("Missing 'confirmNewPassword' field"));
+  }
+
+  const { ok, found, data } = await db_users.getUserByEmail(email);
+  const password_db = data.password;
+  const passwordMatches = await auth.comparePasswords(password, password_db);
+  console.log(`passwordMatches ${passwordMatches}`);
+
+  //If passwords do not match, an error is sent.
+  if (!passwordMatches) {
+    return res
+      .status(400)
+      .json(errorResult(`Wrong email/password combination`));
+  }
+  if(newPassword == confirmNewPassword){
+    //Hasheamos el nuevo password
+    const hashedPassword = await auth.hashPassword(newPassword);
+    //Actualizamos contraseña
+    const updatedPassword = await db_users.updatePassword(email,hashedPassword);
+    res.json(okResult(updatedPassword));
+  }
+  else{  
+    res.json(errorResult(`New passwords don't match`));
+  }
+});
 
 //Generar nueva contraseña
 router.post("/rememberPassword", async (req, res) => {
