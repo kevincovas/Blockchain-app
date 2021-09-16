@@ -76,14 +76,19 @@ function Reservations() {
     setOpen(true);
   };
   // Dismiss or Continue
-  const handleClose = (action) => {
+  const handleClose = async (action) => {
     // Close Reservation
     if (action == 2) {
       setOpen(false);
       setTimeFrame(null);
     }
     // Continue with Reservation
-    else handleSubmit();
+    else {
+      // Do Reservation
+      await handleSubmit();
+
+      // Send OK Message
+    }
   };
 
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
@@ -420,14 +425,32 @@ function Reservations() {
 
     // Call Booking API
     if (timeframe != null) {
-      // TODO Get Data to send to API
+      // Get Data to send to API
       let person_id = customer;
       let booked_employee_id = timeframe.employee;
+      // TODO
       let created_by_id = 1;
       let date_ini = timeframe.date_ini;
       let date_end = timeframe.date_end;
       let booked_services = servicesContracted;
-
+      let mail_content = `<h3>Confirmación de reserva</h3>Fecha y Hora: ${getAppointmentString()}
+      <br />
+      Precio total: ${getTotalPrice()} €
+      <br />
+      Peluquero: ${
+        employeeList.filter(
+          (employee_temp) => employee_temp.id == timeframe.employee
+        )[0].name +
+        " " +
+        employeeList.filter(
+          (employee_temp) => employee_temp.id == timeframe.employee
+        )[0].surname_1 +
+        " " +
+        employeeList.filter(
+          (employee_temp) => employee_temp.id == timeframe.employee
+        )[0].surname_2
+      }`;
+      
       // To Save in Database
       date_ini.setTime(
         date_ini.getTime() - date_ini.getTimezoneOffset() * 60 * 1000
@@ -444,7 +467,8 @@ function Reservations() {
         created_by_id,
         date_ini,
         date_end,
-        booked_services
+        booked_services,
+        mail_content
       );
 
       // Load Time Zones again
@@ -487,177 +511,184 @@ function Reservations() {
   // Render
   return (
     <div className="reservation-background">
-    <Container maxWidth="md"  >
-      <Paper elevation={5} className="forms-container">
-        <form onSubmit={(event) => event.preventDefault()}>
-          <Paper elevation={2} className="forms-container">
-            <Dropdown
-              setIdError={setCustomerIdError}
-              setId={setCustomer}
-              select={customerList}
-              error={customerIdError}
-              field="Cliente"
-              className={"form-customer-field"}
-              setIdHelperMessage={setCustomerIdHelperMessage}
-              idHelperMessage={customerIdHelperMessage}
-              optionLabel={(option) =>
-                `${option.name} ${option.surname_1} ${option.surname_2}`
-              }
-            />
-          </Paper>
-
-          <br />
-
-          <Paper elevation={2} className="forms-container">
-            <Dropdown
-              setIdError={setEmployeeIdError}
-              setId={setEmployee}
-              select={employeeList}
-              error={employeeIdError}
-              field="Peluquero"
-              className={"form-employee-field"}
-              setIdHelperMessage={setEmployeeIdHelperMessage}
-              idHelperMessage={employeeIdHelperMessage}
-              optionLabel={(option) =>
-                `${option.name} ${option.surname_1} ${option.surname_2}`
-              }
-            />
-          </Paper>
-
-          <br />
-          <Paper elevation={2} className="forms-container">
-            <Dropdown
-              setIdError={setServiceIdError}
-              setId={setService}
-              select={servicesList}
-              idHelperMessage={serviceIdHelperMessage}
-              field={"Servicio"}
-              error={serviceIdError}
-              className={"form-service-field"}
-              setIdHelperMessage={setServiceIdHelperMessage}
-              optionLabel={(option) => `${option.name}`}
-            />
-
-            {servicesList.filter(
-              (serviceFilter) => serviceFilter.id == service
-            )[0]
-              ? servicesList.filter(
-                  (serviceFilter) => serviceFilter.id == service
-                )[0].description
-              : ""}
-
-            <p>
-              {servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0]
-                ? "Duración: " +
-                  servicesList.filter(
-                    (serviceFilter) => serviceFilter.id == service
-                  )[0].duration +
-                  " minutos"
-                : ""}
-            </p>
-
-            <p>
-              {servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0]
-                ? "Precio: " +
-                  servicesList.filter(
-                    (serviceFilter) => serviceFilter.id == service
-                  )[0].price +
-                  " €"
-                : ""}
-            </p>
-
-            <p>
-              <Button variant="contained" color="primary" onClick={addService}>
-                Añadir Servicio
-              </Button>
-            </p>
-
-            {listServicesContracted}
-          </Paper>
-          <br />
-
-          {servicesContracted.length != 0 ? (
-            <Paper elevation={2} className="row">
-              <div className="column">
-                <DayPicker
-                  onDayClick={handleDayClick}
-                  locale="es"
-                  months={constnt.MONTHS}
-                  weekdaysLong={constnt.WEEKDAYS_LONG}
-                  weekdaysShort={constnt.WEEKDAYS_SHORT}
-                  firstDayOfWeek={1}
-                  showOutsideDays
-                  selectedDays={state.selectedDay}
-                  todayButton="Éste mes"
-                  disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-                  fromMonth={new Date()}
-                  toMonth={
-                    new Date(
-                      new Date().getFullYear(),
-                      new Date().getMonth() + 2
-                    )
-                  }
-                />
-              </div>
-
-              <div className="column">{listAvailability}</div>
+      <Container maxWidth="md">
+        <Paper elevation={5} className="forms-container">
+          <form onSubmit={(event) => event.preventDefault()}>
+            <Paper elevation={2} className="forms-container">
+              <Dropdown
+                setIdError={setCustomerIdError}
+                setId={setCustomer}
+                select={customerList}
+                error={customerIdError}
+                field="Cliente"
+                className={"form-customer-field"}
+                setIdHelperMessage={setCustomerIdHelperMessage}
+                idHelperMessage={customerIdHelperMessage}
+                optionLabel={(option) =>
+                  `${option.name} ${option.surname_1} ${option.surname_2}`
+                }
+              />
             </Paper>
-          ) : (
-            ""
-          )}
 
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"Está seguro de su reserva?"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Fecha y Hora: {getAppointmentString()}
-                <br />
-                Precio total: {getTotalPrice()} €
-                <br />
-                Peluquero:{" "}
-                {timeframe == null
-                  ? ""
-                  : employeeList.filter(
-                      (employee_temp) => employee_temp.id == timeframe.employee
-                    )[0].name +
-                    " " +
-                    employeeList.filter(
-                      (employee_temp) => employee_temp.id == timeframe.employee
-                    )[0].surname_1 +
-                    " " +
-                    employeeList.filter(
-                      (employee_temp) => employee_temp.id == timeframe.employee
-                    )[0].surname_2}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={(e) => handleClose(`2`)} color="primary">
-                Cancelar
-              </Button>
-              <Button
-                onClick={(e) => handleClose(`1`)}
-                color="primary"
-                autoFocus
-              >
-                Aceptar
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </form>
-      </Paper>
+            <br />
+
+            <Paper elevation={2} className="forms-container">
+              <Dropdown
+                setIdError={setEmployeeIdError}
+                setId={setEmployee}
+                select={employeeList}
+                error={employeeIdError}
+                field="Peluquero"
+                className={"form-employee-field"}
+                setIdHelperMessage={setEmployeeIdHelperMessage}
+                idHelperMessage={employeeIdHelperMessage}
+                optionLabel={(option) =>
+                  `${option.name} ${option.surname_1} ${option.surname_2}`
+                }
+              />
+            </Paper>
+
+            <br />
+            <Paper elevation={2} className="forms-container">
+              <Dropdown
+                setIdError={setServiceIdError}
+                setId={setService}
+                select={servicesList}
+                idHelperMessage={serviceIdHelperMessage}
+                field={"Servicio"}
+                error={serviceIdError}
+                className={"form-service-field"}
+                setIdHelperMessage={setServiceIdHelperMessage}
+                optionLabel={(option) => `${option.name}`}
+              />
+
+              {servicesList.filter(
+                (serviceFilter) => serviceFilter.id == service
+              )[0]
+                ? servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0].description
+                : ""}
+
+              <p>
+                {servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0]
+                  ? "Duración: " +
+                    servicesList.filter(
+                      (serviceFilter) => serviceFilter.id == service
+                    )[0].duration +
+                    " minutos"
+                  : ""}
+              </p>
+
+              <p>
+                {servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0]
+                  ? "Precio: " +
+                    servicesList.filter(
+                      (serviceFilter) => serviceFilter.id == service
+                    )[0].price +
+                    " €"
+                  : ""}
+              </p>
+
+              <p>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={addService}
+                >
+                  Añadir Servicio
+                </Button>
+              </p>
+
+              {listServicesContracted}
+            </Paper>
+            <br />
+
+            {servicesContracted.length != 0 ? (
+              <Paper elevation={2} className="row">
+                <div className="column">
+                  <DayPicker
+                    onDayClick={handleDayClick}
+                    locale="es"
+                    months={constnt.MONTHS}
+                    weekdaysLong={constnt.WEEKDAYS_LONG}
+                    weekdaysShort={constnt.WEEKDAYS_SHORT}
+                    firstDayOfWeek={1}
+                    showOutsideDays
+                    selectedDays={state.selectedDay}
+                    todayButton="Éste mes"
+                    disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
+                    fromMonth={new Date()}
+                    toMonth={
+                      new Date(
+                        new Date().getFullYear(),
+                        new Date().getMonth() + 2
+                      )
+                    }
+                  />
+                </div>
+
+                <div className="column">{listAvailability}</div>
+              </Paper>
+            ) : (
+              ""
+            )}
+
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Está seguro de su reserva?"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Fecha y Hora: {getAppointmentString()}
+                  <br />
+                  Precio total: {getTotalPrice()} €
+                  <br />
+                  Peluquero:{" "}
+                  {timeframe == null
+                    ? ""
+                    : employeeList.filter(
+                        (employee_temp) =>
+                          employee_temp.id == timeframe.employee
+                      )[0].name +
+                      " " +
+                      employeeList.filter(
+                        (employee_temp) =>
+                          employee_temp.id == timeframe.employee
+                      )[0].surname_1 +
+                      " " +
+                      employeeList.filter(
+                        (employee_temp) =>
+                          employee_temp.id == timeframe.employee
+                      )[0].surname_2}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={(e) => handleClose(`2`)} color="primary">
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={(e) => handleClose(`1`)}
+                  color="primary"
+                  autoFocus
+                >
+                  Aceptar
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </form>
+        </Paper>
       </Container>
-      </div>
+    </div>
   );
 }
 
