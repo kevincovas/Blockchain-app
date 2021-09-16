@@ -19,7 +19,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
-import Zoom from '@material-ui/core/Zoom';
+import Zoom from "@material-ui/core/Zoom";
 import "../css/Reservations.css";
 
 function Reservations() {
@@ -518,189 +518,189 @@ function Reservations() {
   // Render
   return (
     <div className="reservation-background">
-
-<Zoom in={true}>
-
-      <Container maxWidth="md">
-        <Paper elevation={5} className="forms-container">
-          <form onSubmit={(event) => event.preventDefault()}>
-            <Paper elevation={2} className="forms-container">
-              <Dropdown
-                setIdError={setCustomerIdError}
-                setId={setCustomer}
-                select={customerList}
-                error={customerIdError}
-                field="Cliente"
-                className={"form-customer-field"}
-                setIdHelperMessage={setCustomerIdHelperMessage}
-                idHelperMessage={customerIdHelperMessage}
-                optionLabel={(option) =>
-                  `${option.name} ${option.surname_1} ${option.surname_2}`
-                }
-              />
-            </Paper>
-
-            <br />
-
-            <Paper elevation={2} className="forms-container">
-              <Dropdown
-                setIdError={setEmployeeIdError}
-                setId={setEmployee}
-                select={employeeList}
-                error={employeeIdError}
-                field="Peluquero"
-                className={"form-employee-field"}
-                setIdHelperMessage={setEmployeeIdHelperMessage}
-                idHelperMessage={employeeIdHelperMessage}
-                optionLabel={(option) =>
-                  `${option.name} ${option.surname_1} ${option.surname_2}`
-                }
-              />
-            </Paper>
-
-            <br />
-            <Paper elevation={2} className="forms-container">
-              <Dropdown
-                setIdError={setServiceIdError}
-                setId={setService}
-                select={servicesList}
-                idHelperMessage={serviceIdHelperMessage}
-                field={"Servicio"}
-                error={serviceIdError}
-                className={"form-service-field"}
-                setIdHelperMessage={setServiceIdHelperMessage}
-                optionLabel={(option) => `${option.name}`}
-              />
-
-              {servicesList.filter(
-                (serviceFilter) => serviceFilter.id == service
-              )[0]
-                ? servicesList.filter(
-                    (serviceFilter) => serviceFilter.id == service
-                  )[0].description
-                : ""}
-
-              <p>
-                {servicesList.filter(
-                  (serviceFilter) => serviceFilter.id == service
-                )[0]
-                  ? "Duración: " +
-                    servicesList.filter(
-                      (serviceFilter) => serviceFilter.id == service
-                    )[0].duration +
-                    " minutos"
-                  : ""}
-              </p>
-
-              <p>
-                {servicesList.filter(
-                  (serviceFilter) => serviceFilter.id == service
-                )[0]
-                  ? "Precio: " +
-                    servicesList.filter(
-                      (serviceFilter) => serviceFilter.id == service
-                    )[0].price +
-                    " €"
-                  : ""}
-              </p>
-
-              <p>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={addService}
-                >
-                  Añadir Servicio
-                </Button>
-              </p>
-
-              {listServicesContracted}
-            </Paper>
-            <br />
-
-            {servicesContracted.length != 0 ? (
-              <Paper elevation={2} className="row">
-                <div className="column">
-                  <DayPicker
-                    onDayClick={handleDayClick}
-                    locale="es"
-                    months={constnt.MONTHS}
-                    weekdaysLong={constnt.WEEKDAYS_LONG}
-                    weekdaysShort={constnt.WEEKDAYS_SHORT}
-                    firstDayOfWeek={1}
-                    showOutsideDays
-                    selectedDays={state.selectedDay}
-                    todayButton="Éste mes"
-                    disabledDays={[{ daysOfWeek: [0] }, { before: new Date() }]}
-                    fromMonth={new Date()}
-                    toMonth={
-                      new Date(
-                        new Date().getFullYear(),
-                        new Date().getMonth() + 2
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="column">{listAvailability}</div>
+      <div class="preload-images" />
+      <Zoom in={true}>
+        <Container maxWidth="md">
+          <Paper elevation={5} className="forms-container">
+            <form onSubmit={(event) => event.preventDefault()}>
+              <Paper elevation={2} className="forms-container">
+                <Dropdown
+                  setIdError={setCustomerIdError}
+                  setId={setCustomer}
+                  select={customerList}
+                  error={customerIdError}
+                  field="Cliente"
+                  className={"form-customer-field"}
+                  setIdHelperMessage={setCustomerIdHelperMessage}
+                  idHelperMessage={customerIdHelperMessage}
+                  optionLabel={(option) =>
+                    `${option.name} ${option.surname_1} ${option.surname_2}`
+                  }
+                />
               </Paper>
-            ) : (
-              ""
-            )}
 
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {"Está seguro de su reserva?"}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Fecha y Hora: {getAppointmentString()}
-                  <br />
-                  Precio total: {getTotalPrice()} €
-                  <br />
-                  Peluquero:{" "}
-                  {timeframe == null
-                    ? ""
-                    : employeeList.filter(
-                        (employee_temp) =>
-                          employee_temp.id == timeframe.employee
-                      )[0].name +
-                      " " +
-                      employeeList.filter(
-                        (employee_temp) =>
-                          employee_temp.id == timeframe.employee
-                      )[0].surname_1 +
-                      " " +
-                      employeeList.filter(
-                        (employee_temp) =>
-                          employee_temp.id == timeframe.employee
-                      )[0].surname_2}
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={(e) => handleClose(`2`)} color="primary">
-                  Cancelar
-                </Button>
-                <Button
-                  onClick={(e) => handleClose(`1`)}
-                  color="primary"
-                  autoFocus
-                >
-                  Aceptar
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </form>
-        </Paper>
-      </Container>
+              <br />
 
-</Zoom>
+              <Paper elevation={2} className="forms-container">
+                <Dropdown
+                  setIdError={setEmployeeIdError}
+                  setId={setEmployee}
+                  select={employeeList}
+                  error={employeeIdError}
+                  field="Peluquero"
+                  className={"form-employee-field"}
+                  setIdHelperMessage={setEmployeeIdHelperMessage}
+                  idHelperMessage={employeeIdHelperMessage}
+                  optionLabel={(option) =>
+                    `${option.name} ${option.surname_1} ${option.surname_2}`
+                  }
+                />
+              </Paper>
 
+              <br />
+              <Paper elevation={2} className="forms-container">
+                <Dropdown
+                  setIdError={setServiceIdError}
+                  setId={setService}
+                  select={servicesList}
+                  idHelperMessage={serviceIdHelperMessage}
+                  field={"Servicio"}
+                  error={serviceIdError}
+                  className={"form-service-field"}
+                  setIdHelperMessage={setServiceIdHelperMessage}
+                  optionLabel={(option) => `${option.name}`}
+                />
+
+                {servicesList.filter(
+                  (serviceFilter) => serviceFilter.id == service
+                )[0]
+                  ? servicesList.filter(
+                      (serviceFilter) => serviceFilter.id == service
+                    )[0].description
+                  : ""}
+
+                <p>
+                  {servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0]
+                    ? "Duración: " +
+                      servicesList.filter(
+                        (serviceFilter) => serviceFilter.id == service
+                      )[0].duration +
+                      " minutos"
+                    : ""}
+                </p>
+
+                <p>
+                  {servicesList.filter(
+                    (serviceFilter) => serviceFilter.id == service
+                  )[0]
+                    ? "Precio: " +
+                      servicesList.filter(
+                        (serviceFilter) => serviceFilter.id == service
+                      )[0].price +
+                      " €"
+                    : ""}
+                </p>
+
+                <p>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={addService}
+                  >
+                    Añadir Servicio
+                  </Button>
+                </p>
+
+                {listServicesContracted}
+              </Paper>
+              <br />
+
+              {servicesContracted.length != 0 ? (
+                <Paper elevation={2} className="row">
+                  <div className="column">
+                    <DayPicker
+                      onDayClick={handleDayClick}
+                      locale="es"
+                      months={constnt.MONTHS}
+                      weekdaysLong={constnt.WEEKDAYS_LONG}
+                      weekdaysShort={constnt.WEEKDAYS_SHORT}
+                      firstDayOfWeek={1}
+                      showOutsideDays
+                      selectedDays={state.selectedDay}
+                      todayButton="Éste mes"
+                      disabledDays={[
+                        { daysOfWeek: [0] },
+                        { before: new Date() },
+                      ]}
+                      fromMonth={new Date()}
+                      toMonth={
+                        new Date(
+                          new Date().getFullYear(),
+                          new Date().getMonth() + 2
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="column">{listAvailability}</div>
+                </Paper>
+              ) : (
+                ""
+              )}
+
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"Está seguro de su reserva?"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Fecha y Hora: {getAppointmentString()}
+                    <br />
+                    Precio total: {getTotalPrice()} €
+                    <br />
+                    Peluquero:{" "}
+                    {timeframe == null
+                      ? ""
+                      : employeeList.filter(
+                          (employee_temp) =>
+                            employee_temp.id == timeframe.employee
+                        )[0].name +
+                        " " +
+                        employeeList.filter(
+                          (employee_temp) =>
+                            employee_temp.id == timeframe.employee
+                        )[0].surname_1 +
+                        " " +
+                        employeeList.filter(
+                          (employee_temp) =>
+                            employee_temp.id == timeframe.employee
+                        )[0].surname_2}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={(e) => handleClose(`2`)} color="primary">
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={(e) => handleClose(`1`)}
+                    color="primary"
+                    autoFocus
+                  >
+                    Aceptar
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </form>
+          </Paper>
+        </Container>
+      </Zoom>
     </div>
   );
 }

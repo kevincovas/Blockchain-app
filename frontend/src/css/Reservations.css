@@ -1,26 +1,25 @@
 .forms-container {
-    display: block;
-    overflow-y: auto;
-    padding: 10px;
+  display: block;
+  overflow-y: auto;
+  padding: 10px;
 }
 
 .new-sale.container {
-    display: grid;
-    grid-template-columns: 2fr 2fr; }
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+}
 
-    .row
-    {
-        display: flex;
-    }
+.row {
+  display: flex;
+}
 
+.column {
+  text-align: center;
+  flex: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
 
-    .column {
-        text-align:center;
-        flex: 50%;
-        padding: 10px;
-        height: 300px; /* Should be removed. Only for demonstration */
-      }
-	  
 .reservation-background {
   /* Center of Screen */
   display: flex;
@@ -34,7 +33,14 @@
   animation-duration: 30s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
 
+/* For not flickering on transition */
+div.preload-images {
+  background: url("../img/background-1.jpg") no-repeat -9999px -9999px;
+  background: url("../img/background-1.jpg") no-repeat -9999px -9999px,
+    url("../img/background-2.png") no-repeat -9999px -9999px,
+    url("../img/background-3.png") no-repeat -9999px -9999px;
 }
 
 /* Set Different Background Images */
