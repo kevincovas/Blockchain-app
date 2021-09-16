@@ -518,7 +518,7 @@ function Reservations() {
   // Render
   return (
     <div className="reservation-background">
-      <div class="preload-images" />
+      <div className="preload-images" />
       <Zoom in={true}>
         <Container maxWidth="md">
           <Paper elevation={5} className="forms-container">
