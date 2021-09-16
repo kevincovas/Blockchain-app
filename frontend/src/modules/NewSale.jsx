@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HOST, METHODS_OF_PAYMENT } from "../config/const";
 import * as api from "../api/Sales";
-import "./NewSale.css";
+import "../css/NewSale.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useSnackbar } from "notistack";
@@ -14,6 +14,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Paper
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
@@ -324,7 +325,43 @@ function NewSale() {
   return (
     <div className="new-sale view">
       <h1>Nueva venta</h1>
-      <div className="new-sale container">
+      <Paper elevation={6} className="new-sale new-sale-container">
+        <div className="new-sale main-column right">
+          <div className="categories-products-container">
+            <div className="products-container">
+              <p>Productos:</p>
+              <div className="buttons-container categories">
+                {productsSelect.map((product) => (
+                  <Button
+                    className="product-button"
+                    key={product.id}
+                    onClick={() => {
+                      addSaleProduct(product.id);
+                    }}
+                  >
+                    {product.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="categories-container">
+              <p>Categorias:</p>
+              <div className="buttons-container categories">
+                {categoriesSelect.map((category) => (
+                  <Button
+                    className="category-button"
+                    key={category.id}
+                    onClick={() => {
+                      filterProductsByCategory(category.id);
+                    }}
+                  >
+                    {category.name.toUpperCase()}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="new-sale main-column left">
           <form
             className="new-sale-people-form"
@@ -369,8 +406,8 @@ function NewSale() {
                     setEmployeeIdHelperMessage(employeeIdDefaultHelperMessage);
                   } else {
                     setSaleCustomerId("");
-                    setCustomerIdError(true);
-                    setCustomerIdHelperMessage(employeeIdErrorMessage);
+                    setEmployeeIdError(true);
+                    setEmployeeIdHelperMessage(employeeIdErrorMessage);
                   }
                 }}
                 size="small"
@@ -393,17 +430,17 @@ function NewSale() {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <StyledTableCell key="name">Producto</StyledTableCell>
+                <StyledTableCell className="name-option" key="name">Producto</StyledTableCell>
                 <StyledTableCell key="quantity">Quant</StyledTableCell>
                 <StyledTableCell key="unitary-price">€/u.</StyledTableCell>
-                <StyledTableCell key="options">Opciones</StyledTableCell>
                 <StyledTableCell key="total_price">Precio</StyledTableCell>
+                <StyledTableCell key="options">Opciones</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {saleProducts.map((saleProduct) => (
                 <TableRow key={saleProduct.id}>
-                  <StyledTableCell key={`${saleProduct.id}-name`}>
+                  <StyledTableCell className="name-option" key={`${saleProduct.id}-name`}>
                     {saleProduct.name}
                   </StyledTableCell>
                   <StyledTableCell key={`${saleProduct.id}-quantity`}>
@@ -412,29 +449,33 @@ function NewSale() {
                   <StyledTableCell key={`${saleProduct.id}-price`}>
                     {saleProduct.price}
                   </StyledTableCell>
+                  <StyledTableCell key={`${saleProduct.id}-total_price`}>
+                    {saleProduct.total_price}
+                  </StyledTableCell>
                   <StyledTableCell key={`${saleProduct.id}-options`}>
-                    <div className="sale-option-action-buttons">
+                    <div className="sale-option-action-buttons-container">
                       <FontAwesomeIcon
                         icon={faMinus}
                         onClick={(e) =>
                           decreaseSaleProductQuantity(`${saleProduct.id}`)
                         }
+                        className="sale-action-icon decrease"
                       />
                       <FontAwesomeIcon
                         icon={faPlus}
                         onClick={(e) =>
                           increaseSaleProductQuantity(`${saleProduct.id}`)
                         }
+                        className="sale-action-icon increase"
                       />
                       <FontAwesomeIcon
                         icon={faTrash}
                         onClick={(e) => deleteSaleProduct(`${saleProduct.id}`)}
+                        className="sale-action-icon delete"
                       />
                     </div>
                   </StyledTableCell>
-                  <StyledTableCell key={`${saleProduct.id}-total_price`}>
-                    {saleProduct.total_price}
-                  </StyledTableCell>
+                  
                 </TableRow>
               ))}
             </TableBody>
@@ -481,43 +522,7 @@ function NewSale() {
               <button type="button" onClick={() => saveSale()}>Cobrar</button>
             </div>*/}
         </div>
-        <div className="new-sale main-column right">
-          <div className="categories-products-container">
-            <div className="products-container">
-              <p>Productos:</p>
-              <div className="buttons-container categories">
-                {productsSelect.map((product) => (
-                  <Button
-                    className="product-button"
-                    key={product.id}
-                    onClick={() => {
-                      addSaleProduct(product.id);
-                    }}
-                  >
-                    {product.name}
-                  </Button>
-                ))}
-              </div>
-            </div>
-            <div className="categories-container">
-              <p>Categorias:</p>
-              <div className="buttons-container categories">
-                {categoriesSelect.map((category) => (
-                  <Button
-                    className="category-button"
-                    key={category.id}
-                    onClick={() => {
-                      filterProductsByCategory(category.id);
-                    }}
-                  >
-                    {category.name.toUpperCase()}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </Paper>
     </div>
   );
 }

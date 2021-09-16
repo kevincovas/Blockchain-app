@@ -2,9 +2,19 @@ const db_users = require("../db/db_users");
 const db_clients = require("../db/db_clients");
 const { Router } = require("express");
 const auth = require("../auth/auth.service");
-const { Console } = require("console");
+const {
+  from_mail,
+  from_name,
+  to_mail,
+  to_name,
+  text_part,
+  html_cambioContraseña,
+  custom_id,
+} = require("../common/sentEmail");
 
 const router = new Router();
+// Mail API
+const mailjet = require("../utils/mail");
 
 const okResult = (results) => ({ status: "OK", results });
 const errorResult = (details) => ({ status: "ERROR", details });
@@ -93,11 +103,38 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
+//Crear nueva contraseña
+router.post("/rememberPassword", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const userExist = await db.checkIfUserExistsByEmail(email);
+    console.log(`UserExist: ${userExist.data.exists}`);
+    if (userExist.data.exists) {
+      let subject = "Cambio de contraseña";
+      //Mandamos el correo con el link para cambiar el password
+      await mailjet.sendEmail(
+        from_mail,
+        from_name,
+        to_mail,
+        to_name,
+        subject,
+        text_part,
+        html_cambioContraseña,
+        custom_id
+      );
+      res.json(okResult(userExist));
+    } else {
+      res.json(errorResult("Usuario no existe"));
+    }
+  } catch (e) {
+    res.status(500).json(errorResult(e.toString()));
+  }
+});
+//Comprobamos si el correo existe
 router.post("/exist", async (req, res) => {
   const { email } = req.body;
   try {
-    const userExist = await db_users.checkIfUserExistsByEmail(email);
+    const userExist = await db.checkIfUserExistsByEmail(email);
     res.json(okResult(userExist));
   } catch (e) {
     res.status(500).json(errorResult(e.toString()));
@@ -128,6 +165,26 @@ router.post("/register", async (req, res) => {
     if (!addUserResult.ok) {
       return res.status(400).json(errorResult(data));
     }
+
+    let subject = "Bienvenido a Arkus peluqueria";
+    //HTML de correo de Usuario Creado
+    let html_usuarioCreado = `
+        <br />Bienvenido a Peluquería Arkus,
+        <br />Su usuario para hacer login es: ${email}
+        <br> LINK: 
+        `;
+
+    //Mandamos el correo de usuario creado
+    await mailjet.sendEmail(
+      from_mail,
+      from_name,
+      to_mail,
+      to_name,
+      subject,
+      text_part,
+      html_usuarioCreado,
+      custom_id
+    );
     res.json(okResult(addUserResult.data));
   } catch (e) {
     res.status(500).json(errorResult(e.toString()));

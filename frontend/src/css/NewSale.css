@@ -1,30 +1,34 @@
-select,
-textarea,
-input {
-  display: block;
-  margin: 20px 0;
-  min-width: 300px; }
+.view.new-sale {
+  padding: min(10vw, 20px);
+  background-color: #F1F9F7;
+  min-height: 92vh; }
 
 table {
   margin-bottom: 20px; }
+  table .MuiTableHead-root .MuiTableCell-head {
+    background-color: #89b0ae;
+    color: white; }
+  table .MuiTableHead-root .MuiTableCell-head:not(.name-option), table .MuiTableHead-root .MuiTableCell-head:not(.name-option) {
+    text-align: center; }
+  table .MuiTableHead-root .MuiTableCell-head .name-option, table .MuiTableHead-root .MuiTableCell-head .name-option {
+    width: 50%; }
 
-.view.new-sale {
-  margin: min(10vw, 20px); }
-
-.new-sale.container {
+.new-sale.new-sale-container {
   display: grid;
-  grid-template-columns: 1fr 1fr; }
+  grid-template-columns: 1fr 1fr;
+  border-radius: 4px;
+  padding: 20px; }
 
 .new-sale.main-column {
-  padding: 10px;
-  border: solid 1px black;
+  margin: 10px;
   min-height: 70vh; }
 
 .buttons-container {
   display: block;
+  border-radius: 4px;
   overflow-y: auto;
-  border: solid 1px black;
-  padding: 2px; }
+  padding: 2px;
+  box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4); }
   .buttons-container.products {
     height: 80%; }
   .buttons-container.categories {
@@ -38,20 +42,16 @@ table {
   width: 150px;
   height: 50px;
   margin: 2px;
-  background-color: antiquewhite;
+  background-color: #BEE3DB;
   text-transform: none; }
   .MuiButton-root.product-button:hover,
   .MuiButton-root.category-button:hover {
-    background-color: aquamarine; }
+    background-color: #EBD8D0; }
 
 .categories-products-container {
   display: grid;
   grid-template-rows: 65% 35%;
   height: 100%; }
-
-.MuiTableHead-root .MuiTableCell-head {
-  background-color: grey;
-  color: black; }
 
 .MuiTable-root {
   margin-top: 20px; }
@@ -63,3 +63,6 @@ form.new-sale-people-form {
     padding-right: 5px; }
   form.new-sale-people-form .form-employee-field {
     padding-left: 5px; }
+
+.sale-action-icon {
+  color: #555B6E; }

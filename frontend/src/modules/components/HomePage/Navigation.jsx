@@ -9,6 +9,12 @@ import "../../../css/Navigation.css";
 
 
 function Navigation(props) {
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    props.setIsLoggedIn(false);
+  };
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -16,6 +22,15 @@ function Navigation(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav>
+            {props.isLoggedIn ? 
+            <Nav.Link
+            className={`nav-item`}
+            onClick={logout}
+            >
+            Cerrar Sesión
+            </Nav.Link>
+            : 
+            <>
             <Nav.Link
               className={`nav-item  ${
                 props.location.pathname === "/login" ? "active" : ""
@@ -32,6 +47,9 @@ function Navigation(props) {
             >
               Resgistrarse
             </Nav.Link>
+            </>
+          }
+            
             <NavDropdown title="Mi perfil" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/rememberPassword">
                 Cambiar contraseña
