@@ -637,7 +637,6 @@ function Reservations() {
                       firstDayOfWeek={1}
                       showOutsideDays
                       selectedDays={state.selectedDay}
-                      todayButton="Éste mes"
                       disabledDays={[
                         { daysOfWeek: [0] },
                         { before: new Date() },
