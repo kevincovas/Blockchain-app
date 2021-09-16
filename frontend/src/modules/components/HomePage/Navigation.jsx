@@ -3,6 +3,12 @@ import { Link, withRouter } from "react-router-dom";
 import "./Navigation.css";
 
 function Navigation(props) {
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    props.setIsLoggedIn(false);
+  };
+
   return (
     <div className="navigation">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -13,7 +19,17 @@ function Navigation(props) {
 
           <div>
             <ul className="navbar-nav ml-auto">
-                <li
+              {props.isLoggedIn ? 
+              <li
+                className={`nav-item`}
+              >
+                <Link className="nav-link" to="/" onClick={logout}>
+                  Cerrar sesión
+                </Link>
+              </li>
+              :
+              <>
+              <li
                 className={`nav-item  ${
                   props.location.pathname === "/login" ? "active" : ""
                 }`}
@@ -23,14 +39,19 @@ function Navigation(props) {
                 </Link>
               </li>
               <li
-                className={`nav-item  ${
-                  props.location.pathname === "/register" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/register">
-                  Registrarse
-                </Link>
-              </li>
+              className={`nav-item  ${
+                props.location.pathname === "/register" ? "active" : ""
+              }`}
+            >
+              <Link className="nav-link" to="/register">
+                Registrarse
+              </Link>
+            </li>
+            </>
+              
+              }
+              
+              
               <li
                 className={`nav-item  ${
                   props.location.pathname === "/clients" ? "active" : ""

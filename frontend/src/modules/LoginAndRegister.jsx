@@ -190,6 +190,11 @@ function LoginAndRegister({ onLogin }) {
           {mode === LOGIN ? REGISTER : LOGIN}
         </a>
       </div>
+      <div>
+        <a href="http://localhost:3000/rememberPassword">
+          Has olvidado la contraseña? Recordar
+        </a>
+      </div>
       <p className="error-msg userExist">{userExist_error}</p>
       <div className={`message ${message.type}`}>{message.text}</div>
     </div>

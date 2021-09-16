@@ -38,6 +38,7 @@ export const login = async ({ email, password }) => {
   return json;
 }
 
+
 export const user_exist = async ({ email}) => {
   const response = await fetch(`${HOST}/users/exist`, {
     method: "POST",
@@ -51,3 +52,15 @@ export const user_exist = async ({ email}) => {
   return json.results;
 }
 
+export const rememberPassword = async ({ email}) => {
+  const response = await fetch(`${HOST}/users/rememberPassword`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+  const json = await response.json();  
+  console.log(`En la API: ${JSON.stringify(json)}`)
+  return json.results;
+}

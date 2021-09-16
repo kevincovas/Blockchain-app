@@ -9,6 +9,7 @@ import Sales from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
 import Clients from "./modules/clients";
+import RememberPassword from "./modules/RememberPassword";
 import Context from "../context/context";
 
 const initialContext = {
@@ -30,6 +31,7 @@ function App() {
 	
   };
   const logout = () => {
+    console.log("Ha entrado en logout");
     localStorage.removeItem("token");
     setIsLoggedIn(false);
   };
@@ -38,7 +40,7 @@ function App() {
     <Context.Provider value={initialContext}>
       <div className="App">
         <Router>
-          <Navigation />
+          <Navigation isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
           <Route path="/" exact component={() => <Home />} />
           <Route path="/clients" exact component={() => <Clients />} />
           <Route
@@ -70,6 +72,18 @@ function App() {
               isLoggedIn ? <Sales /> : <LoginAndRegister onLogin={login} />
             }
           />
+          <Route
+            path="/rememberPassword"
+            exact
+            render={() =>
+              isLoggedIn ? (
+                <Home />
+              ) : (
+                <RememberPassword />
+              )
+            }
+          />
+          
         </Router>
       </div>
     </Context.Provider>
