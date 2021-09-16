@@ -330,7 +330,9 @@ function Reservations() {
       Number.isInteger(horario) ? 0 : (horario % 1) * 60,
       0
     );
+    date_ini.setMilliseconds(0);
     let date_end = new Date(date_ini.getTime() + tiempo * 60000);
+    date_end.setMilliseconds(0);
 
     // If Dates Exceeds Store limits (break + closing time), not available to book
     if (
@@ -452,13 +454,17 @@ function Reservations() {
         )[0].surname_2
       }`;
 
-      // To Save in Database
+      // To Save in Database ini
       date_ini.setTime(
         date_ini.getTime() - date_ini.getTimezoneOffset() * 60 * 1000
       );
+      date_ini.setMilliseconds(0);
+
+      // To Save in Database end
       date_end.setTime(
         date_end.getTime() - date_end.getTimezoneOffset() * 60 * 1000
       );
+      date_end.setMilliseconds(0);
 
       // Book Registration
       const inserted = await api.addReservation(
