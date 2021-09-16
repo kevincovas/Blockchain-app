@@ -1,7 +1,8 @@
 const { errUnauthorized } = require("../common/errors");
 const auth = require('../auth/auth.service');
 const { catchErrors } = require('../common/errors');
-const { checkIfUserExistsByEmail, checkUserRole } = require("../db/db_users");
+const { checkIfUserExistsByEmail } = require("../db/db_users");
+const {HAIRDRESSER_ROLE_NAME, ADMIN_ROLE_NAME} =require("../common/config");
 
 const authenticated = catchErrors(async (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -12,7 +13,8 @@ const authenticated = catchErrors(async (req, res, next) => {
     errUnauthorized(`Wrong auth header format`);
   }
   const token = authHeader.slice("Bearer ".length);
-  const user = auth.decodeToken(token);
+  const {user} = auth.decodeToken(token);
+  console.log(user);
 
   const userExists = await checkIfUserExistsByEmail(user.email);
   if (!userExists.data.exists) {
@@ -31,13 +33,13 @@ const isHairdresser = catchErrors(async (req, res, next) => {
     errUnauthorized(`Wrong auth header format`);
   }
   const token = authHeader.slice("Bearer ".length);
-  const user = auth.decodeToken(token);
-
-  const userIsHairdresser = await checkUserRole(user.id, user.roles[0].id);
-  if (!userIsHairdresser) {
+  const {user, person} = auth.decodeToken(token);
+  console.log(person);
+  if (!person.role.includes(HAIRDRESSER_ROLE_NAME) && !person.role.includes(ADMIN_ROLE_NAME)) {
     errUnauthorized(`Permission required.`);
   }
   req.user = user;
+  req.person = person;
   next();
 });
 

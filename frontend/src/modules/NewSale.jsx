@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { HOST, METHODS_OF_PAYMENT } from "../config/const";
 import * as api from "../api/Sales";
 import "./NewSale.css";
@@ -16,7 +16,6 @@ import {
   TableCell,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import Context from "../../context/context";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -58,8 +57,8 @@ function NewSale() {
   const [categoriesSelect, setCategoriesSelect] = useState([]);
   const [customersSelect, setCustomerSelect] = useState([]);
   const [employeesSelect, setEmployeesSelect] = useState([]);
-  const {saleProducts, setSaleProducts} = useContext(Context);
   const [totalPrice, setTotalPrice] = useState(0.0);
+  const [saleProducts, setSaleProducts] = useState([]);
   const [saleCustomerId, setSaleCustomerId] = useState("");
   const [customerIdError, setCustomerIdError] = useState(false);
   const [customerIdHelperMessage, setCustomerIdHelperMessage] = useState("");
@@ -75,9 +74,6 @@ function NewSale() {
   const { enqueueSnackbar } = useSnackbar();
 
   const isMounted = useMounted();
-
-
-
   /*const checkGenericValue = (key, value) => {
     if(!value){
       const {errorMessage, setStateName} = errorMessages.filter(({id}) => id === key)[0];
@@ -129,13 +125,13 @@ function NewSale() {
       try {
         await api
           .getPeopleByRole(HOST, token, "customer")
-          .then(({ error, error_message, data }) => {
-            if (error) {
-              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`,{
+          .then((result) => {
+            if (result.status !== "OK") {
+              enqueueSnackbar(`Error extrayendo clientes: ${result.details}`,{
                 variant: "error",
               });
             } else {
-              setCustomerSelect(data);
+              setCustomerSelect(result.results);
             }
           });
       } catch (error) {
@@ -149,13 +145,13 @@ function NewSale() {
       try {
         await api
           .getPeopleByRole(HOST, token, "hairdresser")
-          .then(({ error, error_message, data }) => {
-            if (error) {
-              nqueueSnackbar(`Error extrayendo peluqueros: ${error_message}`,{
+          .then((result) => {
+            if (result.status !== "OK") {
+              enqueueSnackbar(`Error extrayendo peluqueros: ${result.details}`,{
                 variant: "error",
               });
             } else {
-              setEmployeesSelect(data);
+              setEmployeesSelect(result.results);
             }
           });
       } catch (error) {
@@ -337,8 +333,9 @@ function NewSale() {
             <div className="form-customer-field">
               <Autocomplete
                 onChange={(event, value) => {
-                  setSaleCustomerId(value.id);
-                  if (value.id) {
+                  console.log(value);
+                  if(value){
+                    setSaleCustomerId(value.id);
                     setCustomerIdError(false);
                     setCustomerIdHelperMessage("");
                   }
@@ -362,8 +359,8 @@ function NewSale() {
             <div className="form-employee-field">
               <Autocomplete
                 onChange={(event, value) => {
-                  setSaleEmployeeId(value.id);
-                  if (value.id) {
+                  if (value) {
+                    setSaleEmployeeId(value.id);
                     setEmployeeIdError(false);
                     setEmployeeIdHelperMessage(employeeIdDefaultHelperMessage);
                   }

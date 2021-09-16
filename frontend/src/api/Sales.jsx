@@ -55,7 +55,7 @@ export const addProductToSale = async (HOST, token, saleProduct) => {
 
 // Get Customers API call
 export const getPeopleByRole = async (HOST, token, role) => {
-  const res = await fetch(HOST + `/sales/get-people-by-role/`, {
+  const res = await fetch(HOST + `/clients/get-people-by-role/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

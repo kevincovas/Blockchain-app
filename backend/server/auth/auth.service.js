@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { errUnauthorized } = require("../common/errors");
-const { JWT_SECRET, JWT_EXPIRATION_TIME } = require("../config");
+const { JWT_SECRET, JWT_EXPIRATION_TIME} = require("../common/config");
+
 
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt();
@@ -12,16 +13,16 @@ const comparePasswords = async (password, dbPassword) => {
   return await bcrypt.compare(password, dbPassword);
 };
 
-const createToken = (user, roles) => {
-  const email = user.email;
-  const token = jwt.sign({...user, roles}, JWT_SECRET, {
+const createToken = (user, person) => {
+  const token = jwt.sign({user, person}, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION_TIME,
   });
   return {
     accessToken: token,
     tokenType: "Bearer",
     expiresIn: JWT_EXPIRATION_TIME,
-    roles: roles
+    person,
+    user
   };
 };
 

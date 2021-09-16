@@ -60,7 +60,7 @@ const checkIfUserExistsByEmailSQL = `
 const checkIfUserExistsByEmail = async (email) => {
   try {
     const result = await pool.query(checkIfUserExistsByEmailSQL, [email]);
-    return { ok: true, found: true, data: result.rows[0] };
+    return { ok: true, data: result.rows[0] };
   } catch (e) {
     return { ok: false, data: e.toString() };
   }
@@ -114,63 +114,7 @@ const deleteUser = async (id) => {
   }
 };
 
-const getUserRolesByIdSQL = `
-  SELECT id, name 
-  FROM roles 
-  WHERE id IN (
-    SELECT role_id 
-    FROM user_roles
-    WHERE user_id=$1
-  );
-`;
 
-const getUserRolesById = async (id) => {
-  try {
-    const result = await pool.query(getUserRolesByIdSQL, [id]);
-    if (result.rowCount < 1) {
-      return { ok: true, found: false };
-    }
-    return { ok: true, found: true, data: result.rows };
-  } catch (e) {
-    return { ok: false, data: e.toString() };
-  }
-};
-
-const checkUserRoleSQL = `
-  SELECT EXISTS(
-    SELECT * 
-    FROM user_roles
-    WHERE user_id = $1
-    AND role_id = $2
-  );
-`;
-
-const checkUserRole = async (id) => {
-  try {
-    const result = await pool.query(checkUserRoleSQL, [id]);
-    return { ok: true, found: true, data: result.rows[0] };
-  } catch (e) {
-    return { ok: false, data: e.toString() };
-  }
-};
-
-const addUserRoleSQL = `
-INSERT INTO user_roles(user_id, role_id) 
-VALUES ($1, (
-  SELECT id
-  FROM roles
-  WHERE name=$2
-))
-RETURNING id;`;
-
-const addUserRole = async (user_id, role_name) => {
-  try {
-    const result = await pool.query(addUserRoleSQL, [user_id, role_name]);
-    return { ok: true, found: true, data: result.rows[0] };
-  } catch (e) {
-    return { ok: false, data: e.toString() };
-  }
-};
 
 module.exports = {
   getUsers,
@@ -180,7 +124,4 @@ module.exports = {
   deleteUser,
   getUserByEmail,
   checkIfUserExistsByEmail,
-  getUserRolesById,
-  checkUserRole,
-  addUserRole,
 };

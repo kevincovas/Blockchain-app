@@ -1,8 +1,8 @@
 import React from 'react';
 
 const Context = React.createContext({
-    saleProducts: [],
-    setSaleProducts: () => {}
+    token: "",
+    user: {}
 });
 
 export default Context

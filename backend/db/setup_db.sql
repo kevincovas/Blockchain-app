@@ -5,8 +5,6 @@ DROP TABLE IF EXISTS sales;
 DROP TABLE IF EXISTS people;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS product_categories;
-DROP TABLE IF EXISTS user_roles;
-DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -15,28 +13,6 @@ CREATE TABLE users (
   password TEXT NOT NULL, 
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE roles (
-  id SERIAL PRIMARY KEY, 
-  name VARCHAR(100) NOT NULL, 
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE user_roles (
-  id SERIAL PRIMARY KEY,  
-  user_id INTEGER NOT NULL, 
-  role_id INTEGER NOT NULL, 
-
-  CONSTRAINT fk_user_roles_user
-    FOREIGN KEY (user_id)
-    REFERENCES users(id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_user_roles_role
-    FOREIGN KEY (role_id)
-    REFERENCES roles(id)
-    ON DELETE CASCADE
 );
 
 CREATE TABLE product_categories (
@@ -73,6 +49,7 @@ CREATE TABLE people (
   birth_date DATE,
   gender CHAR,
   observations TEXT,
+  role VARCHAR(25) NOT NULL,
   user_id INTEGER,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(), 
@@ -174,22 +151,6 @@ CREATE TRIGGER set_use_updated_at
   BEFORE UPDATE ON users
   FOR EACH ROW
   EXECUTE PROCEDURE trigger_set_use_timestamp();
-
-
--- Trigger that updates the updated at field when acrole is updated
-CREATE OR REPLACE FUNCTION trigger_set_rol_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_rol_updated_at 
-  BEFORE UPDATE ON roles
-  FOR EACH ROW
-  EXECUTE PROCEDURE trigger_set_rol_timestamp();
-
 
 -- Trigger that updates the updated at field when a product_category is updated
 CREATE OR REPLACE FUNCTION trigger_set_pca_timestamp()
