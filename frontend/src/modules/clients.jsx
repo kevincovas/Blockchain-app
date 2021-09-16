@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as api from "../api/Clients";
-import "./clients.css";
+import "../css/Clients.css";
 import * as moment from "moment";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import EditIcon from "@material-ui/icons/Edit";
@@ -116,9 +116,10 @@ function ClientSearch() {
     <div className="clients view">
       <h1>Clientes</h1>
 
-      <div className="clients container">
+      <div className="clients clients-container">
         <div className="clients main-column left">
           <input
+            className="searcher"
             type="text"
             value={clientsFilter}
             onChange={(e) => setClientsFilter(e.target.value)}
@@ -128,6 +129,7 @@ function ClientSearch() {
               {clientsListFiltered.map((client) => (
                 <TableRow key={client.id}>
                   <StyledTableCell
+                    className="row-client"
                     onClick={() => {
                       console.log("estoy en el onclick");
                       if (!showClientDetails) {
