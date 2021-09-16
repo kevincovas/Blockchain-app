@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import * as api from "../api/Clients";
-import "./Clients.css";
-import * as moment from 'moment';
+import "./clients.css";
+import * as moment from "moment";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
+import EditIcon from "@material-ui/icons/Edit";
 import { useSnackbar } from "notistack";
 import {
   Table,
@@ -24,17 +25,17 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-
 const clientStructure = {
+  id:"",
   name: "",
-  surname_1:"",
-  surname_2:"",
-  phone:"",
-  birth_date:"",
-  gender:"",
-  observations:"",
-  user_id:"",
-}
+  surname_1: "",
+  surname_2: "",
+  phone: "",
+  birth_date: "",
+  gender: "",
+  observations: "",
+  user_id: "",
+};
 
 function ClientSearch() {
   const token = localStorage.getItem("token");
@@ -42,6 +43,7 @@ function ClientSearch() {
   const [clientsListFiltered, setclientsListFiltered] = useState([]);
   const [clientsFilter, setClientsFilter] = useState("");
   const [clientSelected, setClientSelected] = useState(clientStructure);
+  const [clientEdit, setClientEdit] = useState(clientSelected);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -52,7 +54,7 @@ function ClientSearch() {
           .getPeopleByRoleExtended("customer", token)
           .then(({ error, error_message, data }) => {
             if (error) {
-              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`,{
+              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
                 variant: "error",
               });
             } else {
@@ -61,7 +63,7 @@ function ClientSearch() {
             }
           });
       } catch (error) {
-        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`,{
+        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
           variant: "error",
         });
       }
@@ -91,7 +93,27 @@ function ClientSearch() {
     filterClients(clientsFilter);
   }, [clientsFilter]);
 
+  /*function editClient(field) {
+      try {
+        await api
+          .getUpdateClient(id, token)
+          .then(({ error, error_message, data }) => {
+            if (error) {
+              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
+                variant: "error",
+              });
+            } else {
+              setEditClient(data);
+            }
+          });
+      } catch (error) {
+        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
+          variant: "error",
+        });
+      }
+    };*/
   
+
   return (
     <div className="clients view">
       <h1>Clientes</h1>
@@ -111,15 +133,15 @@ function ClientSearch() {
             <TableBody>
               {clientsListFiltered.map((client) => (
                 <TableRow key={client.id}>
-                  <StyledTableCell onClick={()=>
-                    {
+                  <StyledTableCell
+                    onClick={() => {
                       console.log("estoy en el onclick");
-                      if(!showClientDetails){
+                      if (!showClientDetails) {
                         setShowClientDetails(true);
                       }
                       setClientSelected(client);
-                    }
-                  }>{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
+                    }}
+                  >{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -128,13 +150,97 @@ function ClientSearch() {
         <div className="clients main-column right">
           {showClientDetails ? (
             <>
-              <h3>Nombre: {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
-              </h3>
-              <p>Teléfono: {`${clientSelected.phone}`}</p>
-              <p>Fecha de nacimiento: {`${moment(clientSelected.birth_date).format('DD-MM-YYYY')}`}</p>
-              <p>Género: {`${clientSelected.gender}`}</p>
-              <p>Observaciones: {`${clientSelected.observations}`}</p>
-              <p>Id Usuario: {`${clientSelected.user_id}`}</p>
+              <div className="clients editClient">
+                <EditIcon
+                  onClick={() => {
+                    console.log("estoy en el onclick del edit");
+                    var clientData = document.querySelector(
+                      "#root > div > div.clients.view > div > div.clients.main-column.right > div > div.clientData"
+                    );
+                    if (clientData.style.display == "block") {
+                      console.log("Hola block");
+                      clientData.style.display = "none";
+                    } else {
+                      console.log("Hola no block");
+                      clientData.style.display = "block";
+                    }
+                    var clientDataForm = document.querySelector(
+                      "#root > div > div.clients.view > div > div.clients.main-column.right > div > div.clientDataForm"
+                    );
+                    if (clientDataForm.style.display == "none") {
+                      console.log("QUE none");
+                      clientDataForm.style.display = "block";
+                    } else {
+                      console.log("QUE no none");
+                      clientDataForm.style.display = "none";
+                    }
+                  }}
+                />
+                <div className="clientData">
+                  <h3>
+                    Nombre:{" "}
+                    {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}` }
+                  </h3>
+                  <p>Teléfono: {`${clientSelected.phone}`}</p>
+                  <p>
+                    Fecha de nacimiento:{" "}
+                    {`${moment(clientSelected.birth_date).format(
+                      "DD-MM-YYYY"
+                    )}`}
+                  </p>
+                  <p>Género: {`${clientSelected.gender}`}</p>
+                  <p>Observaciones: {`${clientSelected.observations}`}</p>
+                </div>
+                <div className="clientDataForm">
+                  <form>
+                    <label>
+                      <div>Nombre</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.name}`} onChange={(e) => setClientEdit()}
+                      />
+                    </label>
+                    <label>
+                      <div>Primer Apellido</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.surname_1}`} onChange={(e) => setClientEdit()}
+                      />
+                    </label>
+                    <label>
+                      <div>Segundo Apellido</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.surname_2}`} onChange={(e) => setClientEdit()}
+                      />
+                    </label>
+                    <label>
+                      <div>Teléfono:</div>
+                      <input type="text" value={`${clientSelected.phone}`} />
+                    </label>
+                    <label>
+                      <div>Fecha de nacimiento:</div>
+                      <input
+                        type="text"
+                        value={`${moment(clientSelected.birth_date).format(
+                          "DD-MM-YYYY")}
+                        )`}
+                      />
+                    </label>
+                    <label>
+                      <div>Género:</div>
+                      <input type="text" value={`${clientSelected.gender}`} />
+                    </label>
+                    <label>
+                      <div>Observaciones:</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.observations}`}
+                      />
+                    </label>
+                  </form>
+                </div>
+              </div>
             </>
           ) : (
             <></>

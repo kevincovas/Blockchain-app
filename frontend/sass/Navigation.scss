@@ -1,0 +1,10 @@
+@import "./_variables.scss";
+
+.navbar.bg-dark.navbar-dark{
+    background-color: $grey !important;
+    
+    .navbar-light, .navbar-brand, .navbar-toggler{
+        color: white;
+    }
+}
+

@@ -4,9 +4,7 @@ const { pool } = require("./db");
 // Get Hairdressers by Role
 const getHairdressersSQL = `select people.id , people.name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
 inner join people on people.id = users.id 
-inner join user_roles on user_roles.user_id = users.id
-inner join roles on roles.id = user_roles.role_id
-where roles.name = 'hairdresser'; `;
+where people.role = 'hairdresser';  `;
 
 // Get Products of type Service
 const getServicesSQL = ` select id , name , description , duration , price from products where is_service = true `;
@@ -28,6 +26,22 @@ from
 unnest($2::integer[]) as u(val);
 
 `;
+
+// Get Email from User
+const getMailFromPersonSQL = ` select email from users inner join people on people.user_id = users.id where people.id = $1  `;
+
+const getMailFromPerson = async (id) => {
+  try {
+    const result = await pool.query(getMailFromPersonSQL,[id]);
+    // Check if mail
+    if (result.rowCount < 1) {
+      return { ok: false, data: "" };
+    }
+    return { ok: true, data: result.rows[0].email };
+  } catch (e) {
+    return { ok: false, data: e.toString() };
+  }
+};
 
 const getServices = async () => {
   try {
@@ -115,4 +129,5 @@ module.exports = {
   getReservationsByDay,
   addReservation,
   addBookedServices,
+  getMailFromPerson,
 };

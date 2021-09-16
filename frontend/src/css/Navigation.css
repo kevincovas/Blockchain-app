@@ -1,0 +1,4 @@
+.navbar.bg-dark.navbar-dark {
+  background-color: #555B6E !important; }
+  .navbar.bg-dark.navbar-dark .navbar-light, .navbar.bg-dark.navbar-dark .navbar-brand, .navbar.bg-dark.navbar-dark .navbar-toggler {
+    color: white; }

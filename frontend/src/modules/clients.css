@@ -6,3 +6,7 @@
   padding: 10px;
   border: solid 1px black;
   min-height: 70vh; }
+  
+.clientDataForm {
+  display: none;
+}

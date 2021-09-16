@@ -1,14 +1,8 @@
-@import "./_variables.scss";
-
 .clients.container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-}
+  grid-template-columns: 1fr 1fr; }
 
 .clients.main-column {
   padding: 10px;
   border: solid 1px black;
-  min-height: 70vh;
-}
-
-
+  min-height: 70vh; }
