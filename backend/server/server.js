@@ -4,7 +4,7 @@ require('dotenv').config();
 const db = require("../server/db/db");
 const express = require("express");
 const cors = require("cors");
-const config = require('./config');
+const config = require('./common/config');
 const morgan = require("morgan");
 const helmet = require("helmet");
 const {errorHandler, ApiError} = require("./common/errors");

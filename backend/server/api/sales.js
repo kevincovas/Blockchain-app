@@ -42,25 +42,6 @@ router.get("/get-sales/", authenticated, isHairdresser, async (req, res) => {
   }
 });
 
-router.post("/get-people-by-role/", authenticated, isHairdresser, async (req, res) => {
-  const role = req.body;
-  const { error, error_message, data } = await db.getPeopleByRole(role);
-  if (error) {
-    return res.status(500).json(errorResult(error_message));
-  } else {
-    return res.json(okResult(data));
-  }
-});
-
-router.post("/get-people-by-role-extended/", authenticated, isHairdresser, async (req, res) => {
-  const role = req.body;
-  const { error, error_message, data } = await db.getPeopleByRoleExtended(role);
-  if (error) {
-    return res.status(500).json(errorResult(error_message));
-  } else {
-    return res.json(okResult(data));
-  }
-});
 
 router.post("/create-sale/", authenticated, isHairdresser,async (req, res) => {
   const sale = req.body;

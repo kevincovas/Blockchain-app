@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as api from "../api/Clients";
-import "./Clients.css";
+import "./clients.css";
 import * as moment from 'moment';
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { useSnackbar } from "notistack";

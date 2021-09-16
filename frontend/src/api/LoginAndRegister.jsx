@@ -14,7 +14,7 @@ export const register = async ({ email, password }) => {
 }
 
 export const register_client = async ({name, surname_1, surname_2, gender, birth_date, phone, user_id}) => {
-  const response = await fetch(`${HOST}/clients/registerClient`, {
+  const response = await fetch(`${HOST}/clients/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
