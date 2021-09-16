@@ -19,7 +19,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
-import "./Reservations.css";
+import "../css/Reservations.css";
 
 function Reservations() {
   // Get Token
@@ -486,7 +486,8 @@ function Reservations() {
 
   // Render
   return (
-    <Container maxWidth="md">
+    <div className="reservation-background">
+    <Container maxWidth="md"  >
       <Paper elevation={5} className="forms-container">
         <form onSubmit={(event) => event.preventDefault()}>
           <Paper elevation={2} className="forms-container">
@@ -655,7 +656,8 @@ function Reservations() {
           </Dialog>
         </form>
       </Paper>
-    </Container>
+      </Container>
+      </div>
   );
 }
 

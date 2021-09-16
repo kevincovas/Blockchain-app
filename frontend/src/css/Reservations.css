@@ -1,0 +1,66 @@
+.forms-container {
+    display: block;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.new-sale.container {
+    display: grid;
+    grid-template-columns: 2fr 2fr; }
+
+    .row
+    {
+        display: flex;
+    }
+
+
+    .column {
+        text-align:center;
+        flex: 50%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+      }
+	  
+.reservation-background {
+  /* Center of Screen */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 95vh;
+
+  /* Animation */
+  animation-name: background-loop;
+  animation-timing-function: linear;
+  animation-duration: 15s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+
+}
+
+/* Set Different Background Images */
+@keyframes background-loop {
+  0% {
+    background-image: url("../img/background-1.jpg");
+  }
+  15% {
+    background-image: url("../img/background-1.jpg");
+  }
+  30% {
+    background-image: url("../img/background-2.png");
+  }
+  45% {
+    background-image: url("../img/background-2.png");
+  }
+  60% {
+    background-image: url("../img/background-3.png");
+  }
+  75% {
+    background-image: url("../img/background-3.png");
+  }
+  90% {
+    background-image: url("../img/background-1.jpg");
+  }
+  100% {
+    background-image: url("../img/background-1.jpg");
+  }
+}
