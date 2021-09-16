@@ -189,7 +189,6 @@ function Reservations() {
   // User
   const fetchCustomers = async () => {
     try {
-      console.log(token);
       await apiSales
         .getPeopleByRole(constnt.HOST, token, "customer")
         .then((result) => {
@@ -198,7 +197,6 @@ function Reservations() {
               variant: "error",
             });
           } else {
-            console.log(result.results);
             setCustomerList(result.results);
           }
         });
