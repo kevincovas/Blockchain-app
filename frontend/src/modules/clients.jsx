@@ -26,7 +26,7 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 const clientStructure = {
-  id:"",
+  id: "",
   name: "",
   surname_1: "",
   surname_2: "",
@@ -43,25 +43,24 @@ function ClientSearch() {
   const [clientsListFiltered, setclientsListFiltered] = useState([]);
   const [clientsFilter, setClientsFilter] = useState("");
   const [clientSelected, setClientSelected] = useState(clientStructure);
-  const [clientEdit, setClientEdit] = useState(clientSelected);
+  const [editedClientFields, setEditedClientFields] = useState(clientSelected);
+  const [editClient, setEditClient] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        await api
-          .getPeopleByRoleExtended("customer", token)
-          .then(({ error, error_message, data }) => {
-            if (error) {
-              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
-                variant: "error",
-              });
-            } else {
-              setClientsList(data);
-              setclientsListFiltered(data);
-            }
-          });
+        await api.getPeopleByRoleExtended("customer", token).then((result) => {
+          if (result.status !== "OK") {
+            enqueueSnackbar(`Error extrayendo clientes: ${result.details}`, {
+              variant: "error",
+            });
+          } else {
+            setClientsList(result.results);
+            setclientsListFiltered(result.results);
+          }
+        });
       } catch (error) {
         enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
           variant: "error",
@@ -112,24 +111,19 @@ function ClientSearch() {
         });
       }
     };*/
-  
 
   return (
     <div className="clients view">
       <h1>Clientes</h1>
-      <input
-        type="text"
-        value={clientsFilter}
-        onChange={(e) => setClientsFilter(e.target.value)}
-      />
+
       <div className="clients container">
         <div className="clients main-column left">
+          <input
+            type="text"
+            value={clientsFilter}
+            onChange={(e) => setClientsFilter(e.target.value)}
+          />
           <Table size="small">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Nombre Cliente</StyledTableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {clientsListFiltered.map((client) => (
                 <TableRow key={client.id}>
@@ -153,33 +147,114 @@ function ClientSearch() {
               <div className="clients editClient">
                 <EditIcon
                   onClick={() => {
-                    console.log("estoy en el onclick del edit");
-                    var clientData = document.querySelector(
-                      "#root > div > div.clients.view > div > div.clients.main-column.right > div > div.clientData"
-                    );
-                    if (clientData.style.display == "block") {
-                      console.log("Hola block");
-                      clientData.style.display = "none";
-                    } else {
-                      console.log("Hola no block");
-                      clientData.style.display = "block";
-                    }
-                    var clientDataForm = document.querySelector(
-                      "#root > div > div.clients.view > div > div.clients.main-column.right > div > div.clientDataForm"
-                    );
-                    if (clientDataForm.style.display == "none") {
-                      console.log("QUE none");
-                      clientDataForm.style.display = "block";
-                    } else {
-                      console.log("QUE no none");
-                      clientDataForm.style.display = "none";
-                    }
+                    setEditClient(!editClient);
                   }}
                 />
+              </div>
+              {editClient ? (
+                <div className="clientDataForm">
+                  <form>
+                    <label>
+                      <div>Nombre</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.name}`}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            name: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <div>Primer Apellido</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.surname_1}`}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            surname_1: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <div>Segundo Apellido</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.surname_2}`}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            surname_2: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <div>Teléfono:</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.phone}`}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <div>Fecha de nacimiento:</div>
+                      <input
+                        type="date"
+                        value={`${moment(clientSelected.birth_date).format(
+                          "DD-MM-YYYY"
+                        )}
+                        `}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            birth_date: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <div>Género:</div>
+                      <input
+                        type="text"
+                        value={`${clientSelected.gender}`}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            gender: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      <div>Observaciones:</div>
+                      <textarea
+                        type="text"
+                        value={`${clientSelected.observations}`}
+                        onChange={(e) =>
+                          setEditedClientFields({
+                            ...clientEdit,
+                            observations: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                  </form>
+                </div>
+              ) : (
                 <div className="clientData">
                   <h3>
                     Nombre:{" "}
-                    {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}` }
+                    {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
                   </h3>
                   <p>Teléfono: {`${clientSelected.phone}`}</p>
                   <p>
@@ -188,59 +263,12 @@ function ClientSearch() {
                       "DD-MM-YYYY"
                     )}`}
                   </p>
-                  <p>Género: {`${clientSelected.gender}`}</p>
+                  <p>
+                    Género: {clientSelected.gender == "W" ? `Mujer` : `Hombre`}
+                  </p>
                   <p>Observaciones: {`${clientSelected.observations}`}</p>
                 </div>
-                <div className="clientDataForm">
-                  <form>
-                    <label>
-                      <div>Nombre</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.name}`} onChange={(e) => setClientEdit()}
-                      />
-                    </label>
-                    <label>
-                      <div>Primer Apellido</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.surname_1}`} onChange={(e) => setClientEdit()}
-                      />
-                    </label>
-                    <label>
-                      <div>Segundo Apellido</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.surname_2}`} onChange={(e) => setClientEdit()}
-                      />
-                    </label>
-                    <label>
-                      <div>Teléfono:</div>
-                      <input type="text" value={`${clientSelected.phone}`} />
-                    </label>
-                    <label>
-                      <div>Fecha de nacimiento:</div>
-                      <input
-                        type="text"
-                        value={`${moment(clientSelected.birth_date).format(
-                          "DD-MM-YYYY")}
-                        )`}
-                      />
-                    </label>
-                    <label>
-                      <div>Género:</div>
-                      <input type="text" value={`${clientSelected.gender}`} />
-                    </label>
-                    <label>
-                      <div>Observaciones:</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.observations}`}
-                      />
-                    </label>
-                  </form>
-                </div>
-              </div>
+              )}
             </>
           ) : (
             <></>
