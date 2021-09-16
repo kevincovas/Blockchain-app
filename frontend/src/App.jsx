@@ -4,11 +4,12 @@ import { Redirect } from "react-router";
 import "./App.css";
 
 import Reservations from "./modules/Reservations.jsx";
-import LoginAndRegister from "./modules/LoginAndRegister.jsx";
+import Register from "./modules/Register.jsx";
+import Login from "./modules/Login.jsx";
 import Sales from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
-import Clients from "./modules/clients";
+import Clients from "./modules/Clients";
 import Context from "../context/context";
 
 function App() {
@@ -36,39 +37,39 @@ function App() {
           path="/"
           exact
           render={() =>
-            isLoggedIn ? <LoginAndRegister onLogin={login} /> : <Home />
+            isLoggedIn ? <Login onLogin={login} /> : <Home />
           }
         />
         <Route
           path="/clients"
           exact
           render={() =>
-            isLoggedIn ? <Clients /> : <LoginAndRegister onLogin={login} />
+            isLoggedIn ? <Clients /> : <Login onLogin={login} />
           }
         />
         <Route
           path="/reservations"
           exact
           render={() =>
-            isLoggedIn ? <Reservations /> : <LoginAndRegister onLogin={login} />
+            isLoggedIn ? <Reservations /> : <Login onLogin={login} />
           }
         />
         <Route
           path="/login"
           render={() =>
-            isLoggedIn ? <Home /> : <LoginAndRegister onLogin={login} />
+            isLoggedIn ? <Home /> : <Login onLogin={login} />
           }
         />
         <Route
           path="/register"
           render={() =>
-            isLoggedIn ? <Home /> : <LoginAndRegister onLogin={login} />
+            isLoggedIn ? <Home /> : <Register onLogin={login} />
           }
         />
         <Route
           path="/sales"
           render={() =>
-            isLoggedIn ? <Sales /> : <LoginAndRegister onLogin={login} />
+            isLoggedIn ? <Sales /> : <Login onLogin={login} />
           }
         />
       </Router>
