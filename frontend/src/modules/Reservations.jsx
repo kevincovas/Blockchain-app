@@ -408,7 +408,7 @@ function Reservations() {
 
   // Set State of Selected TimeTable
   function setTimeTableButton(timeframe_in) {
-    user_id;
+
     // Set TimeFrame
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
