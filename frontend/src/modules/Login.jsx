@@ -64,7 +64,7 @@ function Login({ onLogin }) {
             sm={4}
             md={7}
             sx={{
-              backgroundImage: `url(${background})`,
+              backgroundImage: 'url(https://source.unsplash.com/random)',
               backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"
@@ -124,10 +124,6 @@ function Login({ onLogin }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                  />
                   <Button
                     type="submit"
                     fullWidth
@@ -144,8 +140,8 @@ function Login({ onLogin }) {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="#" variant="body2">
-                      {"No tienes una cuenta? "}
+                    <Link href="/register" variant="body2">
+                      {"No tienes una cuenta? Regístrate"}
                     </Link>
                   </Grid>
                 </Grid>
