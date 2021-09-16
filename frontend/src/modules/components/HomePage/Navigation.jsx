@@ -1,68 +1,72 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
-import "./Navigation.css";
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+import {withRouter } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "../../../css/Navigation.css";
+
 
 function Navigation(props) {
   return (
-    <div className="navigation">
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <div className="navigation container">
-          <Link className="navbar-brand" to="/">
-            Peluquería ARKUS
-          </Link>
-
-          <div>
-            <ul className="navbar-nav ml-auto">
-                <li
-                className={`nav-item  ${
-                  props.location.pathname === "/login" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/login">
-                  Iniciar sesión
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/register" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/register">
-                  Registrarse
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/clients" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/clients">
-                  Clientes
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/Reservations" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/reservations">
-                  Reservar
-                </Link>
-              </li>
-              <li
-                className={`nav-item  ${
-                  props.location.pathname === "/sales" ? "active" : ""
-                }`}
-              >
-                <Link className="nav-link" to="/sales">
-                  Ventas
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
+    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Container>
+        <Navbar.Brand href="/">ARKUS</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav>
+            <Nav.Link
+              className={`nav-item  ${
+                props.location.pathname === "/login" ? "active" : ""
+              }`}
+              href="/login"
+            >
+              Inicio Sesión
+            </Nav.Link>
+            <Nav.Link
+              className={`nav-item  ${
+                props.location.pathname === "/register" ? "active" : ""
+              }`}
+              href="/register"
+            >
+              Resgistrarse
+            </Nav.Link>
+            <NavDropdown title="Mi perfil" id="collasible-nav-dropdown">
+              <NavDropdown.Item href="/rememberPassword">
+                Cambiar contraseña
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="/logout">Cerrar Sesión</NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link
+              className={`nav-item  ${
+                props.location.pathname === "/Reservations" ? "active" : ""
+              }`}
+              href="/reservations"
+            >
+              Reservar Cita
+            </Nav.Link>
+            <Nav.Link
+              className={`nav-item  ${
+                props.location.pathname === "/clients" ? "active" : ""
+              }`}
+              href="/clients"
+            >
+              Clientes
+            </Nav.Link>
+            <Nav.Link
+              className={`nav-item  ${
+                props.location.pathname === "/sales" ? "active" : ""
+              }`}
+              href="/sales"
+            >
+              Ventas
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 
