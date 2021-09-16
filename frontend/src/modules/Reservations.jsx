@@ -189,7 +189,6 @@ function Reservations() {
   // User
   const fetchCustomers = async () => {
     try {
-      console.log(token);
       await apiSales
         .getPeopleByRole(constnt.HOST, token, "customer")
         .then((result) => {
@@ -198,7 +197,6 @@ function Reservations() {
               variant: "error",
             });
           } else {
-            console.log(result.results);
             setCustomerList(result.results);
           }
         });
@@ -408,7 +406,7 @@ function Reservations() {
 
   // Set State of Selected TimeTable
   function setTimeTableButton(timeframe_in) {
-    user_id;
+
     // Set TimeFrame
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]

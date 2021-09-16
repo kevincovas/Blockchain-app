@@ -58,7 +58,7 @@ router.post("/add", async (req, res) => {
     date_ini,
     date_end,
     booked_services,
-    mail_content
+    mail_content,
   } = req.body;
 
   // Add Reservation
@@ -73,30 +73,32 @@ router.post("/add", async (req, res) => {
   if (!ok) {
     return res.status(500).json(errorResult(data));
   } else {
-    
     // Send Mail with all info
     let from_mail = "aitor.java@gmail.com";
     let from_name = "Peluquería ARKUS";
-    // TODO
-    let to_mail = "aitor.java@gmail.com";
-    // TODO
-    let to_name = "Aitor";
-    let subject = "Confirmación de reserva";
-    let text_part = "Confirmación";
-    let custom_id = "AppGettingStartedTest";
 
-    // Send Mail via Mailjet
-    await mailjet.sendEmail(
-      from_mail,
-      from_name,
-      to_mail,
-      to_name,
-      subject,
-      text_part,
-      mail_content,
-      custom_id
-    );
+    // Get Mail from User
+    const { ok, data } = await db.getMailFromPerson(person_id);
 
+    // Everything OK
+    if (ok) {
+      // TODO
+      let subject = "Confirmación de reserva";
+      let text_part = "Confirmación";
+      let custom_id = "AppGettingStartedTest";
+
+      // Send Mail via Mailjet
+      await mailjet.sendEmail(
+        from_mail,
+        from_name,
+        data,
+        "",
+        subject,
+        text_part,
+        mail_content,
+        custom_id
+      );
+    }
     return res.json(okResult(data));
   }
 });
