@@ -26,8 +26,9 @@ function Reservations() {
   // Get Token
   const token = localStorage.getItem("token");
   // Get Role
-
+  const person = localStorage.getItem("person");
   // Get User Id
+  const user = localStorage.getItem("user");
 
   // Customer
   const [customer, setCustomer] = useState(0);
@@ -95,8 +96,8 @@ function Reservations() {
   // USE EFECTS ////////////////////////////////////////////////////////////////////////////////////
   // Valores Iniciales
   useEffect(() => {
-    // Customers
-    fetchCustomers();
+    // Customers (only if Admin or Employee)
+    if (JSON.parse(person).role != "customer") fetchCustomers();
 
     // Peluqueros
     loadEmployeeList();
@@ -431,8 +432,7 @@ function Reservations() {
       // Get Data to send to API
       let person_id = customer;
       let booked_employee_id = timeframe.employee;
-      // TODO
-      let created_by_id = 1;
+      let created_by_id = JSON.parse(person).id;
       let date_ini = timeframe.date_ini;
       let date_end = timeframe.date_end;
       let booked_services = servicesContracted;
@@ -521,23 +521,27 @@ function Reservations() {
       <div className="preload-images" />
       <Zoom in={true}>
         <Container maxWidth="md">
-          <Paper elevation={5} className="forms-container">
-            <form onSubmit={(event) => event.preventDefault()}>
-              <Paper elevation={2} className="forms-container">
-                <Dropdown
-                  setIdError={setCustomerIdError}
-                  setId={setCustomer}
-                  select={customerList}
-                  error={customerIdError}
-                  field="Cliente"
-                  className={"form-customer-field"}
-                  setIdHelperMessage={setCustomerIdHelperMessage}
-                  idHelperMessage={customerIdHelperMessage}
-                  optionLabel={(option) =>
-                    `${option.name} ${option.surname_1} ${option.surname_2}`
-                  }
-                />
-              </Paper>
+          <form onSubmit={(event) => event.preventDefault()}>
+            <Paper elevation={5} className="forms-container">
+              {JSON.parse(person).role == "customer" ? (
+                ""
+              ) : (
+                <Paper elevation={2} className="forms-container">
+                  <Dropdown
+                    setIdError={setCustomerIdError}
+                    setId={setCustomer}
+                    select={customerList}
+                    error={customerIdError}
+                    field="Cliente"
+                    className={"form-customer-field"}
+                    setIdHelperMessage={setCustomerIdHelperMessage}
+                    idHelperMessage={customerIdHelperMessage}
+                    optionLabel={(option) =>
+                      `${option.name} ${option.surname_1} ${option.surname_2}`
+                    }
+                  />
+                </Paper>
+              )}
 
               <br />
 
@@ -697,8 +701,8 @@ function Reservations() {
                   </Button>
                 </DialogActions>
               </Dialog>
-            </form>
-          </Paper>
+            </Paper>
+          </form>
         </Container>
       </Zoom>
     </div>
