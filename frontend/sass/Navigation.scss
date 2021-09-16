@@ -1,49 +1,10 @@
 @import "./_variables.scss";
-.navigation ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+
+.navbar.bg-dark.navbar-dark{
+    background-color: $grey !important;
+    
+    .navbar-light, .navbar-brand, .navbar-toggler{
+        color: white;
+    }
 }
 
-.navigation ul li {
-    display: inline-block;
-}
-
-.navigation ul li a {
-    display: block;
-    padding: 0.5rem 1rem;
-    transition: all 0.3s linear;
-    border-radius: 1.5px;
-}
-
-.navigation ul li a:hover{
-    background:  $grey;
-}
-
-.navbar-brand {
-    display: inline-block;
-}
-
-.navigation.container{
-    position: relative;
-    margin: 0rem auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: $green-dark;
-
-}
-
-.nav-link{
-    text-decoration: none;
-    color: black;
-}
-
-.nav-link:hover{
-    background:  $grey;
-}
-
-.navbar-brand{
-    text-decoration: none;
-    color: black;
-}
