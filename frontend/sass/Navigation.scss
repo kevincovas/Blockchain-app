@@ -1,3 +1,4 @@
+@import "./_variables.scss";
 .navigation ul {
     margin: 0;
     padding: 0;
@@ -16,7 +17,7 @@
 }
 
 .navigation ul li a:hover{
-    background:  rgb(145, 181, 202);
+    background:  $grey;
 }
 
 .navbar-brand {
@@ -29,7 +30,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(191, 207, 216);
+    background-color: $green-dark;
 
 }
 
@@ -39,7 +40,7 @@
 }
 
 .nav-link:hover{
-    background:  rgb(145, 181, 202);
+    background:  $grey;
 }
 
 .navbar-brand{

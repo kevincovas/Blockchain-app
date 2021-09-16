@@ -15,7 +15,7 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import background from "../img/peluqueria.png";
+import "../css/LoginAndRegister.css";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -53,28 +53,20 @@ function Login({ onLogin }) {
 
   const theme = createTheme();
 
+
+ 
   return (
     <div className="login-page">
       <ThemeProvider theme={theme}>
-        <Grid container component="main" sx={{ height: "100vh" }}>
+        <Grid className="container-main" container component="main" sx={{ height: "100vh" }}>
           <CssBaseline />
           <Grid
             item
             xs={false}
             sm={4}
             md={7}
-            sx={{
-              backgroundImage: 'url(https://source.unsplash.com/random)',
-              backgroundRepeat: "no-repeat",
-              backgroundColor: (t) =>
-                t.palette.mode === "light"
-                  ? t.palette.grey[50]
-                  : t.palette.grey[900],
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
           />
-          <Grid
+          <Grid className="box-login"
             item
             xs={12}
             sm={8}
@@ -92,7 +84,7 @@ function Login({ onLogin }) {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <Avatar className="coorporativeicon" sx={{ m: 1, bgcolor: "secondary.main" }}>
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
@@ -125,6 +117,7 @@ function Login({ onLogin }) {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <Button
+                    className="corporativeButton"
                     type="submit"
                     fullWidth
                     variant="contained"
@@ -135,13 +128,13 @@ function Login({ onLogin }) {
                 </form>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    <Link className="sinLink" href="#" variant="body2">
                       Has olvidado la contraseña?
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="/register" variant="body2">
-                      {"No tienes una cuenta? Regístrate"}
+                    <Link className="sinLink" href="/register" variant="body2">
+                      ¿No tienes una cuenta? {"Regístrate"}
                     </Link>
                   </Grid>
                 </Grid>

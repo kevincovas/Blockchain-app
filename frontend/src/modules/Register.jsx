@@ -7,12 +7,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import { Autocomplete } from "@material-ui/lab";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -20,8 +14,8 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import background from "../img/peluqueria.png";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import "../css/LoginAndRegister.css";
 
 function Register() {
   const [name, setName] = useState("");
@@ -69,14 +63,14 @@ function Register() {
           console.log(`valPassword: ${valPassword}`);
           if (valPassword) {
             const result = await api.register({ email, password });
-            console.log(`Result Status: `, result)
-            if (result.status!=="OK"){
-                enqueueSnackbar(`Error: ${result.details.toString()}`, {
-                    variant: "error",
-                  });
+            console.log(`Result Status: `, result);
+            if (result.status !== "OK") {
+              enqueueSnackbar(`Error: ${result.details.toString()}`, {
+                variant: "error",
+              });
             } else {
-                const user_id = result.results.id;
-                const result2 = await api.register_client({
+              const user_id = result.results.id;
+              const result2 = await api.register_client({
                 name,
                 surname_1,
                 surname_2,
@@ -84,17 +78,17 @@ function Register() {
                 birth_date,
                 phone,
                 user_id,
+              });
+              if (result2.status !== "OK") {
+                enqueueSnackbar(`Error: ${result2.details.toString()}`, {
+                  variant: "error",
                 });
-                if (result2.status!=="OK"){
-                    enqueueSnackbar(`Error: ${result2.details.toString()}`, {
-                        variant: "error",
-                    });
-                } else {
-                    enqueueSnackbar("Usuario y cliente creado", {
-                    variant: "success",
-                    });
-                    history.push('/');
-                }
+              } else {
+                enqueueSnackbar("Usuario y cliente creado", {
+                  variant: "success",
+                });
+                history.push("/");
+              }
             }
           }
         } else {
@@ -128,7 +122,12 @@ function Register() {
   return (
     <div className="register-page">
       <ThemeProvider theme={theme}>
-        <Grid container component="main" sx={{ height: "100vh" }}>
+        <Grid
+          container
+          className="container-main"
+          component="main"
+          sx={{ height: "100vh" }}
+        >
           <CssBaseline />
           <Grid
             item
@@ -136,8 +135,6 @@ function Register() {
             sm={4}
             md={7}
             sx={{
-              backgroundImage: `url(${background})`,
-              backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"
                   ? t.palette.grey[50]
@@ -146,7 +143,7 @@ function Register() {
               backgroundPosition: "center",
             }}
           />
-          <Grid
+          <Grid className="box-register"
             item
             xs={12}
             sm={8}
@@ -164,11 +161,11 @@ function Register() {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <Avatar className="coorporativeicon" sx={{ m: 1, bgcolor: "secondary.main" }}>
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
-                Resgistro nuevo cliente
+                Registro nuevo cliente
               </Typography>
               <Box className="form-register" sx={{ mt: 1 }}>
                 <form onSubmit={register}>
@@ -198,7 +195,6 @@ function Register() {
                   />
                   <TextField
                     margin="normal"
-                    required
                     fullWidth
                     name="surname_2"
                     label="Segundo Apellido"
@@ -212,38 +208,30 @@ function Register() {
                     onChange={(event, value) => {
                       console.log(value);
                       if (value) {
-                        setGender(value.value)
-                      }else {
-                          setGender("")
+                        setGender(value.value);
+                      } else {
+                        setGender("");
                       }
                     }}
                     fullWidth
                     options={[
-                        {
-                            name: "Mujer",
-                            value: "W"
-                        },
-                        {
-                            name:"Hombre",
-                            value:"M"
-                        }, 
+                      {
+                        name: "Mujer",
+                        value: "W",
+                      },
+                      {
+                        name: "Hombre",
+                        value: "M",
+                      },
                     ]}
                     renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Sexo"
-                      />
+                      <TextField {...params} label="Sexo" />
                     )}
-                    getOptionLabel={(option) =>
-                      `${option.name}`
-                    }
-                    getOptionSelected={(option) =>
-                        `${option.value}`
-                    }
+                    getOptionLabel={(option) => `${option.name}`}
+                    getOptionSelected={(option) => `${option.value}`}
                   />
                   <TextField
                     margin="normal"
-                    required
                     fullWidth
                     name="phone"
                     label="Teléfono"
@@ -255,7 +243,6 @@ function Register() {
                   />
                   <TextField
                     margin="normal"
-                    required
                     fullWidth
                     name="birth_date"
                     label="Fecha de Nacimiento"
@@ -290,6 +277,7 @@ function Register() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <Button
+                    className="corporativeButton"
                     type="submit"
                     fullWidth
                     variant="contained"
