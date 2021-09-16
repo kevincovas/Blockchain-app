@@ -19,6 +19,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
+import Zoom from '@material-ui/core/Zoom';
 import "../css/Reservations.css";
 
 function Reservations() {
@@ -450,7 +451,7 @@ function Reservations() {
           (employee_temp) => employee_temp.id == timeframe.employee
         )[0].surname_2
       }`;
-      
+
       // To Save in Database
       date_ini.setTime(
         date_ini.getTime() - date_ini.getTimezoneOffset() * 60 * 1000
@@ -511,6 +512,9 @@ function Reservations() {
   // Render
   return (
     <div className="reservation-background">
+
+<Zoom in={true}>
+
       <Container maxWidth="md">
         <Paper elevation={5} className="forms-container">
           <form onSubmit={(event) => event.preventDefault()}>
@@ -688,6 +692,9 @@ function Reservations() {
           </form>
         </Paper>
       </Container>
+
+</Zoom>
+
     </div>
   );
 }
