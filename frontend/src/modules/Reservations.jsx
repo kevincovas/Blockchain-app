@@ -413,7 +413,7 @@ function Reservations() {
     );
 
     // Not Customer Selected
-    if (customer == 0) {
+    if (customer == 0 && JSON.parse(person).role != "customer") {
       enqueueSnackbar("Error: Ningún cliente seleccionado.", {
         variant: "error",
       });
@@ -430,7 +430,12 @@ function Reservations() {
     // Call Booking API
     if (timeframe != null) {
       // Get Data to send to API
+
+      // Person Variable if Customer or Admin
       let person_id = customer;
+      if (JSON.parse(person).role == "customer")
+        person_id = JSON.parse(person).id;
+      // Other Variables
       let booked_employee_id = timeframe.employee;
       let created_by_id = JSON.parse(person).id;
       let date_ini = timeframe.date_ini;
