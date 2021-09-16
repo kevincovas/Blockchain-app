@@ -4,9 +4,7 @@ const { pool } = require("./db");
 // Get Hairdressers by Role
 const getHairdressersSQL = `select people.id , people.name , surname_1 , COALESCE(surname_2 , '') as surname_2 from users 
 inner join people on people.id = users.id 
-inner join user_roles on user_roles.user_id = users.id
-inner join roles on roles.id = user_roles.role_id
-where roles.name = 'hairdresser'; `;
+where people.role = 'hairdresser';  `;
 
 // Get Products of type Service
 const getServicesSQL = ` select id , name , description , duration , price from products where is_service = true `;

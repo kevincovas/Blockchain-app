@@ -191,13 +191,13 @@ function Reservations() {
       console.log(token);
       await apiSales
         .getPeopleByRole(constnt.HOST, token, "customer")
-        .then(({ error, error_message, data }) => {
-          if (error) {
-            enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
+        .then((result) => {
+          if (result.status !== "OK") {
+            enqueueSnackbar(`Error extrayendo clientes: ${result.details}`, {
               variant: "error",
             });
           } else {
-            setCustomerList(data);
+            setCustomerList(result.results);
           }
         });
     } catch (error) {
