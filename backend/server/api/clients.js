@@ -65,16 +65,9 @@ router.post("/register", async (req, res) => {
   if (!surname_1) {
     return res.status(400).json(errorResult("Missing '1st surname' field"));
   }
-  //Those are not mandatory fields when creating a person
-  //   if (!surname_2) {
-  //     return res.status(400).json(errorResult("Missing '2nd surname' field"));
-  //   }
-  //   if (!gender) {
-  //     return res.status(400).json(errorResult("Missing 'gender' field"));
-  //   }
-  //   if (!phone) {
-  //     return res.status(400).json(errorResult("Missing 'phone' field"));
-  //   }
+  if (!gender) {
+    return res.status(400).json(errorResult("Missing 'gender' field"));
+  }
   if (!user_id) {
     return res.status(400).json(errorResult("Missing 'user_id' field"));
   }

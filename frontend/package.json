@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "compile:css:watch": "node-sass -o src/modules/ sass --watch"
+    "compile:css:watch": "node-sass -o src/css/ sass --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",

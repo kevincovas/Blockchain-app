@@ -338,6 +338,10 @@ function NewSale() {
                     setSaleCustomerId(value.id);
                     setCustomerIdError(false);
                     setCustomerIdHelperMessage("");
+                  } else {
+                    setSaleCustomerId("");
+                    setCustomerIdError(true);
+                    setCustomerIdHelperMessage(customerIdErrorMessage);
                   }
                 }}
                 size="small"
@@ -359,10 +363,14 @@ function NewSale() {
             <div className="form-employee-field">
               <Autocomplete
                 onChange={(event, value) => {
-                  if (value) {
+                  if(value) {
                     setSaleEmployeeId(value.id);
                     setEmployeeIdError(false);
                     setEmployeeIdHelperMessage(employeeIdDefaultHelperMessage);
+                  } else {
+                    setSaleCustomerId("");
+                    setCustomerIdError(true);
+                    setCustomerIdHelperMessage(employeeIdErrorMessage);
                   }
                 }}
                 size="small"
