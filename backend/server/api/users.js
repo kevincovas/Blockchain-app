@@ -8,7 +8,6 @@ const {
   to_mail,
   to_name,
   text_part,
-  html_cambioContraseña,
   custom_id,
 } = require("../common/sentEmail");
 
@@ -103,15 +102,31 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//Crear nueva contraseña
+//Cambiar contraseña
+
+//Generar nueva contraseña
 router.post("/rememberPassword", async (req, res) => {
   const { email } = req.body;
   try {
-    const userExist = await db.checkIfUserExistsByEmail(email);
+    const userExist = await db_users.checkIfUserExistsByEmail(email);
     console.log(`UserExist: ${userExist.data.exists}`);
     if (userExist.data.exists) {
+      //Generamos un password aleatorio
+      const randPassword = auth.generatePasswordRand(8);
+      console.log(`randPassword: ${randPassword}`);
+      //Hasheamos el nuevo password
+      const hashedPassword = await auth.hashPassword(randPassword);
+      //Actualizamos contraseña
+      await db_users.updatePassword(email,hashedPassword);
+      //Envío de contraseña
       let subject = "Cambio de contraseña";
-      //Mandamos el correo con el link para cambiar el password
+      //HTML de correo de Cambio de Contraseña
+      let html_cambioContraseña = `
+        <br />Como solicitaste, a continuación le mostramos su nueva contraseña:
+        <br> Contraseña: ${randPassword}
+        <br> Si quieres cambiarla, inicia sesión y seguidamente en Mi perfil-Cambiar contraseña 
+      `;
+      //Mandamos el correo con la nueva password
       await mailjet.sendEmail(
         from_mail,
         from_name,
@@ -134,7 +149,7 @@ router.post("/rememberPassword", async (req, res) => {
 router.post("/exist", async (req, res) => {
   const { email } = req.body;
   try {
-    const userExist = await db.checkIfUserExistsByEmail(email);
+    const userExist = await db_users.checkIfUserExistsByEmail(email);
     res.json(okResult(userExist));
   } catch (e) {
     res.status(500).json(errorResult(e.toString()));
