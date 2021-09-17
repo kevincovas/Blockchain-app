@@ -149,6 +149,7 @@ function ClientSearch() {
             value={clientsFilter}
             onChange={(e) => setClientsFilter(e.target.value)}
           />
+          <div className="container-table-client">
           <Table size="small">
             <TableBody>
               {clientsListFiltered.map((client) => (
@@ -166,6 +167,7 @@ function ClientSearch() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </div>
         <div className="clients main-column right">
           {showClientDetails ? (
@@ -291,7 +293,7 @@ function ClientSearch() {
                       className="observations"
                       multiline
                       fullWidth
-                      rows={5}
+                      rows={1}
                       aria-label="maximum height"
                       placeholder="Observaciones"
                       type="text"

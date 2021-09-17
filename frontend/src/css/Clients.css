@@ -2,7 +2,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-radius: 4px;
-  padding: 20px; }
+  padding: 20px;
+  border-radius: 4px; }
 
 .view.clients {
   padding: min(10vw, 20px);
@@ -10,15 +11,16 @@
   min-height: 92vh; }
 
 table {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  border-radius: 4px; }
   table .MuiTableHead-root .MuiTableCell-head {
     background-color: #89b0ae;
     color: white; }
 
 .clients.main-column {
   margin: 10px;
-  min-height: 70vh;
-  box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4); }
+  box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4);
+  border-radius: 4px; }
 
 .searcher {
   background-color: #F1F9F7;
@@ -31,7 +33,7 @@ table {
   background-color: #F1F9F7; }
 
 .editform {
-  padding: 1rem; }
+  padding: 0.5rem; }
 
 .clientData {
   padding: 1rem; }
@@ -44,22 +46,13 @@ table {
   font-weight: 500;
   line-height: 1.5rem; }
 
-/*.date-gender-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  & .form-date-field {
-    padding-right: 5px;
-  }
-
-  & .form-gender-field {
-    padding-left: 5px;
-    
-  }
-}*/
 .MuiSvgIcon-root.editIcon {
   color: #555B6E;
-  margin: 1rem; }
+  margin: 0.5rem; }
 
 .observations {
   margin-top: 2rem; }
+
+.container-table-client {
+  height: 50%;
+  overflow-y: scroll; }
