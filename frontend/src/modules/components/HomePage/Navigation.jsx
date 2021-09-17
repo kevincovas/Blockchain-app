@@ -1,12 +1,11 @@
 import React from "react";
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav'
-import NavDropdown from 'react-bootstrap/NavDropdown'
-import {withRouter } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { withRouter } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../../../css/Navigation.css";
-
 
 function Navigation(props) {
   return (
@@ -55,14 +54,18 @@ function Navigation(props) {
             >
               Clientes
             </Nav.Link>
-            <Nav.Link
+            <NavDropdown
+              title="Ventas"
+              id="collasible-nav-dropdown"
               className={`nav-item  ${
-                props.location.pathname === "/sales" ? "active" : ""
+                props.location.pathname.includes("/sales/") ? "active" : ""
               }`}
-              href="/sales"
             >
-              Ventas
-            </Nav.Link>
+              <NavDropdown.Item href="/sales/new-sale/">
+                Nueva Venta
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/sales/list/">Historial</NavDropdown.Item>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>

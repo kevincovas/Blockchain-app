@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HOST, METHODS_OF_PAYMENT } from "../config/const";
 import * as api from "../api/Sales";
+import "../css/Sales.css";
 import "../css/NewSale.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -65,6 +66,7 @@ const employeeIdDefaultHelperMessage =
 
 function NewSale() {
   const token = localStorage.getItem("token");
+  const { enqueueSnackbar } = useSnackbar();
 
   const [productsList, setProductsList] = useState([]);
   const [productsSelect, setProductsSelect] = useState([]);
@@ -78,7 +80,6 @@ function NewSale() {
   const [saleEmployeeId, setSaleEmployeeId] = useState(null);
   const [saleMethodOfPayment, setSaleMethodOfPayment] = useState("");
   const [observations, setObservations] = useState("");
-  const { enqueueSnackbar } = useSnackbar();
   const [isDialogOpened, setDialogOpen] = useState(false);
 
   //Errors
@@ -330,12 +331,15 @@ function NewSale() {
           });
         } else {
           var createProductsError = false;
-          saleProducts.forEach(async ({ id, quantity }) => {
+          saleProducts.forEach(async ({ id, quantity, name, price }) => {
             const saleProduct = {
               sale_id: parseInt(saleResult.data.id),
               product_id: id,
               quantity,
+              product_name: name,
+              product_unit_price: parseInt(price).toFixed(2)
             };
+            console.log(saleProduct);
             var productResult = await api.addProductToSale(
               HOST,
               token,
@@ -353,7 +357,7 @@ function NewSale() {
               variant: "success",
             });
             setDialogOpen(false);
-            cleanStates();
+            // cleanStates();
           }
         }
       } catch (error) {
@@ -382,10 +386,10 @@ function NewSale() {
   }, [saleProducts]);
 
   return (
-    <div className="new-sale view">
+    <div className="new-sale sales view">
       <h1 className="sales-title">Nueva venta</h1>
-      <Paper elevation={6} className="new-sale new-sale-container">
-        <div className="new-sale main-column right">
+      <Paper elevation={6} className="new-sale new-sale-container sales-container">
+        <div className="new-sale sales main-column right">
           <div className="categories-products-container">
             <div className="products-container">
               <p>Productos:</p>
@@ -421,7 +425,7 @@ function NewSale() {
             </div>
           </div>
         </div>
-        <div className="new-sale main-column left">
+        <div className="new-sale sales main-column left">
           <div className="account-total-container">
             <div className="account-container">
               <form
@@ -431,7 +435,6 @@ function NewSale() {
                 <div className="form-customer-field">
                   <Autocomplete
                     onChange={(event, value) => {
-                      console.log(value);
                       if (value) {
                         setSaleCustomerId(value.id);
                         setCustomerIdError(false);
@@ -595,7 +598,6 @@ function NewSale() {
                   key="0"
                   className="mop-button"
                   onClick={() => {
-                    console.log(checkSale());
                     if (!checkSale()) {
                       setSaleMethodOfPayment(0);
                       setDialogOpen(true);

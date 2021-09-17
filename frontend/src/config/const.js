@@ -54,6 +54,18 @@ export const METHODS_OF_PAYMENT = [
   {
     id: 1,
     name: "Tarjeta",
-    icon: "fa"
+    icon: "fa",
   },
 ];
+
+export const clientStructure = {
+  id: "",
+  name: "",
+  surname_1: "",
+  surname_2: "",
+  phone: "",
+  birth_date: "",
+  gender: "",
+  observations: "",
+  user_id: "",
+};

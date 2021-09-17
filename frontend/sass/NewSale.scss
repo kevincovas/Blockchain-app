@@ -1,16 +1,5 @@
 @import "./_variables.scss";
 
-h1.sales-title{
-  margin-bottom: 2rem;
-  margin-top: 1rem;
-  color: $grey;
-}
-.view.new-sale {
-  padding: unquote("min(10vw, 20px)");
-  background-color: $green-light;
-  min-height: 92vh;
-}
-
 table {
   margin-bottom: 20px;
   .MuiTableHead-root .MuiTableCell-head{
@@ -40,19 +29,6 @@ table {
 
     }
   }
-}
-
-
-.new-sale.new-sale-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-radius: 4px;
-  padding: 20px;
-}
-
-.new-sale.main-column {
-  margin: 10px;
-  min-height: 70vh;
 }
 
 .buttons-container {
