@@ -43,7 +43,7 @@
 
 /* For not flickering on transition */
 div.preload-images {
-  background: url("../img/background-1.png") no-repeat -9999px -9999px;
+  background: url("../img/background-1-.png") no-repeat -9999px -9999px;
   background: url("../img/background-1.png") no-repeat -9999px -9999px,
     url("../img/background-2.png") no-repeat -9999px -9999px,
     url("../img/background-3.png") no-repeat -9999px -9999px;
