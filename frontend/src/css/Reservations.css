@@ -25,12 +25,16 @@
   padding: 10px;
 }
 
+.verticalSeparator{
+  height:30px;
+}
+
 .reservation-background {
   /* Center of Screen */
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 96vh;
+  min-height: 94vh;
 
   /* Animation */
   animation-name: background-loop;

@@ -526,6 +526,7 @@ function Reservations() {
       <Zoom in={true}>
         <Container maxWidth="md">
           <form onSubmit={(event) => event.preventDefault()}>
+          <div className='verticalSeparator' />
             <Paper elevation={5} className="forms-container">
               {JSON.parse(person).role == "customer" ? (
                 ""
@@ -706,6 +707,7 @@ function Reservations() {
                 </DialogActions>
               </Dialog>
             </Paper>
+            <div className='verticalSeparator' />
           </form>
         </Container>
       </Zoom>
