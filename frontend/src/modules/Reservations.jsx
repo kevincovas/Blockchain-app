@@ -119,7 +119,7 @@ function Reservations() {
       await handleSubmit();
      
       // Redirect to main (only if user)
-      if (JSON.parse(person).role == "customer") 
+      if (person != null && JSON.parse(person).role == "customer") 
       window.location.href = "/";
 
     }
@@ -129,7 +129,7 @@ function Reservations() {
   // Valores Iniciales
   useEffect(() => {
     // Customers (only if Admin or Employee)
-    if (JSON.parse(person).role != "customer") fetchCustomers();
+    if (person != null &&  JSON.parse(person).role != "customer") fetchCustomers();
 
     // Peluqueros
     loadEmployeeList();
@@ -444,6 +444,12 @@ function Reservations() {
     );
 
     // Not Customer Selected
+    if(person == null)
+    {
+      enqueueSnackbar("Error: Tienes que registrarte e iniciar sesión en la aplicación para reservar", {
+        variant: "error",
+      });
+    }else
     if (customer == 0 && JSON.parse(person).role != "customer") {
       enqueueSnackbar("Error: Ningún cliente seleccionado.", {
         variant: "error",
@@ -463,7 +469,7 @@ function Reservations() {
       // Get Data to send to API
       // Person Variable if Customer or Admin
       let person_id = customer;
-      if (JSON.parse(person).role == "customer")
+      if (person != null && JSON.parse(person).role == "customer")
         person_id = JSON.parse(person).id;
       // Other Variables
       let booked_employee_id = timeframe.employee;
@@ -559,7 +565,7 @@ function Reservations() {
           <form onSubmit={(event) => event.preventDefault()}>
             <div className="verticalSeparator" />
             <Paper elevation={5} className={classes.mainPaper}>
-              {JSON.parse(person).role == "customer" ? (
+              {person == null || ( person != null && JSON.parse(person).role == "customer") ? (
                 ""
               ) : (
                 <Paper elevation={2} className={classes.formsContainer}>
@@ -727,7 +733,7 @@ function Reservations() {
                           (employee_temp) =>
                             employee_temp.id == timeframe.employee
                         )[0].surname_2}
-                    <p>Recibirá un mail de confirmación con su reserva.</p>
+                    <br/>Recibirá un mail de confirmación con su reserva.
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
