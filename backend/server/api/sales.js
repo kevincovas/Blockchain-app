@@ -4,27 +4,32 @@ const { isHairdresser, authenticated } = require("../auth/auth.middlewares");
 
 const router = new Router();
 
-const okResult = (results) => ({
+const okResult = (data) => ({
   error: false,
   error_message: "",
-  data: results,
+  data
 });
 const errorResult = (error_message) => ({
   error: true,
   error_message,
-  data: [],
+  data: []
 });
 
-router.get("/get-product-categories/", authenticated, isHairdresser, async (req, res) => {
-  const { error, error_message, data } = await db.getProductCategories();
-  if (error) {
-    return res.status(500).json(errorResult(error_message));
-  } else {
-    return res.json(okResult(data));
+router.get(
+  "/get-product-categories/",
+  authenticated,
+  isHairdresser,
+  async (req, res) => {
+    const { error, error_message, data } = await db.getProductCategories();
+    if (error) {
+      return res.status(500).json(errorResult(error_message));
+    } else {
+      return res.json(okResult(data));
+    }
   }
-});
+);
 
-router.get("/get-products/",authenticated , isHairdresser, async (req, res) => {
+router.get("/get-products/", authenticated, isHairdresser, async (req, res) => {
   const { error, error_message, data } = await db.getProducts();
   if (error) {
     return res.status(500).json(errorResult(error_message));
@@ -42,8 +47,7 @@ router.get("/get-sales/", authenticated, isHairdresser, async (req, res) => {
   }
 });
 
-
-router.post("/create-sale/", authenticated, isHairdresser,async (req, res) => {
+router.post("/create-sale/", authenticated, isHairdresser, async (req, res) => {
   const sale = req.body;
   // var error = false;
   // var missingFieldsErrorMessage = `missing fields: `;
@@ -60,38 +64,52 @@ router.post("/create-sale/", authenticated, isHairdresser,async (req, res) => {
   }
 });
 
-router.post("/add-product-to-sale/", authenticated, isHairdresser, async (req, res) => {
-  const soldProduct = req.body;
-  // var error = false;
-  // var missingFieldsErrorMessage = `missing fields: `;
-  // if(customerId){
-  //   const customerExists = await db.checkIfPersonExists(customerId);
-  // } else {
+router.post(
+  "/add-product-to-sale/",
+  authenticated,
+  isHairdresser,
+  async (req, res) => {
+    const soldProduct = req.body;
+    // var error = false;
+    // var missingFieldsErrorMessage = `missing fields: `;
+    // if(customerId){
+    //   const customerExists = await db.checkIfPersonExists(customerId);
+    // } else {
 
-  // }
-  const { error, error_message, data } = await db.addProductToSale(soldProduct);
-  if (error) {
-    return res.status(500).json(errorResult(error_message));
-  } else {
-    return res.json(okResult(data));
+    // }
+    const { error, error_message, data } = await db.addProductToSale(
+      soldProduct
+    );
+    if (error) {
+      return res.status(500).json(errorResult(error_message));
+    } else {
+      return res.json(okResult(data));
+    }
   }
-});
+);
 
-router.post("/get-sold-products/", authenticated, isHairdresser, async (req, res) => {
-  const saleId = req.body.saleId;
-  // var error = false;
-  // var missingFieldsErrorMessage = `missing fields: `;
-  // if(customerId){
-  //   const customerExists = await db.checkIfPersonExists(customerId);
-  // } else {
+router.get(
+  "/get-sold-products/:id",
+  authenticated,
+  isHairdresser,
+  async (req, res) => {
+    const saleId = req.params.id;
+    // var error = false;
+    // var missingFieldsErrorMessage = `missing fields: `;
+    // if(customerId){
+    //   const customerExists = await db.checkIfPersonExists(customerId);
+    // } else {
 
-  // }
-  const { error, error_message, data } = await db.getSoldProductsBySaleId(saleId);
-  if (error) {
-    return res.status(500).json(errorResult(error_message));
-  } else {
-    return res.json(okResult(data));
+    // }
+    const { error, error_message, data } = await db.getSoldProductsBySaleId(
+      saleId
+    );
+    if (error) {
+      return res.status(500).json(errorResult(error_message));
+    } else {
+      return res.json(okResult(data));
+    }
   }
-});
+);
 
 module.exports = router;

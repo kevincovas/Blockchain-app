@@ -4,3 +4,22 @@
   overflow-y: auto;
   padding: 2px;
   box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4); }
+
+table.sales.sales-list {
+  margin-bottom: 0; }
+  table.sales.sales-list .MuiTableRow-root:hover {
+    cursor: pointer;
+    background-color: #F1F9F7; }
+
+.shadowed-container.sales-list {
+  min-height: 100%; }
+
+.sale-details-container {
+  margin-top: 20px; }
+
+.sale-details-container p span {
+  font-weight: 600; }
+  .sale-details-container p span.block {
+    display: block;
+    overflow-y: auto;
+    height: 10vh; }

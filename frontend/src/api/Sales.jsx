@@ -71,7 +71,20 @@ export const getPeopleByRole = async (HOST, token, role) => {
 //Get Sales
 export const getSales = async (HOST, token) => {
   const res = await fetch(HOST + `/sales/get-sales/`, {
-    method: "POST",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  });
+  const response = await res.json();
+  return response;
+};
+
+// Get Sold Products
+export const getSoldProducts = async (HOST, token, saleId) => {
+  const res = await fetch(`${HOST}/sales/get-sold-products/${saleId}`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`

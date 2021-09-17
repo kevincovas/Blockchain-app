@@ -42,10 +42,9 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-
 // function useMounted() {
 //   /*
-//     Custom hook created to check if the component is being mounted or if it has already been mounted. 
+//     Custom hook created to check if the component is being mounted or if it has already been mounted.
 //   */
 //   const [isMounted, setIsMounted] = useState(false);
 //   useEffect(() => {
@@ -337,7 +336,7 @@ function NewSale() {
               product_id: id,
               quantity,
               product_name: name,
-              product_unit_price: parseInt(price).toFixed(2)
+              product_unit_price: parseInt(price).toFixed(2),
             };
             console.log(saleProduct);
             var productResult = await api.addProductToSale(
@@ -388,12 +387,15 @@ function NewSale() {
   return (
     <div className="new-sale sales view">
       <h1 className="sales-title">Nueva venta</h1>
-      <Paper elevation={6} className="new-sale new-sale-container sales-container">
+      <Paper
+        elevation={6}
+        className="new-sale new-sale-container sales-container"
+      >
         <div className="new-sale sales main-column right">
           <div className="categories-products-container">
             <div className="products-container">
               <p>Productos:</p>
-              <div className="buttons-container categories">
+              <div className="buttons-container products">
                 {productsSelect.map((product) => (
                   <Button
                     className="product-button"
@@ -493,65 +495,71 @@ function NewSale() {
                   />
                 </div>
               </form>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell className="name-option" key="name">
-                      Producto
-                    </StyledTableCell>
-                    <StyledTableCell key="quantity">Quant</StyledTableCell>
-                    <StyledTableCell key="unitary-price">€/u.</StyledTableCell>
-                    <StyledTableCell key="total_price">Precio</StyledTableCell>
-                    <StyledTableCell key="options">Opciones</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {saleProducts.map((saleProduct) => (
-                    <TableRow key={saleProduct.id}>
-                      <StyledTableCell
-                        className="name-option"
-                        key={`${saleProduct.id}-name`}
-                      >
-                        {saleProduct.name}
+              <div className="sold-products-table-container">
+                <Table stickyHeader size="small" className="sales">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell className="name-option" key="name">
+                        Producto
                       </StyledTableCell>
-                      <StyledTableCell key={`${saleProduct.id}-quantity`}>
-                        {saleProduct.quantity}
+                      <StyledTableCell key="quantity">Cant</StyledTableCell>
+                      <StyledTableCell key="unitary-price">
+                        €/u.
                       </StyledTableCell>
-                      <StyledTableCell key={`${saleProduct.id}-price`}>
-                        {saleProduct.price}
+                      <StyledTableCell key="total_price">
+                        Precio
                       </StyledTableCell>
-                      <StyledTableCell key={`${saleProduct.id}-total_price`}>
-                        {saleProduct.total_price}
-                      </StyledTableCell>
-                      <StyledTableCell key={`${saleProduct.id}-options`}>
-                        <div className="sale-option-action-buttons-container">
-                          <FontAwesomeIcon
-                            icon={faMinus}
-                            onClick={(e) =>
-                              decreaseSaleProductQuantity(`${saleProduct.id}`)
-                            }
-                            className="sale-action-icon decrease"
-                          />
-                          <FontAwesomeIcon
-                            icon={faPlus}
-                            onClick={(e) =>
-                              increaseSaleProductQuantity(`${saleProduct.id}`)
-                            }
-                            className="sale-action-icon increase"
-                          />
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            onClick={(e) =>
-                              deleteSaleProduct(`${saleProduct.id}`)
-                            }
-                            className="sale-action-icon delete"
-                          />
-                        </div>
-                      </StyledTableCell>
+                      <StyledTableCell key="options">Opciones</StyledTableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {saleProducts.map((saleProduct) => (
+                      <TableRow key={saleProduct.id}>
+                        <StyledTableCell
+                          className="name-option"
+                          key={`${saleProduct.id}-name`}
+                        >
+                          {saleProduct.name}
+                        </StyledTableCell>
+                        <StyledTableCell key={`${saleProduct.id}-quantity`}>
+                          {saleProduct.quantity}
+                        </StyledTableCell>
+                        <StyledTableCell key={`${saleProduct.id}-price`}>
+                          {saleProduct.price}
+                        </StyledTableCell>
+                        <StyledTableCell key={`${saleProduct.id}-total_price`}>
+                          {saleProduct.total_price}
+                        </StyledTableCell>
+                        <StyledTableCell key={`${saleProduct.id}-options`}>
+                          <div className="sale-option-action-buttons-container">
+                            <FontAwesomeIcon
+                              icon={faMinus}
+                              onClick={(e) =>
+                                decreaseSaleProductQuantity(`${saleProduct.id}`)
+                              }
+                              className="sale-action-icon decrease"
+                            />
+                            <FontAwesomeIcon
+                              icon={faPlus}
+                              onClick={(e) =>
+                                increaseSaleProductQuantity(`${saleProduct.id}`)
+                              }
+                              className="sale-action-icon increase"
+                            />
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              onClick={(e) =>
+                                deleteSaleProduct(`${saleProduct.id}`)
+                              }
+                              className="sale-action-icon delete"
+                            />
+                          </div>
+                        </StyledTableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
               {/*<label>
                   Observaciones:
                   <textarea
