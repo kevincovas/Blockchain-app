@@ -2,3 +2,12 @@
   background-color: #555B6E !important; }
   .navbar.bg-dark.navbar-dark .navbar-light, .navbar.bg-dark.navbar-dark .navbar-brand, .navbar.bg-dark.navbar-dark .navbar-toggler {
     color: white; }
+
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
+.element-right {
+  display: inline-block;
+  text-align: right; }

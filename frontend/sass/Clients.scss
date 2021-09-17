@@ -1,14 +1,44 @@
 @import "./_variables.scss";
 
-.clients.container {
+.clients.clients-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.view.clients {
+  padding: unquote("min(10vw, 20px)");
+  background-color: $green-light;
+  min-height: 92vh;
+}
+
+table {
+  margin-bottom: 20px;
+  .MuiTableHead-root .MuiTableCell-head{
+    background-color: $green-dark;
+    color: white;
+  }
 }
 
 .clients.main-column {
-  padding: 10px;
-  border: solid 1px black;
+  margin: 10px;
   min-height: 70vh;
+  box-shadow: 
+    inset 0 0 5px 0px rgba(0, 0, 0, 0.4);
 }
+
+.searcher{
+  background-color: $green-medium;
+  margin: 0.5rem;
+  color: white;
+  border-color: white;
+  width: 96%;
+}
+
+.row-client:hover{
+  background-color: $pale-pink;
+}
+
 
 
