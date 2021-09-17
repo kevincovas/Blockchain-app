@@ -38,7 +38,8 @@ SELECT
   s.updated_at 
 FROM sales s
 INNER JOIN people p1 ON p1.id = s.customer_id
-INNER JOIN people p2 ON p2.id = s.employee_id;`;
+INNER JOIN people p2 ON p2.id = s.employee_id
+ORDER BY s.created_at DESC;`;
 const getSales = async () => {
   try {
     const result = await pool.query(getSalesSQL);

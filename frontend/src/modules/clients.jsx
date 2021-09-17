@@ -12,13 +12,13 @@ import {
   TableCell,
   Paper,
   TextField,
-  Button, 
-  Select, 
-  MenuItem
+  Button,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { Autocomplete } from "@material-ui/lab";
-import {clientStructure, genderOptions} from "../config/const";
+import { clientStructure, genderOptions } from "../config/const";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -31,7 +31,6 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: "left",
   },
 }))(TableCell);
-
 
 function ClientSearch() {
   const token = localStorage.getItem("token");
@@ -89,8 +88,6 @@ function ClientSearch() {
     filterClients(clientsFilter);
   }, [clientsFilter]);
 
-
-
   const saveClient = async () => {
     var is_wrong = false;
     if (!editedClientFields.name) {
@@ -113,60 +110,62 @@ function ClientSearch() {
     }
     if (!is_wrong) {
       try {
-        const editResult =await api
-          .updateClient(editedClientFields, token);
-          if (editResult.error) {
-            enqueueSnackbar(editResult.error_message, {
-              variant: "error",
-            });
-          } else {
-            enqueueSnackbar("Cliente editado correctamente", {
-              variant: "success",
-            });
-            
-            fetchClients();
-            setClientSelected(editedClientFields);
-            setEditClient(false);
+        const editResult = await api.updateClient(editedClientFields, token);
+        if (editResult.error) {
+          enqueueSnackbar(editResult.error_message, {
+            variant: "error",
+          });
+        } else {
+          enqueueSnackbar("Cliente editado correctamente", {
+            variant: "success",
+          });
 
-          }  
+          fetchClients();
+          setClientSelected(editedClientFields);
+          setEditClient(false);
+        }
       } catch (error) {
         enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
           variant: "error",
         });
       }
     }
-    };
+  };
 
   return (
     <div className="clients view">
-      <h1>Clientes</h1>
+      <h1 className="clients-title">Clientes</h1>
       <Paper elevation={6} className="clients clients-container">
         <div className="clients main-column left">
-          <input
-            className="searcher"
-            type="text"
-            placeholder="Buscar cliente..."
-            value={clientsFilter}
-            onChange={(e) => setClientsFilter(e.target.value)}
-          />
-          <div className="container-table-client">
-          <Table size="small">
-            <TableBody>
-              {clientsListFiltered.map((client) => (
-                <TableRow key={client.id}>
-                  <StyledTableCell
-                    className="row-client"
-                    onClick={() => {
-                      if (!showClientDetails) {
-                        setShowClientDetails(true);
-                      }
-                      setClientSelected(client);
-                    }}
-                  >{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="shadowed-container clients-list">
+            <TextField
+              placeholder="Busca por cliente"
+              variant="filled"
+              size="small"
+              value={clientsFilter}
+              onChange={(event) => {
+                setClientsFilter(event.target.value);
+              }}
+            />
+            <div className="container-table-client">
+              <Table size="small">
+                <TableBody>
+                  {clientsListFiltered.map((client) => (
+                    <TableRow key={client.id}>
+                      <StyledTableCell
+                        className="row-client"
+                        onClick={() => {
+                          if (!showClientDetails) {
+                            setShowClientDetails(true);
+                          }
+                          setClientSelected(client);
+                        }}
+                      >{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
         <div className="clients main-column right">
@@ -183,10 +182,13 @@ function ClientSearch() {
               </div>
               {editClient ? (
                 <div className="clientDataForm">
-                  <form className="editform" onSubmit={ e => { 
-                    e.preventDefault()
-                    saveClient();}
-                  }>
+                  <form
+                    className="editform"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      saveClient();
+                    }}
+                  >
                     <TextField
                       margin="normal"
                       fullWidth
@@ -262,7 +264,9 @@ function ClientSearch() {
                         autoComplete="birth_date"
                         type="date"
                         autoFocus
-                        value={`${moment(Date.parse(editedClientFields.birth_date)).format("YYYY-MM-DD")}`}
+                        value={`${moment(
+                          Date.parse(editedClientFields.birth_date)
+                        ).format("YYYY-MM-DD")}`}
                         onChange={(e) =>
                           setEditedClientFields({
                             ...editedClientFields,
@@ -270,7 +274,7 @@ function ClientSearch() {
                           })
                         }
                       />
-                      <Select 
+                      <Select
                         fullWidth
                         margin="normal"
                         labelId="gender-select-label"
@@ -278,14 +282,17 @@ function ClientSearch() {
                         value={`${editedClientFields.gender}`}
                         label="Sexo"
                         onChange={(e) => {
-                          setEditedClientFields({...editedClientFields, gender: e.target.value});
-                          console.log(editedClientFields.gender);
-                          console.log(e.target.value);
+                          setEditedClientFields({
+                            ...editedClientFields,
+                            gender: e.target.value,
+                          });
                         }}
                       >
-                        {genderOptions.map((option) => 
-                          <MenuItem key={option.value} value={option.value}>{option.name}</MenuItem>
-                        )}
+                        {genderOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </div>
 
@@ -297,7 +304,7 @@ function ClientSearch() {
                       aria-label="maximum height"
                       placeholder="Observaciones"
                       type="text"
-                       value={`${editedClientFields.observations}`}
+                      value={`${editedClientFields.observations}`}
                       onChange={(e) =>
                         setEditedClientFields({
                           ...editedClientFields,

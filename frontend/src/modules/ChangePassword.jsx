@@ -16,24 +16,14 @@ function ChangePassword(props) {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const changePassword = async () => {
-    //console.log("Ha entrado en changePassword frontend");
     try {
-      //const {email} = JSON.parse(localStorage.getItem("user"));
-      const token = localStorage.getItem("token");
-
-      //console.log(`email: ${email}`);
-      console.log(`password: ${password}`);
-      console.log(`newPassword: ${newPassword}`);
-      console.log(`confirmNewPassword: ${confirmNewPassword}`);
-      console.log(`Token: ${token}`);
-      
+      const token = localStorage.getItem("token");      
       const results = await api.changePassword({
         token,
         password,
         newPassword,
         confirmNewPassword,
       });
-      console.log(`Results: ${results}`);
       if (results.status !== "OK") {
         enqueueSnackbar(`Error al cambiar contraseña: ${results.details}`, {
           variant: "error",

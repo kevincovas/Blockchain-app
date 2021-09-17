@@ -45,7 +45,7 @@ CREATE TABLE people (
   name VARCHAR(25) NOT NULL, 
   surname_1 VARCHAR(25) NOT NULL, 
   surname_2 VARCHAR(25), 
-  phone DECIMAL(20),
+  phone VARCHAR(20),
   birth_date DATE,
   gender CHAR,
   observations TEXT,

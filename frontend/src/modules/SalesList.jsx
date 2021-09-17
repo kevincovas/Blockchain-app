@@ -163,7 +163,7 @@ function SalesList() {
                 <h5 className="clientDataName">
                   {`${selectedSale.customer_name} - ${moment(
                     selectedSale.created_at
-                  ).format("DD/MM/YYYY")}`}
+                  ).format("DD/MM/YYYY - HH:MM")}`}
                 </h5>
                 <div className="sold-products-table-container">
                   <Table size="small" className="sales">
@@ -226,7 +226,7 @@ function SalesList() {
                     Importe total: <span>{selectedSale.total_import}€</span>
                   </p>
                   <p>
-                    Observations: <span className="block">{selectedSale.observations}</span>
+                    Observaciones: <span className="block">{selectedSale.observations}</span>
                   </p>
                 </div>
               </div>

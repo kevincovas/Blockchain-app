@@ -17,8 +17,6 @@ function RememberPassword(){
         e.preventDefault();
         try {
           const { status, result } = await api.rememberPassword({email});
-          console.log(`status: ${status}`);
-          console.log(`result: ${result}`);
           /*
           if (error) {
              setMessage({ type: "error", text: error });

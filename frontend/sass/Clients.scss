@@ -11,7 +11,7 @@
 .view.clients {
   padding: unquote("min(10vw, 20px)");
   background-color: $green-light;
-  min-height: 92vh;
+  min-height: 93.5vh;
 }
 
 table {
@@ -59,7 +59,6 @@ table {
   line-height: 1.5rem;
 }
 
-
 .MuiSvgIcon-root.editIcon {
   color: $grey;
   margin: 0.5rem;
@@ -72,4 +71,14 @@ table {
 .container-table-client{
   height: 50%;
   overflow-y: scroll;
+}
+
+.shadowed-container.clients-list{
+  min-height: 100%;
+}
+
+h1.clients-title {
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  color: $grey;
 }

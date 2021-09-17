@@ -30,14 +30,11 @@ function App() {
   };
 
   const logout = () => {
-    console.log("Ha entrado en logout");
     localStorage.removeItem("token");
     localStorage.removeItem("person");
     localStorage.removeItem("user");
     setIsLoggedIn(false);
-    console.log(`History antes: ${history}`);
     history.push("/");
-    console.log(`History despues: ${history}`);
   };
 
   const openDialog = () => {

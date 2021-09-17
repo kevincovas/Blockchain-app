@@ -178,7 +178,7 @@ function Reservations() {
         </List>
 
         <p>Duración total: {getTotalTime()} minutos</p>
-        <p>Precio total: {getTotalPrice()} €</p>
+        <p>Precio total estimado: {getTotalPrice()} €</p>
       </div>
     );
   }
@@ -479,7 +479,7 @@ function Reservations() {
       let booked_services = servicesContracted;
       let mail_content = `<h3>Confirmación de reserva</h3>Fecha y Hora: ${getAppointmentString()}
       <br />
-      Precio total: ${getTotalPrice()} €
+      Precio total estimado: ${getTotalPrice()} €
       <br />
       Peluquero: ${
         employeeList.filter(
@@ -716,7 +716,7 @@ function Reservations() {
                   <DialogContentText id="alert-dialog-description">
                     Fecha y Hora: {getAppointmentString()}
                     <br />
-                    Precio total: {getTotalPrice()} €
+                    Precio total estimado: {getTotalPrice()} €
                     <br />
                     Peluquero:{" "}
                     {timeframe == null

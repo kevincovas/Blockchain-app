@@ -29,6 +29,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import {useHistory} from "react-router-dom";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -65,6 +66,7 @@ const employeeIdDefaultHelperMessage =
 
 function NewSale() {
   const token = localStorage.getItem("token");
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [productsList, setProductsList] = useState([]);
@@ -338,7 +340,6 @@ function NewSale() {
               product_name: name,
               product_unit_price: parseInt(price).toFixed(2),
             };
-            console.log(saleProduct);
             var productResult = await api.addProductToSale(
               HOST,
               token,
@@ -356,6 +357,7 @@ function NewSale() {
               variant: "success",
             });
             setDialogOpen(false);
+            history.push("/sales/list/");ç
             // cleanStates();
           }
         }
@@ -365,15 +367,6 @@ function NewSale() {
         });
       }
     }
-  };
-
-  const cleanStates = () => {
-    setProductsSelect(productsList);
-    setSaleProducts([]);
-    setSaleCustomerId("");
-    setSaleEmployeeId("");
-    setSaleMethodOfPayment("");
-    setObservations("");
   };
 
   const setOptionsForAutocompletes = (option) => {

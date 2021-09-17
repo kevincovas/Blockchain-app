@@ -1,5 +1,7 @@
 .navbar.bg-dark.navbar-dark {
-  background-color: #555B6E !important; }
+  background-color: #555B6E !important;
+  padding-right: 20px;
+  padding-left: 20px; }
   .navbar.bg-dark.navbar-dark .navbar-light, .navbar.bg-dark.navbar-dark .navbar-brand, .navbar.bg-dark.navbar-dark .navbar-toggler {
     color: white; }
 

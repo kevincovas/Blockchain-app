@@ -20,7 +20,6 @@ const errorHandler = (err, req, res, next) => {
     const { code, message } = err;
     return res.status(code).send({ error: message });
   }
-  console.error(err);
   res
     .status(500)
     .send({ error: `Internal Server error (TODO FULLSTACK): ${err}` });

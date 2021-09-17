@@ -104,16 +104,8 @@ router.get("/:id/", async (req, res) => {
 //Cambiar contraseña
 router.post("/changePassword/", authenticated, async (req, res) => {
   const email = req.user.email;
-  console.log(`Email: ${email}`);
-  
-
-  console.log("Ha entrado a change password");
   const {password,newPassword, confirmNewPassword } = req.body;
   
-  //console.log(`email: ${email}`);
-  console.log(`Password: ${password}`);
-  console.log(`newPassword: ${newPassword}`);
-  console.log(`confirmNewPassword: ${confirmNewPassword}`);
   if (!password) {
     return res.status(400).json(errorResult("Missing 'password' field"));
   }

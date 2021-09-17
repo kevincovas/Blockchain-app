@@ -12,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { InputLabel } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
@@ -216,13 +217,14 @@ function Register() {
                     value={surname_2}
                     onChange={(e) => setApellido2(e.target.value)}
                   />
+                  <div className="select-container">
+                  <InputLabel id="gender-select-label">Sexo</InputLabel>
                   <Select
                     fullWidth
-                    margin="normal"
                     labelId="gender-select-label"
                     id="gender-select"
                     value={`${gender}`}
-                    label="Sexo"
+                    variant="standard"
                     onChange={(e) => {
                       setGender(e.target.value);
                     }}
@@ -233,6 +235,7 @@ function Register() {
                       </MenuItem>
                     ))}
                   </Select>
+                  </div>
                   {/* <Autocomplete
                     required
                     onChange={(event, value) => {

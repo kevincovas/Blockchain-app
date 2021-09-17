@@ -9,7 +9,6 @@ export const register = async ({ email, password }) => {
     body: JSON.stringify({ email, password }),
   });
   const json = await response.json();
-  console.log(`En la API: ${JSON.stringify(json)}`)
   return json;
 }
 
@@ -61,7 +60,6 @@ export const user_exist = async ({ email}) => {
     body: JSON.stringify({ email }),
   });
   const json = await response.json();  
-  console.log(`En la API: ${JSON.stringify(json)}`)
   return json.results;
 }
 
@@ -74,6 +72,5 @@ export const rememberPassword = async ({ email}) => {
     body: JSON.stringify({ email }),
   });
   const json = await response.json();  
-  console.log(`En la API: ${JSON.stringify(json)}`)
   return json.results;
 }
