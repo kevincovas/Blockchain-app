@@ -10,6 +10,8 @@ import "../../../css/Navigation.css";
 function Navigation(props) {
   const logout = () => {
     localStorage.removeItem("token");
+	localStorage.removeItem("person");
+	localStorage.removeItem("user");
     props.setIsLoggedIn(false);
   };
 
@@ -42,7 +44,7 @@ function Navigation(props) {
                   }`}
                   href="/register"
                 >
-                  Resgistrarse
+                  Registrarse
                 </Nav.Link>
               </>
             )}
@@ -55,6 +57,9 @@ function Navigation(props) {
             >
               Reservar Cita
             </Nav.Link>
+			
+			{ ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ?
+        <>
             <Nav.Link
               className={`nav-item  ${
                 props.location.pathname === "/clients" ? "active" : ""
@@ -63,18 +68,21 @@ function Navigation(props) {
             >
               Clientes
             </Nav.Link>
+
             <NavDropdown
               title="Ventas"
               id="collasible-nav-dropdown"
               className={`nav-item  ${
                 props.location.pathname.includes("/sales/") ? "active" : ""
-              }`}
-            >
-              <NavDropdown.Item href="/sales/new-sale/">
+              }`}>
+                <NavDropdown.Item href="/sales/new-sale/">
                 Nueva Venta
               </NavDropdown.Item>
               <NavDropdown.Item href="/sales/list/">Historial</NavDropdown.Item>
-            </NavDropdown>
+              </NavDropdown>
+          </>
+        : <></>}
+			{ localStorage.getItem("token") != null  ?
             <NavDropdown title="Mi perfil" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/rememberPassword">
                 Cambiar contraseña
@@ -82,6 +90,9 @@ function Navigation(props) {
               <NavDropdown.Divider />
               <NavDropdown.Item href="/logout">Cerrar Sesión</NavDropdown.Item>
             </NavDropdown>
+			: ""
+			}
+			
           </Nav>
         </Navbar.Collapse>
       </Container>
