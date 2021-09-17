@@ -3,7 +3,13 @@ import { HOST, METHODS_OF_PAYMENT } from "../config/const";
 import * as api from "../api/Sales";
 import "../css/NewSale.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMinus,
+  faPlus,
+  faTrash,
+  faMoneyBillWave,
+  faCreditCard,
+} from "@fortawesome/free-solid-svg-icons";
 import { useSnackbar } from "notistack";
 import { withStyles } from "@material-ui/core/styles";
 import {
@@ -14,7 +20,12 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Paper
+  Paper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
@@ -30,16 +41,17 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function useMounted() {
-  /*
-    Custom hook created to check if the component is being mounted or if it has already been mounted. 
-  */
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  return isMounted;
-}
+
+// function useMounted() {
+//   /*
+//     Custom hook created to check if the component is being mounted or if it has already been mounted. 
+//   */
+//   const [isMounted, setIsMounted] = useState(false);
+//   useEffect(() => {
+//     setIsMounted(true);
+//   }, []);
+//   return isMounted;
+// }
 
 const methodOfPayment = "methodOfPayment";
 const employeeId = "employeeId";
@@ -53,6 +65,7 @@ const employeeIdDefaultHelperMessage =
 
 function NewSale() {
   const token = localStorage.getItem("token");
+
   const [productsList, setProductsList] = useState([]);
   const [productsSelect, setProductsSelect] = useState([]);
   const [categoriesSelect, setCategoriesSelect] = useState([]);
@@ -60,21 +73,22 @@ function NewSale() {
   const [employeesSelect, setEmployeesSelect] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0.0);
   const [saleProducts, setSaleProducts] = useState([]);
-  const [saleCustomerId, setSaleCustomerId] = useState("");
-  const [customerIdError, setCustomerIdError] = useState(false);
-  const [customerIdHelperMessage, setCustomerIdHelperMessage] = useState("");
+  const [saleCustomerId, setSaleCustomerId] = useState(null);
+
+  const [saleEmployeeId, setSaleEmployeeId] = useState(null);
+  const [saleMethodOfPayment, setSaleMethodOfPayment] = useState("");
+  const [observations, setObservations] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+  const [isDialogOpened, setDialogOpen] = useState(false);
+
+  //Errors
   const [employeeIdError, setEmployeeIdError] = useState(false);
   const [employeeIdHelperMessage, setEmployeeIdHelperMessage] = useState(
     employeeIdDefaultHelperMessage
   );
-  const [methodOfPaymentError, setMethodOfPaymentError] = useState("");
-  const [saleEmployeeId, setSaleEmployeeId] = useState("");
-  const [saleMethodOfPayment, setSaleMethodOfPayment] = useState("");
-  const [observations, setObservations] = useState("");
-  const [messages, setMessages] = useState([]);
-  const { enqueueSnackbar } = useSnackbar();
+  const [customerIdError, setCustomerIdError] = useState(false);
+  const [customerIdHelperMessage, setCustomerIdHelperMessage] = useState("");
 
-  const isMounted = useMounted();
   /*const checkGenericValue = (key, value) => {
     if(!value){
       const {errorMessage, setStateName} = errorMessages.filter(({id}) => id === key)[0];
@@ -89,34 +103,42 @@ function NewSale() {
         await api.getProductCategories(HOST, token).then((response) => {
           const { error, error_message, data } = response;
           if (error) {
-            enqueueSnackbar(`Error extrayendo categorías de productoa: ${error_message}`,{
-              variant: "error",
-            });
+            enqueueSnackbar(
+              `Error extrayendo categorías de productoa: ${error_message}`,
+              {
+                variant: "error",
+              }
+            );
           } else {
             setCategoriesSelect(data);
           }
         });
       } catch (error) {
-        enqueueSnackbar(`Error extrayendo categorías de producto: ${error.toString()}`,{
-          variant: "error",
-        });
+        enqueueSnackbar(
+          `Error extrayendo categorías de producto: ${error.toString()}`,
+          {
+            variant: "error",
+          }
+        );
       }
     };
 
     const fetchProducts = async () => {
       try {
-        await api.getProducts(HOST, token).then(({ error, error_message, data }) => {
-          if (error) {
-            enqueueSnackbar(`Error extrayendo productos: ${error_message}`,{
-              variant: "error",
-            });
-          } else {
-            setProductsList(data);
-            setProductsSelect(data);
-          }
-        });
+        await api
+          .getProducts(HOST, token)
+          .then(({ error, error_message, data }) => {
+            if (error) {
+              enqueueSnackbar(`Error extrayendo productos: ${error_message}`, {
+                variant: "error",
+              });
+            } else {
+              setProductsList(data);
+              setProductsSelect(data);
+            }
+          });
       } catch (error) {
-        enqueueSnackbar(`Error extrayendo productos: ${error.toString()}`,{
+        enqueueSnackbar(`Error extrayendo productos: ${error.toString()}`, {
           variant: "error",
         });
       }
@@ -124,19 +146,17 @@ function NewSale() {
 
     const fetchCustomers = async () => {
       try {
-        await api
-          .getPeopleByRole(HOST, token, "customer")
-          .then((result) => {
-            if (result.status !== "OK") {
-              enqueueSnackbar(`Error extrayendo clientes: ${result.details}`,{
-                variant: "error",
-              });
-            } else {
-              setCustomerSelect(result.results);
-            }
-          });
+        await api.getPeopleByRole(HOST, token, "customer").then((result) => {
+          if (result.status !== "OK") {
+            enqueueSnackbar(`Error extrayendo clientes: ${result.details}`, {
+              variant: "error",
+            });
+          } else {
+            setCustomerSelect(result.results);
+          }
+        });
       } catch (error) {
-        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`,{
+        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
           variant: "error",
         });
       }
@@ -144,19 +164,17 @@ function NewSale() {
 
     const fetchEmployees = async () => {
       try {
-        await api
-          .getPeopleByRole(HOST, token, "hairdresser")
-          .then((result) => {
-            if (result.status !== "OK") {
-              enqueueSnackbar(`Error extrayendo peluqueros: ${result.details}`,{
-                variant: "error",
-              });
-            } else {
-              setEmployeesSelect(result.results);
-            }
-          });
+        await api.getPeopleByRole(HOST, token, "hairdresser").then((result) => {
+          if (result.status !== "OK") {
+            enqueueSnackbar(`Error extrayendo peluqueros: ${result.details}`, {
+              variant: "error",
+            });
+          } else {
+            setEmployeesSelect(result.results);
+          }
+        });
       } catch (error) {
-        enqueueSnackbar(`Error extrayendo peluqueros: ${error.toString()}`,{
+        enqueueSnackbar(`Error extrayendo peluqueros: ${error.toString()}`, {
           variant: "error",
         });
       }
@@ -272,7 +290,7 @@ function NewSale() {
     setTotalPrice(finalPrice);
   };
 
-  const saveSale = async () => {
+  const checkSale = () => {
     if (saleProducts.length !== 0) {
       var error = false;
       if (!saleCustomerId) {
@@ -285,37 +303,78 @@ function NewSale() {
         setEmployeeIdHelperMessage(employeeIdErrorMessage);
         error = true;
       }
-      if (!saleMethodOfPayment) {
-        setMethodOfPaymentError(methodOfPaymentErrorMessage);
-        error = true;
-      }
-      if (!error) {
-        const sale = {
-          customer_id: parseInt(saleCustomerId),
-          employee_id: parseInt(saleEmployeeId),
-          total_price: totalPrice,
-          method_of_payment: parseInt(saleMethodOfPayment),
-          observations: observations,
-        };
-        try {
-          const { data } = await api.createSale(HOST, token, sale);
+      return error;
+    } else {
+      enqueueSnackbar("Selecciona algun producto para seguir con la venta.", {
+        variant: "error",
+      });
+      return true;
+    }
+  };
+
+  const saveSale = async () => {
+    const error = checkSale();
+    if (!error) {
+      const sale = {
+        customer_id: parseInt(saleCustomerId),
+        employee_id: parseInt(saleEmployeeId),
+        total_price: totalPrice,
+        method_of_payment: parseInt(saleMethodOfPayment),
+        observations: observations,
+      };
+      try {
+        const saleResult = await api.createSale(HOST, token, sale);
+        if (saleResult.error) {
+          enqueueSnackbar(saleResult.error_message, {
+            variant: "error",
+          });
+        } else {
+          var createProductsError = false;
           saleProducts.forEach(async ({ id, quantity }) => {
             const saleProduct = {
-              sale_id: parseInt(data.id),
+              sale_id: parseInt(saleResult.data.id),
               product_id: id,
               quantity,
             };
-            await api.addProductToSale(HOST, token, saleProduct);
+            var productResult = await api.addProductToSale(
+              HOST,
+              token,
+              saleProduct
+            );
+            if (productResult.error) {
+              enqueueSnackbar(productResult.error_message, {
+                variant: "error",
+              });
+              createProductsError = true;
+            }
           });
-        } catch (error) {
-          alert(error.toString());
+          if (!createProductsError) {
+            enqueueSnackbar("Tu compra se ha guardado correctamente", {
+              variant: "success",
+            });
+            setDialogOpen(false);
+            cleanStates();
+          }
         }
+      } catch (error) {
+        enqueueSnackbar(error.toString(), {
+          variant: "error",
+        });
       }
-    } else {
-      enqueueSnackbar("Selecciona algun producto para seguir con la  venta.", {
-        variant: "error",
-      });
     }
+  };
+
+  const cleanStates = () => {
+    setProductsSelect(productsList);
+    setSaleProducts([]);
+    setSaleCustomerId("");
+    setSaleEmployeeId("");
+    setSaleMethodOfPayment("");
+    setObservations("");
+  };
+
+  const setOptionsForAutocompletes = (option) => {
+    return `${option.name} ${option.surname_1} ${option.surname_2}`;
   };
 
   useEffect(() => {
@@ -324,7 +383,7 @@ function NewSale() {
 
   return (
     <div className="new-sale view">
-      <h1>Nueva venta</h1>
+      <h1 className="sales-title">Nueva venta</h1>
       <Paper elevation={6} className="new-sale new-sale-container">
         <div className="new-sale main-column right">
           <div className="categories-products-container">
@@ -363,166 +422,244 @@ function NewSale() {
           </div>
         </div>
         <div className="new-sale main-column left">
-          <form
-            className="new-sale-people-form"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <div className="form-customer-field">
-              <Autocomplete
-                onChange={(event, value) => {
-                  console.log(value);
-                  if(value){
-                    setSaleCustomerId(value.id);
-                    setCustomerIdError(false);
-                    setCustomerIdHelperMessage("");
-                  } else {
-                    setSaleCustomerId("");
-                    setCustomerIdError(true);
-                    setCustomerIdHelperMessage(customerIdErrorMessage);
-                  }
-                }}
-                size="small"
-                fullWidth
-                options={customersSelect}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Cliente"
-                    helperText={customerIdHelperMessage}
-                    error={customerIdError}
-                  />
-                )}
-                getOptionLabel={(option) =>
-                  `${option.name} ${option.surname_1} ${option.surname_2}`
-                }
-              />
-            </div>
-            <div className="form-employee-field">
-              <Autocomplete
-                onChange={(event, value) => {
-                  if(value) {
-                    setSaleEmployeeId(value.id);
-                    setEmployeeIdError(false);
-                    setEmployeeIdHelperMessage(employeeIdDefaultHelperMessage);
-                  } else {
-                    setSaleCustomerId("");
-                    setEmployeeIdError(true);
-                    setEmployeeIdHelperMessage(employeeIdErrorMessage);
-                  }
-                }}
-                size="small"
-                fullWidth
-                options={employeesSelect}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Peluquero"
-                    helperText={employeeIdHelperMessage}
-                    error={employeeIdError}
-                  />
-                )}
-                getOptionLabel={(option) =>
-                  `${option.name} ${option.surname_1} ${option.surname_2}`
-                }
-              />
-            </div>
-          </form>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell className="name-option" key="name">Producto</StyledTableCell>
-                <StyledTableCell key="quantity">Quant</StyledTableCell>
-                <StyledTableCell key="unitary-price">€/u.</StyledTableCell>
-                <StyledTableCell key="total_price">Precio</StyledTableCell>
-                <StyledTableCell key="options">Opciones</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {saleProducts.map((saleProduct) => (
-                <TableRow key={saleProduct.id}>
-                  <StyledTableCell className="name-option" key={`${saleProduct.id}-name`}>
-                    {saleProduct.name}
-                  </StyledTableCell>
-                  <StyledTableCell key={`${saleProduct.id}-quantity`}>
-                    {saleProduct.quantity}
-                  </StyledTableCell>
-                  <StyledTableCell key={`${saleProduct.id}-price`}>
-                    {saleProduct.price}
-                  </StyledTableCell>
-                  <StyledTableCell key={`${saleProduct.id}-total_price`}>
-                    {saleProduct.total_price}
-                  </StyledTableCell>
-                  <StyledTableCell key={`${saleProduct.id}-options`}>
-                    <div className="sale-option-action-buttons-container">
-                      <FontAwesomeIcon
-                        icon={faMinus}
-                        onClick={(e) =>
-                          decreaseSaleProductQuantity(`${saleProduct.id}`)
-                        }
-                        className="sale-action-icon decrease"
-                      />
-                      <FontAwesomeIcon
-                        icon={faPlus}
-                        onClick={(e) =>
-                          increaseSaleProductQuantity(`${saleProduct.id}`)
-                        }
-                        className="sale-action-icon increase"
-                      />
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        onClick={(e) => deleteSaleProduct(`${saleProduct.id}`)}
-                        className="sale-action-icon delete"
-                      />
-                    </div>
-                  </StyledTableCell>
-                  
-                </TableRow>
-              ))}
-            </TableBody>
-            {/* <TableFooter>
-              <TableRow>
-                <StyledTableCell key="total-title" colSpan="4" >
-                  Importe Total
-                </StyledTableCell>
-                <StyledTableCell key="final-price" colSpan="4" >
-                  {totalPrice.toFixed(2)}
-                </StyledTableCell>
-              </TableRow>
-            </TableFooter> */}
-          </Table>
-          {/*<label>
-              Observaciones:
-              <textarea
-                onChange={(event) => setObservations(event.target.value)}
-                cols="50"
-                rows="7"
-              ></textarea>
-            </label>
-            <label>
-              Selecciona el método de pago:
-              <select
-                onClick={(event) => {
-                  {
-                    setSaleMethodOfPayment(event.target.value);
-                    if(event.target.value){
-                      setMethodOfPaymentError("");
-                    }
-                  }
-                }}
+          <div className="account-total-container">
+            <div className="account-container">
+              <form
+                className="new-sale-people-form"
+                onSubmit={(event) => event.preventDefault()}
               >
-                {METHODS_OF_PAYMENT.map((method) => (
-                  <option key={method.id} value={method.id}>
-                    {method.name}
-                  </option>
-                ))}
-              </select>
-              <div className="error-msg">{methodOfPaymentError}</div>
-            </label>
-            <div>
-              <button type="button" onClick={() => saveSale()}>Cobrar</button>
-            </div>*/}
+                <div className="form-customer-field">
+                  <Autocomplete
+                    onChange={(event, value) => {
+                      console.log(value);
+                      if (value) {
+                        setSaleCustomerId(value.id);
+                        setCustomerIdError(false);
+                        setCustomerIdHelperMessage("");
+                      } else {
+                        setSaleCustomerId("");
+                        setCustomerIdError(true);
+                        setCustomerIdHelperMessage(customerIdErrorMessage);
+                      }
+                    }}
+                    size="small"
+                    fullWidth
+                    options={customersSelect}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Cliente"
+                        helperText={customerIdHelperMessage}
+                        error={customerIdError}
+                      />
+                    )}
+                    getOptionLabel={(option) =>
+                      setOptionsForAutocompletes(option)
+                    }
+                  />
+                </div>
+                <div className="form-employee-field">
+                  <Autocomplete
+                    onChange={(event, value) => {
+                      if (value) {
+                        setSaleEmployeeId(value.id);
+                        setEmployeeIdError(false);
+                        setEmployeeIdHelperMessage(
+                          employeeIdDefaultHelperMessage
+                        );
+                      } else {
+                        setSaleCustomerId("");
+                        setEmployeeIdError(true);
+                        setEmployeeIdHelperMessage(employeeIdErrorMessage);
+                      }
+                    }}
+                    size="small"
+                    fullWidth
+                    options={employeesSelect}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Peluquero"
+                        helperText={employeeIdHelperMessage}
+                        error={employeeIdError}
+                      />
+                    )}
+                    getOptionLabel={(option) =>
+                      setOptionsForAutocompletes(option)
+                    }
+                  />
+                </div>
+              </form>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell className="name-option" key="name">
+                      Producto
+                    </StyledTableCell>
+                    <StyledTableCell key="quantity">Quant</StyledTableCell>
+                    <StyledTableCell key="unitary-price">€/u.</StyledTableCell>
+                    <StyledTableCell key="total_price">Precio</StyledTableCell>
+                    <StyledTableCell key="options">Opciones</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {saleProducts.map((saleProduct) => (
+                    <TableRow key={saleProduct.id}>
+                      <StyledTableCell
+                        className="name-option"
+                        key={`${saleProduct.id}-name`}
+                      >
+                        {saleProduct.name}
+                      </StyledTableCell>
+                      <StyledTableCell key={`${saleProduct.id}-quantity`}>
+                        {saleProduct.quantity}
+                      </StyledTableCell>
+                      <StyledTableCell key={`${saleProduct.id}-price`}>
+                        {saleProduct.price}
+                      </StyledTableCell>
+                      <StyledTableCell key={`${saleProduct.id}-total_price`}>
+                        {saleProduct.total_price}
+                      </StyledTableCell>
+                      <StyledTableCell key={`${saleProduct.id}-options`}>
+                        <div className="sale-option-action-buttons-container">
+                          <FontAwesomeIcon
+                            icon={faMinus}
+                            onClick={(e) =>
+                              decreaseSaleProductQuantity(`${saleProduct.id}`)
+                            }
+                            className="sale-action-icon decrease"
+                          />
+                          <FontAwesomeIcon
+                            icon={faPlus}
+                            onClick={(e) =>
+                              increaseSaleProductQuantity(`${saleProduct.id}`)
+                            }
+                            className="sale-action-icon increase"
+                          />
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            onClick={(e) =>
+                              deleteSaleProduct(`${saleProduct.id}`)
+                            }
+                            className="sale-action-icon delete"
+                          />
+                        </div>
+                      </StyledTableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {/*<label>
+                  Observaciones:
+                  <textarea
+                    onChange={(event) => setObservations(event.target.value)}
+                    cols="50"
+                    rows="7"
+                  ></textarea>
+                </label>
+                <label>
+                  Selecciona el método de pago:
+                  <select
+                    onClick={(event) => {
+                      {
+                        setSaleMethodOfPayment(event.target.value);
+                        if(event.target.value){
+                          setMethodOfPaymentError("");
+                        }
+                      }
+                    }}
+                  >
+                    {METHODS_OF_PAYMENT.map((method) => (
+                      <option key={method.id} value={method.id}>
+                        {method.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="error-msg">{methodOfPaymentError}</div>
+                </label>
+                <div>
+                  <button type="button" onClick={() => saveSale()}>Cobrar</button>
+                </div>*/}
+            </div>
+            <div className="total-container">
+              <div className="final-import-container">
+                <div className="final-import-label">
+                  <p>Importe total:</p>
+                </div>
+                <div className="final-import-value">
+                  <p>{totalPrice.toFixed(2)}€</p>
+                </div>
+              </div>
+              <div className="mop-buttons-container">
+                <Button
+                  key="0"
+                  className="mop-button"
+                  onClick={() => {
+                    console.log(checkSale());
+                    if (!checkSale()) {
+                      setSaleMethodOfPayment(0);
+                      setDialogOpen(true);
+                    }
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faMoneyBillWave}
+                    className="mop-button-icon"
+                  />
+                </Button>
+                <Button
+                  key="1"
+                  className="mop-button"
+                  onClick={() => {
+                    if (!checkSale()) {
+                      setSaleMethodOfPayment(1);
+                      setDialogOpen(true);
+                    }
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faCreditCard}
+                    className="mop-button-icon"
+                  />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </Paper>
+      <Dialog
+        open={isDialogOpened}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"¿Deseas guardar la venta?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <TextField
+              label="Observaciones"
+              multiline
+              rows={5}
+              variant="filled"
+              onChange={(event) => setObservations(event.target.value)}
+            />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialogOpen(false);
+            }}
+            color="primary"
+          >
+            Cancelar
+          </Button>
+          <Button onClick={() => saveSale()} color="primary" autoFocus>
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
