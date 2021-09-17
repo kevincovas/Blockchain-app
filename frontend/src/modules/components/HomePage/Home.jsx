@@ -1,21 +1,18 @@
 import React from "react";
+import "../../../css/HomePage.css";
+import image from "../../../img/peluqueria1.png";
 
 function Home() {
 
     return (
-        <div className="home-container">            
-              <h1 className="font-weight-light">PELUQUERÍA ARKUS</h1>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy text
-                ever since the 1500s, when an unknown printer took a galley of
-                type and scrambled it to make a type specimen book.
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy text
-                ever since the 1500s, when an unknown printer took a galley of
-                type and scrambled it to make a type specimen book.
-              </p>
-          </div>
+        <div className="home-container">
+          <div className="left">         
+              <h1 className="tittle">PELUQUERÍA ARKUS</h1>
+              <h4 className="slogan">
+                LA VIDA ES DEMASIADO CORTA PARA LLEVAR UN PELO ABURRIDO
+              </h4>
+          </div> 
+        </div> 
     );
   }
   

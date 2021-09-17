@@ -7,11 +7,14 @@ import EditIcon from "@material-ui/icons/Edit";
 import { useSnackbar } from "notistack";
 import {
   Table,
-  TableHead,
   TableBody,
   TableRow,
   TableCell,
+  Paper,
+  TextField
 } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
+
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -115,8 +118,7 @@ function ClientSearch() {
   return (
     <div className="clients view">
       <h1>Clientes</h1>
-
-      <div className="clients clients-container">
+      <Paper elevation={6} className="clients clients-container">
         <div className="clients main-column left">
           <input
             className="searcher"
@@ -155,88 +157,116 @@ function ClientSearch() {
               </div>
               {editClient ? (
                 <div className="clientDataForm">
-                  <form>
-                    <label>
-                      <div>Nombre</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.name}`}
-                        onChange={(e) =>
-                          setEditedClientFields({
-                            ...clientEdit,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-                    <label>
-                      <div>Primer Apellido</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.surname_1}`}
-                        onChange={(e) =>
-                          setEditedClientFields({
-                            ...clientEdit,
-                            surname_1: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-                    <label>
-                      <div>Segundo Apellido</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.surname_2}`}
-                        onChange={(e) =>
-                          setEditedClientFields({
-                            ...clientEdit,
-                            surname_2: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-                    <label>
-                      <div>Teléfono:</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.phone}`}
-                        onChange={(e) =>
-                          setEditedClientFields({
-                            ...clientEdit,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-                    <label>
-                      <div>Fecha de nacimiento:</div>
-                      <input
-                        type="date"
-                        value={`${moment(clientSelected.birth_date).format(
-                          "DD-MM-YYYY"
-                        )}
-                        `}
-                        onChange={(e) =>
-                          setEditedClientFields({
-                            ...clientEdit,
-                            birth_date: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-                    <label>
-                      <div>Género:</div>
-                      <input
-                        type="text"
-                        value={`${clientSelected.gender}`}
-                        onChange={(e) =>
-                          setEditedClientFields({
-                            ...clientEdit,
-                            gender: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
+                  <form className="editform">
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="name"
+                      label="Nombre"
+                      name="name"
+                      autoComplete="name"
+                      autoFocus
+                      value={`${clientSelected.name}`}
+                      onChange={(e) =>
+                        setEditedClientFields({
+                          ...clientEdit,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="surname_1"
+                      label="Primer Apellido"
+                      name="surname_1"
+                      autoComplete="surname_1"
+                      autoFocus
+                      value={`${clientSelected.surname_1}`}
+                      onChange={(e) =>
+                        setEditedClientFields({
+                          ...clientEdit,
+                          surname_1: e.target.value,
+                        })
+                      }
+                    />
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="surname_2"
+                      label="Segundo Apellido"
+                      name="surname_2"
+                      autoComplete="surname_2"
+                      autoFocus
+                      value={`${clientSelected.surname_2}`}
+                      onChange={(e) =>
+                        setEditedClientFields({
+                          ...clientEdit,
+                          surname_2: e.target.value,
+                        })
+                      }
+                    />
+
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="phone"
+                      label="Teléfono"
+                      name="phone"
+                      autoComplete="phone"
+                      autoFocus
+                      value={`${clientSelected.phone}`}
+                      onChange={(e) =>
+                        setEditedClientFields({
+                          ...clientEdit,
+                          phone: e.target.value,
+                        })
+                      }
+                    />      
+                     <TextField
+                      margin="normal"
+                      id="birth_date"
+                      label="Fecha de nacimiento"
+                      name="birth_date"
+                      autoComplete="birth_date"
+                      type="date"
+                      autoFocus
+                      value={`${moment(clientSelected.birth_date).format(
+                        "DD-MM-YYYY"
+                      )}`}
+                      onChange={(e) =>
+                        setEditedClientFields({
+                          ...clientEdit,
+                          birth_date: e.target.value
+                        })
+                      }
+                    />
+                    <Autocomplete
+                    onChange={(event, value) => {
+                      console.log(value);
+                      if (value) {
+                        setGender(value.value);
+                      } else {
+                        setGender("");
+                      }
+                    }}
+                    fullWidth
+                    options={[
+                      {
+                        name: "Mujer",
+                        value: "W",
+                      },
+                      {
+                        name: "Hombre",
+                        value: "M",
+                      },
+                    ]}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Sexo" />
+                    )}
+                    getOptionLabel={(option) => `${option.name}`}
+                    getOptionSelected={(option) => `${option.value}`}
+                    />
                     <label>
                       <div>Observaciones:</div>
                       <textarea
@@ -255,7 +285,7 @@ function ClientSearch() {
               ) : (
                 <div className="clientData">
                   <h3>
-                    Nombre:{" "}
+                    Nombre:
                     {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
                   </h3>
                   <p>Teléfono: {`${clientSelected.phone}`}</p>
@@ -276,7 +306,7 @@ function ClientSearch() {
             <></>
           )}
         </div>
-      </div>
+      </Paper>
     </div>
   );
 }
