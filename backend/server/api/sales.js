@@ -77,4 +77,21 @@ router.post("/add-product-to-sale/", authenticated, isHairdresser, async (req, r
   }
 });
 
+router.post("/get-sold-products/", authenticated, isHairdresser, async (req, res) => {
+  const saleId = req.body.saleId;
+  // var error = false;
+  // var missingFieldsErrorMessage = `missing fields: `;
+  // if(customerId){
+  //   const customerExists = await db.checkIfPersonExists(customerId);
+  // } else {
+
+  // }
+  const { error, error_message, data } = await db.getSoldProductsBySaleId(saleId);
+  if (error) {
+    return res.status(500).json(errorResult(error_message));
+  } else {
+    return res.json(okResult(data));
+  }
+});
+
 module.exports = router;

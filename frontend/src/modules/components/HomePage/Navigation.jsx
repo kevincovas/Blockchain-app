@@ -59,6 +59,7 @@ function Navigation(props) {
             </Nav.Link>
 			
 			{ ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ?
+        <>
             <Nav.Link
               className={`nav-item  ${
                 props.location.pathname === "/clients" ? "active" : ""
@@ -66,24 +67,22 @@ function Navigation(props) {
               href="/clients"
             >
               Clientes
-            </Nav.Link>  : ""
-			
-			}
-			
-			{ ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ?
-            <Nav.Link
-              className={`nav-item  ${
-                props.location.pathname === "/sales" ? "active" : ""
-              }`}
-              href="/sales"
-            > 
-              Ventas
             </Nav.Link>
-			
-			: "" }
-			
+
+            <NavDropdown
+              title="Ventas"
+              id="collasible-nav-dropdown"
+              className={`nav-item  ${
+                props.location.pathname.includes("/sales/") ? "active" : ""
+              }`}>
+                <NavDropdown.Item href="/sales/new-sale/">
+                Nueva Venta
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/sales/list/">Historial</NavDropdown.Item>
+              </NavDropdown>
+          </>
+        : <></>}
 			{ localStorage.getItem("token") != null  ?
-			
             <NavDropdown title="Mi perfil" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/rememberPassword">
                 Cambiar contraseña

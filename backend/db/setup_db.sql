@@ -84,6 +84,8 @@ CREATE TABLE sold_products (
   id BIGSERIAL PRIMARY KEY,  
   sale_id INTEGER NOT NULL,
   product_id INTEGER NOT NULL,
+  product_name VARCHAR(100) NOT NULL,
+  product_unit_price DECIMAL(10,2) NOT NULL, 
   quantity SMALLINT,
 
   CONSTRAINT fk_sold_products_sale

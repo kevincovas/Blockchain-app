@@ -1,40 +1,34 @@
 @import "./_variables.scss";
 
-.view.new-sale {
-  padding: unquote("min(10vw, 20px)");
-  background-color: $green-light;
-  min-height: 92vh;
-}
-
 table {
   margin-bottom: 20px;
   .MuiTableHead-root .MuiTableCell-head{
     background-color: $green-dark;
     color: white;
-  }
-  .MuiTableHead-root {
-    .MuiTableCell-head, .MuiTableCell-head{
-      &:not(.name-option){
-        text-align: center;
-      }
-      .name-option{
-        width: 50%;
-      }
+    &:not(.name-option){
+      text-align: center;
+    }
+    &.name-option{
+      width: 50%;
     }
   }
-}
+  .MuiTableBody-root .MuiTableCell-body{
+    &:not(.name-option){
+      text-align: center;
+    }
+    &.name-option{
+      width: 50%;
+    }
+    .sale-action-icon{
+      &:not(:first-child){
+        margin-left: 3px;
+      } 
+      &:not(:last-child){
+        margin-right: 3px;
+      }
 
-
-.new-sale.new-sale-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-radius: 4px;
-  padding: 20px;
-}
-
-.new-sale.main-column {
-  margin: 10px;
-  min-height: 70vh;
+    }
+  }
 }
 
 .buttons-container {
@@ -68,18 +62,12 @@ table {
   text-transform: none;
 }
 
-.categories-products-container {
+.categories-products-container, .account-total-container {
   display: grid;
   grid-template-rows: 65% 35%;
   height: 100%;
 }
 
-
-// .MuiTableFooter-root .MuiTableCell-footer{
-//     background-color: black;
-//     color: white;
-//     font-size: 14px;
-// }
 
 .MuiTable-root {
   margin-top: 20px;
@@ -100,5 +88,50 @@ form.new-sale-people-form {
 
 .sale-action-icon{
   color: $grey;
-  
+  font-size: 15px;
+}
+
+.mop-buttons-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  .mop-button{
+    width: 100px;
+    height: 100px;
+    &:not(:first-child){
+      margin-left: 20px;
+    }
+    font-size: 40px;
+    color: $green-light;
+    background-color: $green-medium;
+    &:hover{
+      background-color: $pale-pink;
+    }
+  }
+}
+
+.final-import-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 30px;
+  .final-import-label{
+    font-weight: 600;
+    line-height: 2.5rem;
+    font-size: 1.5rem;
+  }
+  .final-import-value{
+    line-height: 2.5rem;
+    text-align: right;
+    font-weight: 600;
+    font-size: 2.5rem;
+  }
+}
+
+.MuiTextField-root{
+  width: 100%;
+}
+
+.MuiDialog-paper{
+  width: 60vw;
 }

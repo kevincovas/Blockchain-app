@@ -6,12 +6,12 @@ import "./App.css";
 import Reservations from "./modules/Reservations.jsx";
 import Register from "./modules/Register.jsx";
 import Login from "./modules/Login.jsx";
-import Sales from "./modules/NewSale.jsx";
+import NewSale from "./modules/NewSale.jsx";
 import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
-import Clients from "./modules/Clients";
+import Clients from "./modules/clients";
+import SalesList from "./modules/SalesList";
 import RememberPassword from "./modules/RememberPassword";
-import Context from "../context/context";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -41,7 +41,7 @@ function App() {
           path="/"
           exact
           render={() =>
-            isLoggedIn ? <Login onLogin={login} /> : <Home />
+            isLoggedIn ? <Home /> : <Login onLogin={login} />
           }
         />
         <Route
@@ -71,9 +71,15 @@ function App() {
           }
         />
         <Route
-          path="/sales"
+          path="/sales/new-sale/"
           render={() =>
-            isLoggedIn && ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ? <Sales /> : <Login onLogin={login} />
+            isLoggedIn ? <NewSale /> : <Login onLogin={login} />
+          }
+        />
+        <Route
+          path="/sales/list/"
+          render={() =>
+            isLoggedIn && ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ? <SalesList /> : <Login onLogin={login} />
           }
         />
         <Route

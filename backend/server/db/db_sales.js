@@ -26,7 +26,19 @@ const getProducts = async () => {
 };
 
 // Gets all sales from DB and returns all fields.
-const getSalesSQL = `SELECT * FROM sales;`;
+const getSalesSQL = `
+SELECT 
+  s.id, 
+  CONCAT(p1.name, ' ', p1.surname_1, ' ', COALESCE(p1.surname_2, '')) as customer_name, 
+  CONCAT(p2.name, ' ', p2.surname_1, ' ', COALESCE(p2.surname_2, '')) as employee_name, 
+  s.total_import, 
+  s.observations, 
+  s.method_of_payment, 
+  s.created_at, 
+  s.updated_at 
+FROM sales s
+INNER JOIN people p1 ON p1.id = s.customer_id
+INNER JOIN people p2 ON p2.id = s.employee_id;`;
 const getSales = async () => {
   try {
     const result = await pool.query(getSalesSQL);
@@ -35,7 +47,6 @@ const getSales = async () => {
     return { error: true, error_message: e.toString(), data: [] };
   }
 };
-
 
 
 // const checkIfPersonExistsSQL = `SELECT EXISTS(SELECT * FROM people WHERE id=$1);`;
@@ -70,15 +81,30 @@ const createSale = async (sale) => {
 
 
 //Adds a row in sold_products table 
-const addProductToSaleSQL = `INSERT INTO sold_products(sale_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING id;`;
-const addProductToSale = async (soldProduct) => {
+const addProductToSaleSQL = `INSERT INTO sold_products(sale_id, product_id, product_name, product_unit_price, quantity) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
+const addProductToSale = async ({sale_id, product_id, product_name, product_unit_price, quantity}) => {
   try {
-    const result = await pool.query(addProductToSaleSQL, Object.values(soldProduct));
+    const result = await pool.query(addProductToSaleSQL, [sale_id, product_id, product_name, product_unit_price, quantity]);
     return { error: false, error_message: "", data: result.rows[0] };
   } catch (e) {
     return { error: true, error_message: e.toString() };
   }
 };
+
+const getSoldProductsBySaleIdSQL = `
+  SELECT id, product_name, product_unit_price, quantity
+  FROM sold_products
+  WHERE sale_id=$1;
+`
+const getSoldProductsBySaleId = async (sale_id) => {
+  try {
+    const result = await pool.query(getSoldProductsBySaleIdSQL, [sale_id] );
+    return { error: false, error_message: "", data: result.rows };
+  } catch (e) {
+    return { error: true, error_message: e.toString(), data: [] };
+  }
+};
+
 
 module.exports = {
   getProductCategories,
@@ -86,4 +112,5 @@ module.exports = {
   getSales,
   createSale,
   addProductToSale,
+  getSoldProductsBySaleId,
 };

@@ -1,0 +1,21 @@
+h1.sales-title {
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  color: #555B6E; }
+
+#root {
+  background-color: #F1F9F7; }
+
+.view.sales {
+  padding: min(10vw, 20px);
+  min-height: 93.5vh; }
+
+.sales-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 4px;
+  padding: 20px; }
+
+.sales.main-column {
+  margin: 10px;
+  min-height: 70vh; }
