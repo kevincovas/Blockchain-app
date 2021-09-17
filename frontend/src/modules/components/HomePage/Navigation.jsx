@@ -49,7 +49,7 @@ function Navigation(props) {
 
             <Nav.Link
               className={`nav-item  ${
-                props.location.pathname === "/Reservations" ? "active" : ""
+                props.location.pathname === "/reservations" ? "active" : ""
               }`}
               href="/reservations"
             >
