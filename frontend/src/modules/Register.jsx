@@ -18,6 +18,8 @@ import { useHistory } from "react-router-dom";
 import "../css/LoginAndRegister.css";
 
 function Register() {
+
+  //States
   const [name, setName] = useState("");
   const [surname_1, setApellido1] = useState("");
   const [surname_2, setApellido2] = useState("");
@@ -35,6 +37,7 @@ function Register() {
 
   const register = async (e) => {
     e.preventDefault();
+    //For check that the all required fields aren't empty
     var is_wrong = false;
     if (!name) {
       enqueueSnackbar("El campo nombre no puede estar vacío", {
@@ -54,22 +57,22 @@ function Register() {
       });
       is_wrong = true;
     }
+    //If all fiels are okey the we have the register
     if (!is_wrong) {
       try {
+        //Check that the email of the user doesn't exists 
         const userExists = await api.user_exist({ email });
-        console.log(`userExists: ${userExists.data.exists}`);
         if (!userExists.data.exists) {
           const valPassword = validatePassword(password);
-          console.log(`valPassword: ${valPassword}`);
           if (valPassword) {
             const result = await api.register({ email, password });
-            console.log(`Result Status: `, result);
             if (result.status !== "OK") {
               enqueueSnackbar(`Error: ${result.details.toString()}`, {
                 variant: "error",
               });
             } else {
               const user_id = result.results.id;
+              //Save the fields of the client
               const result2 = await api.register_client({
                 name,
                 surname_1,
@@ -206,7 +209,6 @@ function Register() {
                   />
                   <Autocomplete
                     onChange={(event, value) => {
-                      console.log(value);
                       if (value) {
                         setGender(value.value);
                       } else {

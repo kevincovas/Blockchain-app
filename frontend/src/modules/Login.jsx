@@ -25,36 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 function Login({ onLogin }) {
 
-  // Submit Information to backed API
-    const handleSubmit = async () => {
-    // Close Dialog
-    setOpen(false);
-    }
-  // Style Material
-  const useStyles = makeStyles((theme) => ({
-    formsContainer: {
-      display: "block",
-      padding: "10px",
-      backgroundColor: "#F1F9F7",
-    },
-
-    btnReservation: {
-      backgroundColor: "#555B6E",
-    },
-
-    mainPaper: {
-      display: "block",
-      backgroundColor: "#89b0ae",
-      padding: "10px",
-    },
-
-    paperCalendar: {
-      display: "flex",
-      backgroundColor: "#F1F9F7",
-    },
-  }));
-  const classes = useStyles();
-
+  //States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [changePassword, setChangePassword] = useState("");
@@ -62,38 +33,15 @@ function Login({ onLogin }) {
   //Error control
   const { enqueueSnackbar } = useSnackbar();
 
-  // Alert Frame
-  const [open, setOpen] = useState(false);
 
-  // Dismiss or Continue
-  const handleClose = async (action) => {
-    // Close generaate new password
-    if (action == 2) {
-      setOpen(false);
-      setTimeFrame(null);
-    }
-    // Continue with Reservation
-    else {
-      // Do Reservation
-      await handleSubmit();
-
-      // Redirect to main (only if user)
-      if (person != null && JSON.parse(person).role == "customer")
-        window.location.href = "/";
-    }
-  };
-
+  //Function of login
   const login = async (e) => {
-    
     e.preventDefault();
     try {
       const { error, accessToken, person, user } = await api.login({
         email,
         password,
       });
-      console.log(`error: ${error}`);
-      console.log(`accessToken: ${accessToken}`);
-      console.log(`User: ${user}`);
       if (error) {
         setMessage({ type: "error", text: error });
       } else {
@@ -203,41 +151,7 @@ function Login({ onLogin }) {
             </Box>
           </Grid>
         </Grid>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Está seguro de resetear su password?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-            <TextField
-              label="Correo"
-              multiline
-              rows={1}
-              variant="filled"
-              onChange={(event) => setChangePassword(event.target.value)}
-            />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={(e) => handleClose(`2`)} color="primary">
-              Cancelar
-            </Button>
-            <Button
-              className={classes.btnReservation}
-              onClick={(e) => handleClose(`1`)}
-              color="primary"
-              variant="contained"
-              autoFocus
-            >
-              Resetear
-            </Button>
-          </DialogActions>
-        </Dialog>
+        
       </ThemeProvider>
     </div>
   );

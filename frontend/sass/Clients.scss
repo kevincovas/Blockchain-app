@@ -5,6 +5,7 @@
   grid-template-columns: 1fr 1fr;
   border-radius: 4px;
   padding: 20px;
+  border-radius: 4px;
 }
 
 .view.clients {
@@ -15,7 +16,8 @@
 
 table {
   margin-bottom: 20px;
-  .MuiTableHead-root .MuiTableCell-head{
+  border-radius: 4px;
+  .MuiTableHead-root .MuiTableCell-head {
     background-color: $green-dark;
     color: white;
   }
@@ -23,33 +25,32 @@ table {
 
 .clients.main-column {
   margin: 10px;
-  min-height: 70vh;
-  box-shadow: 
-    inset 0 0 5px 0px rgba(0, 0, 0, 0.4);
+  //min-height: 70vh;
+  box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
 }
 
-.searcher{
+.searcher {
   background-color: $green-light;
   margin: 0.5rem;
-  color: white;
+  color: $grey;
   border-color: white;
   width: 96%;
 }
 
-
-.row-client:hover{
+.row-client:hover {
   background-color: $green-light;
 }
 
-.editform{
+.editform {
+  padding: 0.5rem;
+}
+
+.clientData {
   padding: 1rem;
 }
 
-.clientData{
-  padding: 1rem;
-}
-
-.clientDataName{
+.clientDataName {
   background-color: $green-dark;
   color: white;
   text-align: center;
@@ -59,25 +60,16 @@ table {
 }
 
 
-.date-gender-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  & .form-date-field {
-    padding-right: 5px;
-  }
-
-  & .form-gender-field {
-    padding-left: 5px;
-  }
-}
-
 .MuiSvgIcon-root.editIcon {
   color: $grey;
-  margin: 1rem;
+  margin: 0.5rem;
 }
 
+.observations {
+  margin-top: 2rem;
+}
 
-
-
-
+.container-table-client{
+  height: 50%;
+  overflow-y: scroll;
+}

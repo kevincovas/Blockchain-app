@@ -13,14 +13,14 @@ export const getPeopleByRoleExtended = async (role, token) => {
     return response;
   };
 
-  export const updateClient = async (id, token) => {
-    const response = await fetch(`${HOST}/clients/:id`, {
+  export const updateClient = async (client, token) => {
+    const response = await fetch(`${HOST}/clients/${client.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify({id, name, surname_1, surname_2, gender, birth_date, phone, observations}),
+      body: JSON.stringify(client),
     });
     const json = await response.json();
     return json;
