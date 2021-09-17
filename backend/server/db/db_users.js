@@ -114,6 +114,23 @@ const deleteUser = async (id) => {
   }
 };
 
+const updatePasswordSQL = `
+  UPDATE users SET password = $2
+  WHERE email = $1 RETURNING *;  
+`;
+
+const updatePassword = async (email, password) => {
+  try {
+    const result = await pool.query(updatePasswordSQL, [email, password]);
+    if (result.rowCount < 1) {
+      return { ok: true, found: false };
+    }
+    console.log("Dato actualizado");
+    return { ok: true, found: true, data: result.rows };
+  } catch (e) {
+    return { ok: false, data: e.toString() };
+  }
+};
 
 
 module.exports = {
@@ -124,4 +141,5 @@ module.exports = {
   deleteUser,
   getUserByEmail,
   checkIfUserExistsByEmail,
+  updatePassword,
 };
