@@ -13,6 +13,7 @@ import {
   Paper,
   TextField
 } from "@material-ui/core";
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { Autocomplete } from "@material-ui/lab";
 
 
@@ -149,7 +150,7 @@ function ClientSearch() {
           {showClientDetails ? (
             <>
               <div className="clients editClient">
-                <EditIcon
+                <EditIcon className="editIcon"
                   onClick={() => {
                     setEditClient(!editClient);
                   }}
@@ -206,7 +207,7 @@ function ClientSearch() {
                         })
                       }
                     />
-
+                    
                     <TextField
                       margin="normal"
                       fullWidth
@@ -222,8 +223,10 @@ function ClientSearch() {
                           phone: e.target.value,
                         })
                       }
-                    />      
+                    />
+                    <div className="date-gender-form">      
                      <TextField
+                      className="form-date-fields"
                       margin="normal"
                       id="birth_date"
                       label="Fecha de nacimiento"
@@ -231,9 +234,7 @@ function ClientSearch() {
                       autoComplete="birth_date"
                       type="date"
                       autoFocus
-                      value={`${moment(clientSelected.birth_date).format(
-                        "DD-MM-YYYY"
-                      )}`}
+                      value={`${clientSelected.birth_date}`}
                       onChange={(e) =>
                         setEditedClientFields({
                           ...clientEdit,
@@ -242,6 +243,7 @@ function ClientSearch() {
                       }
                     />
                     <Autocomplete
+                    className="form-gender-fields"
                     onChange={(event, value) => {
                       console.log(value);
                       if (value) {
@@ -267,10 +269,14 @@ function ClientSearch() {
                     getOptionLabel={(option) => `${option.name}`}
                     getOptionSelected={(option) => `${option.value}`}
                     />
-                    <label>
-                      <div>Observaciones:</div>
-                      <textarea
+                    </div>
+
+                      <TextareaAutosize
+                        maxRows={10}
+                        aria-label="maximum height"
+                        placeholder="Observaciones"
                         type="text"
+                        style={{ width: 400}}
                         value={`${clientSelected.observations}`}
                         onChange={(e) =>
                           setEditedClientFields({
@@ -279,16 +285,16 @@ function ClientSearch() {
                           })
                         }
                       />
-                    </label>
                   </form>
                 </div>
               ) : (
                 <div className="clientData">
-                  <h3>
-                    Nombre:
-                    {`${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
-                  </h3>
-                  <p>Teléfono: {`${clientSelected.phone}`}</p>
+                  <h5 className="clientDataName">
+                    Cliente: 
+                    {` ${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
+                  </h5>
+                  <p>
+                    Teléfono: {clientSelected.phone == null ? `Sin especificar` : `${clientSelected.phone}`}</p>
                   <p>
                     Fecha de nacimiento:{" "}
                     {`${moment(clientSelected.birth_date).format(

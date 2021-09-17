@@ -29,16 +29,55 @@ table {
 }
 
 .searcher{
-  background-color: $green-medium;
+  background-color: $green-light;
   margin: 0.5rem;
   color: white;
   border-color: white;
   width: 96%;
 }
 
+
 .row-client:hover{
-  background-color: $pale-pink;
+  background-color: $green-light;
 }
+
+.editform{
+  padding: 1rem;
+}
+
+.clientData{
+  padding: 1rem;
+}
+
+.clientDataName{
+  background-color: $green-dark;
+  color: white;
+  text-align: center;
+  padding: 6px 24px 6px 16px;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+
+.date-gender-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  & .form-date-field {
+    padding-right: 5px;
+  }
+
+  & .form-gender-field {
+    padding-left: 5px;
+  }
+}
+
+.MuiSvgIcon-root.editIcon {
+  color: $grey;
+  margin: 1rem;
+}
+
+
 
 
 
