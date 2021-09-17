@@ -627,6 +627,7 @@ function Reservations() {
 
               {servicesContracted.length != 0 ? (
                 <Paper elevation={2} className="row">
+                  <div className="column-center">Escoge fecha y hora por favor</div>
                   <div className="column">
                     <DayPicker
                       onDayClick={handleDayClick}
