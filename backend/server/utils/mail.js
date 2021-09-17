@@ -42,6 +42,16 @@ const sendEmail = async (
     });
 };
 
+// Send Mail with all info
+let from_mail = "aitor.java@gmail.com";
+let from_name = "Peluquería ARKUS";
+let text_part = "Test Email Texto";
+let custom_id = "AppGettingStartedTest";
+
 module.exports = {
   sendEmail,
+  from_mail,
+  from_name,
+  text_part,
+  custom_id,
 };

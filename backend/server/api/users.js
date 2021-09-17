@@ -2,18 +2,19 @@ const db_users = require("../db/db_users");
 const db_clients = require("../db/db_clients");
 const { Router } = require("express");
 const auth = require("../auth/auth.service");
-const {
+const {sendEmail,from_mail,from_name,text_part,custom_id,} = require("../utils/mail");
+/*const {
   from_mail,
   from_name,
   to_mail,
   to_name,
   text_part,
   custom_id,
-} = require("../common/sentEmail");
+} = require("../common/sentEmail");*/
 
 const router = new Router();
 // Mail API
-const mailjet = require("../utils/mail");
+//const mailjet = require("../utils/mail");
 
 const okResult = (results) => ({ status: "OK", results });
 const errorResult = (details) => ({ status: "ERROR", details });
@@ -154,8 +155,13 @@ router.post("/rememberPassword", async (req, res) => {
       const hashedPassword = await auth.hashPassword(randPassword);
       //Actualizamos contraseña
       await db_users.updatePassword(email,hashedPassword);
+      
       //Envío de contraseña
-      let subject = "Cambio de contraseña";
+      let to_mail = email;
+      console.log(`to_mail: ${to_mail}`);
+      let to_name = "Kevin";
+      let subject = "Nueva contraseña generada";
+
       //HTML de correo de Cambio de Contraseña
       let html_cambioContraseña = `
         <br />Como solicitaste, a continuación le mostramos su nueva contraseña:
@@ -163,7 +169,7 @@ router.post("/rememberPassword", async (req, res) => {
         <br> Si quieres cambiarla, inicia sesión y seguidamente en Mi perfil-Cambiar contraseña 
       `;
       //Mandamos el correo con la nueva password
-      await mailjet.sendEmail(
+      await sendEmail(
         from_mail,
         from_name,
         to_mail,
@@ -217,16 +223,20 @@ router.post("/register", async (req, res) => {
       return res.status(400).json(errorResult(data));
     }
 
-    let subject = "Bienvenido a Arkus peluqueria";
+    //Envío de correo de bienvenida
+      let to_mail = email;
+      console.log(`to_mail: ${to_mail}`);
+      let to_name = "Kevin";
+      let subject = "Bienvenido a Arkus Peluquería";
+    
     //HTML de correo de Usuario Creado
     let html_usuarioCreado = `
         <br />Bienvenido a Peluquería Arkus,
         <br />Su usuario para hacer login es: ${email}
-        <br> LINK: 
         `;
 
     //Mandamos el correo de usuario creado
-    await mailjet.sendEmail(
+    await sendEmail(
       from_mail,
       from_name,
       to_mail,

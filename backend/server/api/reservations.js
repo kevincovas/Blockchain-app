@@ -3,9 +3,10 @@ const { Router } = require("express");
 const router = new Router();
 const okResult = (results) => ({ status: "OK", results });
 const errorResult = (details) => ({ status: "ERROR", details });
+const {sendEmail,from_mail,from_name,text_part,custom_id,} = require("../utils/mail");
 
 // Mail API
-const mailjet = require("../utils/mail");
+//const mailjet = require("../utils/mail");
 
 // Get All Hairdressers
 router.get("/hairdressers", async (req, res) => {
@@ -73,10 +74,7 @@ router.post("/add", async (req, res) => {
   if (!ok) {
     return res.status(500).json(errorResult(data));
   } else {
-    // Send Mail with all info
-    let from_mail = "aitor.java@gmail.com";
-    let from_name = "Peluquería ARKUS";
-
+    
     // Get Mail from User
     const { ok, data } = await db.getMailFromPerson(person_id);
 
@@ -84,11 +82,9 @@ router.post("/add", async (req, res) => {
     if (ok) {
       // TODO
       let subject = "Confirmación de reserva";
-      let text_part = "Confirmación";
-      let custom_id = "AppGettingStartedTest";
 
       // Send Mail via Mailjet
-      await mailjet.sendEmail(
+      await sendEmail(
         from_mail,
         from_name,
         data,
