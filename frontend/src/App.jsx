@@ -11,6 +11,7 @@ import Home from "./modules/components/HomePage/Home.jsx";
 import Navigation from "./modules/components/HomePage/Navigation";
 import Clients from "./modules/clients";
 import SalesList from "./modules/SalesList";
+import RememberPassword from "./modules/RememberPassword";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -25,6 +26,7 @@ function App() {
   };
 
   const logout = () => {
+    console.log("Ha entrado en logout");
     localStorage.removeItem("token");
     setIsLoggedIn(false);
   };
@@ -32,7 +34,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navigation />
+      <Navigation isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
         <Route
           path="/"
           exact
@@ -78,6 +80,18 @@ function App() {
             isLoggedIn ? <SalesList /> : <Login onLogin={login} />
           }
         />
+        <Route
+            path="/rememberPassword"
+            exact
+            render={() =>
+              isLoggedIn ? (
+                <Home />
+              ) : (
+                <RememberPassword />
+              )
+            }
+          />
+
       </Router>
     </div>
   );

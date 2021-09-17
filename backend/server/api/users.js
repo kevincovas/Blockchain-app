@@ -2,9 +2,18 @@ const db_users = require("../db/db_users");
 const db_clients = require("../db/db_clients");
 const { Router } = require("express");
 const auth = require("../auth/auth.service");
-const { Console } = require("console");
+const {
+  from_mail,
+  from_name,
+  to_mail,
+  to_name,
+  text_part,
+  custom_id,
+} = require("../common/sentEmail");
 
 const router = new Router();
+// Mail API
+const mailjet = require("../utils/mail");
 
 const okResult = (results) => ({ status: "OK", results });
 const errorResult = (details) => ({ status: "ERROR", details });
@@ -93,7 +102,86 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//Cambiar contraseña
+router.post("/changePassword", async (req, res) => {
+  const { email, password,newPassword, confirmNewPassword } = req.body;
+  console.log(`newPassword: ${newPassword}`);
+  console.log(`confirmNewPassword: ${confirmNewPassword}`);
+  if (!password) {
+    return res.status(400).json(errorResult("Missing 'password' field"));
+  }
+  if (!newPassword) {
+    return res.status(400).json(errorResult("Missing 'newPassword' field"));
+  }
+  if (!confirmNewPassword) {
+    return res.status(400).json(errorResult("Missing 'confirmNewPassword' field"));
+  }
 
+  const { ok, found, data } = await db_users.getUserByEmail(email);
+  const password_db = data.password;
+  const passwordMatches = await auth.comparePasswords(password, password_db);
+  console.log(`passwordMatches ${passwordMatches}`);
+
+  //If passwords do not match, an error is sent.
+  if (!passwordMatches) {
+    return res
+      .status(400)
+      .json(errorResult(`Wrong email/password combination`));
+  }
+  if(newPassword == confirmNewPassword){
+    //Hasheamos el nuevo password
+    const hashedPassword = await auth.hashPassword(newPassword);
+    //Actualizamos contraseña
+    const updatedPassword = await db_users.updatePassword(email,hashedPassword);
+    res.json(okResult(updatedPassword));
+  }
+  else{  
+    res.json(errorResult(`New passwords don't match`));
+  }
+});
+
+//Generar nueva contraseña
+router.post("/rememberPassword", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const userExist = await db_users.checkIfUserExistsByEmail(email);
+    console.log(`UserExist: ${userExist.data.exists}`);
+    if (userExist.data.exists) {
+      //Generamos un password aleatorio
+      const randPassword = auth.generatePasswordRand(8);
+      console.log(`randPassword: ${randPassword}`);
+      //Hasheamos el nuevo password
+      const hashedPassword = await auth.hashPassword(randPassword);
+      //Actualizamos contraseña
+      await db_users.updatePassword(email,hashedPassword);
+      //Envío de contraseña
+      let subject = "Cambio de contraseña";
+      //HTML de correo de Cambio de Contraseña
+      let html_cambioContraseña = `
+        <br />Como solicitaste, a continuación le mostramos su nueva contraseña:
+        <br> Contraseña: ${randPassword}
+        <br> Si quieres cambiarla, inicia sesión y seguidamente en Mi perfil-Cambiar contraseña 
+      `;
+      //Mandamos el correo con la nueva password
+      await mailjet.sendEmail(
+        from_mail,
+        from_name,
+        to_mail,
+        to_name,
+        subject,
+        text_part,
+        html_cambioContraseña,
+        custom_id
+      );
+      res.json(okResult(userExist));
+    } else {
+      res.json(errorResult("Usuario no existe"));
+    }
+  } catch (e) {
+    res.status(500).json(errorResult(e.toString()));
+  }
+});
+//Comprobamos si el correo existe
 router.post("/exist", async (req, res) => {
   const { email } = req.body;
   try {
@@ -128,6 +216,26 @@ router.post("/register", async (req, res) => {
     if (!addUserResult.ok) {
       return res.status(400).json(errorResult(data));
     }
+
+    let subject = "Bienvenido a Arkus peluqueria";
+    //HTML de correo de Usuario Creado
+    let html_usuarioCreado = `
+        <br />Bienvenido a Peluquería Arkus,
+        <br />Su usuario para hacer login es: ${email}
+        <br> LINK: 
+        `;
+
+    //Mandamos el correo de usuario creado
+    await mailjet.sendEmail(
+      from_mail,
+      from_name,
+      to_mail,
+      to_name,
+      subject,
+      text_part,
+      html_usuarioCreado,
+      custom_id
+    );
     res.json(okResult(addUserResult.data));
   } catch (e) {
     res.status(500).json(errorResult(e.toString()));

@@ -1,0 +1,28 @@
+.home-container {
+  display: inline-block;
+  background: url("../img/tonos.png");
+  min-height: 94vh;
+  background-size: cover;
+  background-position: "center";
+  text-align: center;
+  padding: 8rem;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  opacity: 0.85; }
+
+.tittle {
+  margin-top: 6rem;
+  font-size: 3.5rem;
+  font-weight: 700;
+  max-width: 40rem;
+  border-color: white;
+  border: 8px solid white;
+  /*outline: 2px solid $grey;
+    -webkit-text-stroke: 2px $grey;*/
+  color: white; }
+
+.slogan {
+  margin-top: 5rem;
+  max-width: 40rem; }
