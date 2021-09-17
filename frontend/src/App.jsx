@@ -41,7 +41,7 @@ function App() {
           path="/"
           exact
           render={() =>
-            isLoggedIn ? <Home /> : <Login onLogin={login} />
+            <Home/>
           }
         />
         <Route
