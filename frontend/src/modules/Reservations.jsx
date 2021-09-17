@@ -21,9 +21,12 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 import Zoom from "@material-ui/core/Zoom";
 import "../css/Reservations.css";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
 function Reservations() {
+ 
+ // Style Material
   const useStyles = makeStyles((theme) => ({
     formsContainer: {
       display: "block",
@@ -46,8 +49,10 @@ function Reservations() {
       backgroundColor: "#F1F9F7",
     },
   }));
-
   const classes = useStyles();
+
+  // History
+  const history = useHistory();
 
   // Get Token
   const token = localStorage.getItem("token");
@@ -114,8 +119,11 @@ function Reservations() {
     else {
       // Do Reservation
       await handleSubmit();
+     
+      // Redirect to main (only if user)
+      if (JSON.parse(person).role == "customer") 
+      window.location.href = "/";
 
-      // Send OK Message
     }
   };
 
