@@ -32,8 +32,8 @@
 .reservation-background {
   /* Center of Screen */
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: top;
+  align-items: top;
   min-height: 94vh;
 
   /* Animation */
@@ -46,8 +46,8 @@
 
 /* For not flickering on transition */
 div.preload-images {
-  background: url("../img/background-1.jpg") no-repeat -9999px -9999px;
-  background: url("../img/background-1.jpg") no-repeat -9999px -9999px,
+  background: url("../img/background-1.png") no-repeat -9999px -9999px;
+  background: url("../img/background-1.png") no-repeat -9999px -9999px,
     url("../img/background-2.png") no-repeat -9999px -9999px,
     url("../img/background-3.png") no-repeat -9999px -9999px;
 }
@@ -55,27 +55,35 @@ div.preload-images {
 /* Set Different Background Images */
 @keyframes background-loop {
   0% {
-    background-image: url("../img/background-1.jpg");
+    background-image: url("../img/background-1.png");
+    background-color: #F1F9F7;
   }
   15% {
-    background-image: url("../img/background-1.jpg");
+    background-image: url("../img/background-1.png");
+    background-color: #F1F9F7;
   }
   30% {
     background-image: url("../img/background-2.png");
+    background-color: #F1F9F7;
   }
   45% {
     background-image: url("../img/background-2.png");
+    background-color: #F1F9F7;
   }
   60% {
     background-image: url("../img/background-3.png");
+    background-color: #F1F9F7;
   }
   75% {
     background-image: url("../img/background-3.png");
+    background-color: #F1F9F7;
   }
   90% {
-    background-image: url("../img/background-1.jpg");
+    background-image: url("../img/background-1.png");
+    background-color: #F1F9F7;
   }
   100% {
-    background-image: url("../img/background-1.jpg");
+    background-image: url("../img/background-1.png");
+    background-color: #F1F9F7;
   }
 }
