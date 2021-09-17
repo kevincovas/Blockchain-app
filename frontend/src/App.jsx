@@ -28,6 +28,8 @@ function App() {
   const logout = () => {
     console.log("Ha entrado en logout");
     localStorage.removeItem("token");
+	localStorage.removeItem("person");
+	localStorage.removeItem("user");	
     setIsLoggedIn(false);
   };
 
@@ -46,7 +48,7 @@ function App() {
           path="/clients"
           exact
           render={() =>
-            isLoggedIn ? <Clients /> : <Login onLogin={login} />
+            isLoggedIn && ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ? <Clients /> : <Login onLogin={login} />
           }
         />
         <Route
@@ -71,7 +73,7 @@ function App() {
         <Route
           path="/sales"
           render={() =>
-            isLoggedIn ? <Sales /> : <Login onLogin={login} />
+            isLoggedIn && ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ? <Sales /> : <Login onLogin={login} />
           }
         />
         <Route
