@@ -21,8 +21,30 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 import Zoom from "@material-ui/core/Zoom";
 import "../css/Reservations.css";
+import { makeStyles } from "@material-ui/core/styles";
 
 function Reservations() {
+  const useStyles = makeStyles((theme) => ({
+    formsContainer: {
+      display: "block",
+      padding: "10px",
+      backgroundColor: "#F1F9F7",
+    },
+
+    mainPaper: {
+      display: "block",
+      backgroundColor: "#89b0ae",
+      padding: "10px",
+    },
+
+    paperCalendar: {
+      display: "flex",
+      backgroundColor: "#F1F9F7",
+    },
+  }));
+
+  const classes = useStyles();
+
   // Get Token
   const token = localStorage.getItem("token");
   // Get Role
@@ -406,7 +428,6 @@ function Reservations() {
 
   // Set State of Selected TimeTable
   function setTimeTableButton(timeframe_in) {
-
     // Set TimeFrame
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
@@ -526,12 +547,12 @@ function Reservations() {
       <Zoom in={true}>
         <Container maxWidth="md">
           <form onSubmit={(event) => event.preventDefault()}>
-          <div className='verticalSeparator' />
-            <Paper elevation={5} className="forms-container">
+            <div className="verticalSeparator" />
+            <Paper elevation={5} className={classes.mainPaper}>
               {JSON.parse(person).role == "customer" ? (
                 ""
               ) : (
-                <Paper elevation={2} className="forms-container">
+                <Paper elevation={2} className={classes.formsContainer}>
                   <Dropdown
                     setIdError={setCustomerIdError}
                     setId={setCustomer}
@@ -550,7 +571,7 @@ function Reservations() {
 
               <br />
 
-              <Paper elevation={2} className="forms-container">
+              <Paper elevation={2} className={classes.formsContainer}>
                 <Dropdown
                   setIdError={setEmployeeIdError}
                   setId={setEmployee}
@@ -567,7 +588,7 @@ function Reservations() {
               </Paper>
 
               <br />
-              <Paper elevation={2} className="forms-container">
+              <Paper elevation={2} className={classes.formsContainer}>
                 <Dropdown
                   setIdError={setServiceIdError}
                   setId={setService}
@@ -624,37 +645,41 @@ function Reservations() {
 
                 {listServicesContracted}
               </Paper>
-              <br />
 
               {servicesContracted.length != 0 ? (
-                <Paper elevation={2} className="row">
-                  <div className="column-center">Escoge fecha y hora por favor</div>
-                  <div className="column">
-                    <DayPicker
-                      onDayClick={handleDayClick}
-                      locale="es"
-                      months={constnt.MONTHS}
-                      weekdaysLong={constnt.WEEKDAYS_LONG}
-                      weekdaysShort={constnt.WEEKDAYS_SHORT}
-                      firstDayOfWeek={1}
-                      showOutsideDays
-                      selectedDays={state.selectedDay}
-                      disabledDays={[
-                        { daysOfWeek: [0] },
-                        { before: new Date() },
-                      ]}
-                      fromMonth={new Date()}
-                      toMonth={
-                        new Date(
-                          new Date().getFullYear(),
-                          new Date().getMonth() + 2
-                        )
-                      }
-                    />
+                <div>
+                  <div className="column-center">
+                    Escoge fecha y hora por favor
                   </div>
 
-                  <div className="column">{listAvailability}</div>
-                </Paper>
+                  <Paper elevation={2} className={classes.paperCalendar}>
+                    <div className="column">
+                      <DayPicker
+                        onDayClick={handleDayClick}
+                        locale="es"
+                        months={constnt.MONTHS}
+                        weekdaysLong={constnt.WEEKDAYS_LONG}
+                        weekdaysShort={constnt.WEEKDAYS_SHORT}
+                        firstDayOfWeek={1}
+                        showOutsideDays
+                        selectedDays={state.selectedDay}
+                        disabledDays={[
+                          { daysOfWeek: [0] },
+                          { before: new Date() },
+                        ]}
+                        fromMonth={new Date()}
+                        toMonth={
+                          new Date(
+                            new Date().getFullYear(),
+                            new Date().getMonth() + 2
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="column">{listAvailability}</div>
+                  </Paper>
+                </div>
               ) : (
                 ""
               )}
@@ -707,7 +732,7 @@ function Reservations() {
                 </DialogActions>
               </Dialog>
             </Paper>
-            <div className='verticalSeparator' />
+            <div className="verticalSeparator" />
           </form>
         </Container>
       </Zoom>

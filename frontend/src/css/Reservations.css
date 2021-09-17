@@ -8,10 +8,6 @@
   grid-template-columns: 2fr 2fr;
 }
 
-.row {
-  display: flex;
-}
-
 .column {
   text-align: center;
   flex: 50%;
@@ -21,6 +17,7 @@
 
 .column-center {
   text-align: center;
+  color:white;
   flex: 100%;
   padding: 10px;
 }
@@ -56,34 +53,34 @@ div.preload-images {
 @keyframes background-loop {
   0% {
     background-image: url("../img/background-1.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   15% {
     background-image: url("../img/background-1.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   30% {
     background-image: url("../img/background-2.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   45% {
     background-image: url("../img/background-2.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   60% {
     background-image: url("../img/background-3.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   75% {
     background-image: url("../img/background-3.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   90% {
     background-image: url("../img/background-1.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
   100% {
     background-image: url("../img/background-1.png");
-    background-color: #F1F9F7;
+    background-color: #BEE3DB;
   }
 }
