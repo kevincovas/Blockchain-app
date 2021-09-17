@@ -21,9 +21,8 @@ function Navigation(props) {
         <Navbar.Collapse className="element-right" id="responsive-navbar-nav">
           <Nav>
             {props.isLoggedIn ? (
-              <Nav.Link className={`nav-item`}  onClick={props.onLogout}>
-                Cerrar Sesión
-              </Nav.Link>
+              <>
+              </>
             ) : (
               <>
                 <Nav.Link
