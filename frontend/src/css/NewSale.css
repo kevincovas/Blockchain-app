@@ -1,31 +1,30 @@
-table {
-  margin-bottom: 20px; }
-  table .MuiTableHead-root .MuiTableCell-head {
+table.sales {
+  margin: 0; }
+  table.sales .MuiTableHead-root .MuiTableCell-head {
     background-color: #89b0ae;
     color: white; }
-    table .MuiTableHead-root .MuiTableCell-head:not(.name-option) {
+    table.sales .MuiTableHead-root .MuiTableCell-head:not(.name-option) {
       text-align: center; }
-    table .MuiTableHead-root .MuiTableCell-head.name-option {
+    table.sales .MuiTableHead-root .MuiTableCell-head.name-option {
       width: 50%; }
-  table .MuiTableBody-root .MuiTableCell-body:not(.name-option) {
+  table.sales .MuiTableBody-root .MuiTableCell-body:not(.name-option) {
     text-align: center; }
-  table .MuiTableBody-root .MuiTableCell-body.name-option {
+  table.sales .MuiTableBody-root .MuiTableCell-body.name-option {
     width: 50%; }
-  table .MuiTableBody-root .MuiTableCell-body .sale-action-icon:not(:first-child) {
+  table.sales .MuiTableBody-root .MuiTableCell-body .sale-action-icon:not(:first-child) {
     margin-left: 3px; }
-  table .MuiTableBody-root .MuiTableCell-body .sale-action-icon:not(:last-child) {
+  table.sales .MuiTableBody-root .MuiTableCell-body .sale-action-icon:not(:last-child) {
     margin-right: 3px; }
 
 .buttons-container {
   display: block;
   border-radius: 4px;
   overflow-y: auto;
-  padding: 2px;
-  box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4); }
+  padding: 2px; }
   .buttons-container.products {
-    height: 80%; }
+    height: 40vh; }
   .buttons-container.categories {
-    height: 70%; }
+    height: 20vh; }
 
 .MuiButton-root.product-button,
 .MuiButton-root.category-button {

@@ -19,3 +19,15 @@ h1.sales-title {
 .sales.main-column {
   margin: 10px;
   min-height: 70vh; }
+
+.shadowed-container {
+  box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4);
+  display: block;
+  border-radius: 4px;
+  overflow-y: auto;
+  padding: 2px; }
+
+.sold-products-table-container {
+  height: 30vh;
+  overflow-y: auto;
+  margin-bottom: 20px; }
