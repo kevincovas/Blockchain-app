@@ -31,7 +31,7 @@ table {
 .searcher{
   background-color: $green-light;
   margin: 0.5rem;
-  color: white;
+  color: $grey;
   border-color: white;
   width: 96%;
 }
@@ -59,7 +59,7 @@ table {
 }
 
 
-.date-gender-form {
+/*.date-gender-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
 
@@ -69,12 +69,17 @@ table {
 
   & .form-gender-field {
     padding-left: 5px;
+    
   }
-}
+}*/
 
 .MuiSvgIcon-root.editIcon {
   color: $grey;
   margin: 1rem;
+}
+
+.observations{
+  margin-top: 2rem;
 }
 
 

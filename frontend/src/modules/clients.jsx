@@ -11,11 +11,14 @@ import {
   TableRow,
   TableCell,
   Paper,
-  TextField
+  TextField,
+  Button, 
+  Select, 
+  MenuItem
 } from "@material-ui/core";
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { Autocomplete } from "@material-ui/lab";
-
+import {clientStructure, genderOptions} from "../config/const";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -29,17 +32,6 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-const clientStructure = {
-  id: "",
-  name: "",
-  surname_1: "",
-  surname_2: "",
-  phone: "",
-  birth_date: "",
-  gender: "",
-  observations: "",
-  user_id: "",
-};
 
 function ClientSearch() {
   const token = localStorage.getItem("token");
@@ -52,25 +44,26 @@ function ClientSearch() {
   const [showClientDetails, setShowClientDetails] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
+  const fetchClients = async () => {
+    try {
+      await api.getPeopleByRoleExtended("customer", token).then((result) => {
+        if (result.status !== "OK") {
+          enqueueSnackbar(`Error extrayendo clientes: ${result.details}`, {
+            variant: "error",
+          });
+        } else {
+          setClientsList(result.results);
+          setclientsListFiltered(result.results);
+        }
+      });
+    } catch (error) {
+      enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
+        variant: "error",
+      });
+    }
+  };
+
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        await api.getPeopleByRoleExtended("customer", token).then((result) => {
-          if (result.status !== "OK") {
-            enqueueSnackbar(`Error extrayendo clientes: ${result.details}`, {
-              variant: "error",
-            });
-          } else {
-            setClientsList(result.results);
-            setclientsListFiltered(result.results);
-          }
-        });
-      } catch (error) {
-        enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
-          variant: "error",
-        });
-      }
-    };
     fetchClients();
   }, []);
 
@@ -96,25 +89,53 @@ function ClientSearch() {
     filterClients(clientsFilter);
   }, [clientsFilter]);
 
-  /*function editClient(field) {
+
+
+  const saveClient = async () => {
+    var is_wrong = false;
+    if (!editedClientFields.name) {
+      enqueueSnackbar("El campo nombre no puede estar vacío", {
+        variant: "error",
+      });
+      is_wrong = true;
+    }
+    if (!editedClientFields.surname_1) {
+      enqueueSnackbar("El campo primer apellido no puede estar vacío", {
+        variant: "error",
+      });
+      is_wrong = true;
+    }
+    if (!editedClientFields.gender) {
+      enqueueSnackbar("Es obligatorio seleccionar un género", {
+        variant: "error",
+      });
+      is_wrong = true;
+    }
+    if (!is_wrong) {
       try {
-        await api
-          .getUpdateClient(id, token)
-          .then(({ error, error_message, data }) => {
-            if (error) {
-              enqueueSnackbar(`Error extrayendo clientes: ${error_message}`, {
-                variant: "error",
-              });
-            } else {
-              setEditClient(data);
-            }
-          });
+        const editResult =await api
+          .updateClient(editedClientFields, token);
+          if (editResult.error) {
+            enqueueSnackbar(editResult.error_message, {
+              variant: "error",
+            });
+          } else {
+            enqueueSnackbar("Cliente editado correctamente", {
+              variant: "success",
+            });
+            
+            fetchClients();
+            setClientSelected(editedClientFields);
+            setEditClient(false);
+
+          }  
       } catch (error) {
         enqueueSnackbar(`Error extrayendo clientes: ${error.toString()}`, {
           variant: "error",
         });
       }
-    };*/
+    }
+    };
 
   return (
     <div className="clients view">
@@ -124,6 +145,7 @@ function ClientSearch() {
           <input
             className="searcher"
             type="text"
+            placeholder="Buscar cliente..."
             value={clientsFilter}
             onChange={(e) => setClientsFilter(e.target.value)}
           />
@@ -134,7 +156,6 @@ function ClientSearch() {
                   <StyledTableCell
                     className="row-client"
                     onClick={() => {
-                      console.log("estoy en el onclick");
                       if (!showClientDetails) {
                         setShowClientDetails(true);
                       }
@@ -150,15 +171,20 @@ function ClientSearch() {
           {showClientDetails ? (
             <>
               <div className="clients editClient">
-                <EditIcon className="editIcon"
+                <EditIcon
+                  className="editIcon"
                   onClick={() => {
                     setEditClient(!editClient);
+                    setEditedClientFields(clientSelected);
                   }}
                 />
               </div>
               {editClient ? (
                 <div className="clientDataForm">
-                  <form className="editform">
+                  <form className="editform" onSubmit={ e => { 
+                    e.preventDefault()
+                    saveClient();}
+                  }>
                     <TextField
                       margin="normal"
                       fullWidth
@@ -167,10 +193,10 @@ function ClientSearch() {
                       name="name"
                       autoComplete="name"
                       autoFocus
-                      value={`${clientSelected.name}`}
+                      value={`${editedClientFields.name}`}
                       onChange={(e) =>
                         setEditedClientFields({
-                          ...clientEdit,
+                          ...editedClientFields,
                           name: e.target.value,
                         })
                       }
@@ -183,10 +209,10 @@ function ClientSearch() {
                       name="surname_1"
                       autoComplete="surname_1"
                       autoFocus
-                      value={`${clientSelected.surname_1}`}
+                      value={`${editedClientFields.surname_1}`}
                       onChange={(e) =>
                         setEditedClientFields({
-                          ...clientEdit,
+                          ...editedClientFields,
                           surname_1: e.target.value,
                         })
                       }
@@ -199,15 +225,15 @@ function ClientSearch() {
                       name="surname_2"
                       autoComplete="surname_2"
                       autoFocus
-                      value={`${clientSelected.surname_2}`}
+                      value={`${editedClientFields.surname_2}`}
                       onChange={(e) =>
                         setEditedClientFields({
-                          ...clientEdit,
+                          ...editedClientFields,
                           surname_2: e.target.value,
                         })
                       }
                     />
-                    
+
                     <TextField
                       margin="normal"
                       fullWidth
@@ -216,85 +242,90 @@ function ClientSearch() {
                       name="phone"
                       autoComplete="phone"
                       autoFocus
-                      value={`${clientSelected.phone}`}
+                      value={`${editedClientFields.phone}`}
                       onChange={(e) =>
                         setEditedClientFields({
-                          ...clientEdit,
+                          ...editedClientFields,
                           phone: e.target.value,
                         })
                       }
                     />
-                    <div className="date-gender-form">      
-                     <TextField
-                      className="form-date-fields"
-                      margin="normal"
-                      id="birth_date"
-                      label="Fecha de nacimiento"
-                      name="birth_date"
-                      autoComplete="birth_date"
-                      type="date"
-                      autoFocus
-                      value={`${clientSelected.birth_date}`}
-                      onChange={(e) =>
-                        setEditedClientFields({
-                          ...clientEdit,
-                          birth_date: e.target.value
-                        })
-                      }
-                    />
-                    <Autocomplete
-                    className="form-gender-fields"
-                    onChange={(event, value) => {
-                      console.log(value);
-                      if (value) {
-                        setGender(value.value);
-                      } else {
-                        setGender("");
-                      }
-                    }}
-                    fullWidth
-                    options={[
-                      {
-                        name: "Mujer",
-                        value: "W",
-                      },
-                      {
-                        name: "Hombre",
-                        value: "M",
-                      },
-                    ]}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Sexo" />
-                    )}
-                    getOptionLabel={(option) => `${option.name}`}
-                    getOptionSelected={(option) => `${option.value}`}
-                    />
-                    </div>
-
-                      <TextareaAutosize
-                        maxRows={10}
-                        aria-label="maximum height"
-                        placeholder="Observaciones"
-                        type="text"
-                        style={{ width: 400}}
-                        value={`${clientSelected.observations}`}
+                    <div className="date-gender-form">
+                      <TextField
+                        className="form-date-fields"
+                        margin="normal"
+                        id="birth_date"
+                        label="Fecha de nacimiento"
+                        name="birth_date"
+                        autoComplete="birth_date"
+                        type="date"
+                        autoFocus
+                        value={`${moment(Date.parse(editedClientFields.birth_date)).format("YYYY-MM-DD")}`}
                         onChange={(e) =>
                           setEditedClientFields({
-                            ...clientEdit,
-                            observations: e.target.value,
+                            ...editedClientFields,
+                            birth_date: e.target.value,
                           })
                         }
                       />
+                      <Select 
+                        fullWidth
+                        margin="normal"
+                        labelId="gender-select-label"
+                        id="gender-select"
+                        value={`${editedClientFields.gender}`}
+                        label="Sexo"
+                        onChange={(e) => {
+                          setEditedClientFields({...editedClientFields, gender: e.target.value});
+                          console.log(editedClientFields.gender);
+                          console.log(e.target.value);
+                        }}
+                      >
+                        {genderOptions.map((option) => 
+                          <MenuItem key={option.value} value={option.value}>{option.name}</MenuItem>
+                        )}
+                      </Select>
+                    </div>
+
+                    <TextareaAutosize
+                      className="observations"
+                      multiline
+                      fullWidth
+                      rows={5}
+                      aria-label="maximum height"
+                      placeholder="Observaciones"
+                      type="text"
+                       value={`${editedClientFields.observations}`}
+                      onChange={(e) =>
+                        setEditedClientFields({
+                          ...editedClientFields,
+                          observations: e.target.value,
+                        })
+                      }
+                    />
+                    <Button
+                      className="corporativeButton"
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Guardar
+                    </Button>
                   </form>
                 </div>
               ) : (
                 <div className="clientData">
                   <h5 className="clientDataName">
-                    Cliente: 
+                    Cliente:
                     {` ${clientSelected.name} ${clientSelected.surname_1} ${clientSelected.surname_2}`}
                   </h5>
                   <p>
-                    Teléfono: {clientSelected.phone == null ? `Sin especificar` : `${clientSelected.phone}`}</p>
+                    Teléfono:{" "}
+                    {clientSelected.phone == null
+                      ? `Sin especificar`
+                      : `${clientSelected.phone}`}
+                  </p>
                   <p>
                     Fecha de nacimiento:{" "}
                     {`${moment(clientSelected.birth_date).format(

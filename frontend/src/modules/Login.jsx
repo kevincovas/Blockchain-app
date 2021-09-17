@@ -18,23 +18,23 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import "../css/LoginAndRegister.css";
 
 function Login({ onLogin }) {
+
+  //States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   //Error control
   const { enqueueSnackbar } = useSnackbar();
 
+
+  //Function of login
   const login = async (e) => {
-    console.log("hols"); 
     e.preventDefault();
     try {
       const { error, accessToken, person, user } = await api.login({
         email,
         password,
       });
-      console.log(`error: ${error}`);
-      console.log(`accessToken: ${accessToken}`);
-      console.log(`User: ${user}`);
       if (error) {
         setMessage({ type: "error", text: error });
       } else {

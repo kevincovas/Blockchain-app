@@ -69,3 +69,15 @@ export const clientStructure = {
   observations: "",
   user_id: "",
 };
+
+
+export const genderOptions = [
+  {
+    value:"W",
+    name:"Mujer"
+  },
+  {
+    value:"M",
+    name:"Hombre"
+  }
+]
