@@ -9,7 +9,7 @@ const {sendEmail,from_mail,from_name,text_part,custom_id,} = require("../utils/m
 //const mailjet = require("../utils/mail");
 
 // Get All Hairdressers
-router.get("/hairdressers", async (req, res) => {
+router.get("/hairdressers/", async (req, res) => {
   const { ok, found, data } = await db.getHairdressers();
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -24,7 +24,7 @@ router.get("/hairdressers", async (req, res) => {
 });
 
 // Get Services List
-router.get("/services", async (req, res) => {
+router.get("/services/", async (req, res) => {
   const { ok, found, data } = await db.getServices();
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -39,7 +39,7 @@ router.get("/services", async (req, res) => {
 });
 
 //Get Reservations in one Day
-router.get("/check/:date", async (req, res) => {
+router.get("/check/:date/", async (req, res) => {
   const { ok, data } = await db.getReservationsByDay(req.params.date);
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -51,7 +51,7 @@ router.get("/check/:date", async (req, res) => {
 });
 
 //Add Reservation
-router.post("/add", async (req, res) => {
+router.post("/add/", async (req, res) => {
   const {
     person_id,
     booked_employee_id,

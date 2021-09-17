@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 });
 
 //Get de un solo cliente
-router.get("/:id", async (req, res) => {
+router.get("/:id/", async (req, res) => {
   const { ok, found, data } = await db.getOneClient(req.params.id);
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -55,7 +55,7 @@ router.post("/get-person-by-user-id/", async (req, res) => {
 });
 
 //Post de un nuevo cliente
-router.post("/register", async (req, res) => {
+router.post("/register/", async (req, res) => {
   const { name, surname_1, surname_2, gender, birth_date, phone, user_id } =
     req.body;
   //Validamos que lo que envian esta bien
@@ -97,7 +97,7 @@ router.post("/register", async (req, res) => {
 });
 
 //Actualización de un cliente
-router.put("/:id", async (req, res) => {
+router.put("/:id/", async (req, res) => {
   const { id } = req.params;
   const {
     name,
@@ -132,7 +132,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //Delete de un cliente
-router.delete("/:id", async (req, res) => {
+router.delete("/:id/", async (req, res) => {
   const { id } = req.params;
   const { ok, found, data } = await db.deleteClient(id);
 

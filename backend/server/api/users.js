@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
 });
 
 /*Post para hacer el LOGIN */
-router.post("/login", async (req, res) => {
+router.post("/login/", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email) {
@@ -89,7 +89,7 @@ router.post("/login", async (req, res) => {
 });
 
 //Obtenemos un solo usuario
-router.get("/:id", async (req, res) => {
+router.get("/:id/", async (req, res) => {
   const { ok, found, data } = await db_users.getOneUser(req.params.id);
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -104,7 +104,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //Cambiar contraseña
-router.post("/changePassword", async (req, res) => {
+router.post("/changePassword/", async (req, res) => {
   const { email, password,newPassword, confirmNewPassword } = req.body;
   console.log(`newPassword: ${newPassword}`);
   console.log(`confirmNewPassword: ${confirmNewPassword}`);
@@ -142,7 +142,7 @@ router.post("/changePassword", async (req, res) => {
 });
 
 //Generar nueva contraseña
-router.post("/rememberPassword", async (req, res) => {
+router.post("/rememberPassword/", async (req, res) => {
   const { email } = req.body;
   try {
     const userExist = await db_users.checkIfUserExistsByEmail(email);
@@ -188,7 +188,7 @@ router.post("/rememberPassword", async (req, res) => {
   }
 });
 //Comprobamos si el correo existe
-router.post("/exist", async (req, res) => {
+router.post("/exist/", async (req, res) => {
   const { email } = req.body;
   try {
     const userExist = await db_users.checkIfUserExistsByEmail(email);
@@ -199,7 +199,7 @@ router.post("/exist", async (req, res) => {
 });
 
 //Creamos un nuevo usuario
-router.post("/register", async (req, res) => {
+router.post("/register/", async (req, res) => {
   const { email, password } = req.body;
   if (!email) {
     return res.status(400).json(errorResult("Missing 'email' field"));
@@ -253,7 +253,7 @@ router.post("/register", async (req, res) => {
 });
 
 //Actualizamos un usuario
-router.put("/:id", async (req, res) => {
+router.put("/:id/", async (req, res) => {
   const { id } = req.params;
   const { email, password } = req.body;
   const { ok, found, data } = await db_users.updateUser(id, email, password);
@@ -271,7 +271,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //Eliminamos un usuario
-router.delete("/:id", async (req, res) => {
+router.delete("/:id/", async (req, res) => {
   const { id } = req.params;
   const { ok, found, data } = await db_users.deleteUser(id);
 
