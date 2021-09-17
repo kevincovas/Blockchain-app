@@ -526,6 +526,7 @@ function Reservations() {
       <Zoom in={true}>
         <Container maxWidth="md">
           <form onSubmit={(event) => event.preventDefault()}>
+          <div className='verticalSeparator' />
             <Paper elevation={5} className="forms-container">
               {JSON.parse(person).role == "customer" ? (
                 ""
@@ -627,6 +628,7 @@ function Reservations() {
 
               {servicesContracted.length != 0 ? (
                 <Paper elevation={2} className="row">
+                  <div className="column-center">Escoge fecha y hora por favor</div>
                   <div className="column">
                     <DayPicker
                       onDayClick={handleDayClick}
@@ -705,6 +707,7 @@ function Reservations() {
                 </DialogActions>
               </Dialog>
             </Paper>
+            <div className='verticalSeparator' />
           </form>
         </Container>
       </Zoom>
