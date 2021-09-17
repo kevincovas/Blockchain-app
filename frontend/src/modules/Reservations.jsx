@@ -31,6 +31,10 @@ function Reservations() {
       backgroundColor: "#F1F9F7",
     },
 
+    btnReservation: {
+      backgroundColor: "#555B6E",
+    },
+
     mainPaper: {
       display: "block",
       backgroundColor: "#89b0ae",
@@ -636,6 +640,7 @@ function Reservations() {
                 <p>
                   <Button
                     variant="contained"
+                    className={classes.btnReservation}
                     color="primary"
                     onClick={addService}
                   >
@@ -716,6 +721,7 @@ function Reservations() {
                           (employee_temp) =>
                             employee_temp.id == timeframe.employee
                         )[0].surname_2}
+                    <p>Recibirá un mail de confirmación con su reserva.</p>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -723,8 +729,10 @@ function Reservations() {
                     Cancelar
                   </Button>
                   <Button
+                    className={classes.btnReservation}
                     onClick={(e) => handleClose(`1`)}
                     color="primary"
+                    variant="contained"
                     autoFocus
                   >
                     Aceptar
