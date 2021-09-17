@@ -127,11 +127,6 @@ function Login({ onLogin }) {
                   </Button>
                 </form>
                 <Grid container>
-                  <Grid item xs>
-                    <Link className="sinLink" href="#" variant="body2">
-                      Has olvidado la contraseña?
-                    </Link>
-                  </Grid>
                   <Grid item>
                     <Link className="sinLink" href="/register" variant="body2">
                       ¿No tienes una cuenta? {"Regístrate"}

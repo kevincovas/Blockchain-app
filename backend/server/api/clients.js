@@ -11,7 +11,7 @@ const okResult = (results) => ({ status: "OK", results });
 const errorResult = (details) => ({ status: "ERROR", details });
 
 //Get de todos los clientes
-router.get("/", async (req, res) => {
+/*router.get("/", authenticated, isHairdresser, async (req, res) => {
   const { ok, found, data } = await db.getClients();
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -23,10 +23,10 @@ router.get("/", async (req, res) => {
     //Si hay clientes
     return res.json(okResult(data));
   }
-});
+});*/
 
 //Get de un solo cliente
-router.get("/:id/", async (req, res) => {
+router.get("/:id/", authenticated, isHairdresser, async (req, res) => {
   const { ok, found, data } = await db.getOneClient(req.params.id);
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -40,7 +40,7 @@ router.get("/:id/", async (req, res) => {
   }
 });
 
-router.post("/get-person-by-user-id/", async (req, res) => {
+/*router.post("/get-person-by-user-id/", async (req, res) => {
   const { ok, found, data } = await db.getPersonByUserId(req.body.id);
   if (!ok) {
     //Si ha habido un error en el servidor
@@ -52,7 +52,7 @@ router.post("/get-person-by-user-id/", async (req, res) => {
     //Si existe el cliente
     return res.json(okResult(data));
   }
-});
+});*/
 
 //Post de un nuevo cliente
 router.post("/register/", async (req, res) => {
@@ -71,10 +71,8 @@ router.post("/register/", async (req, res) => {
   if (!user_id) {
     return res.status(400).json(errorResult("Missing 'user_id' field"));
   }
-  console.log(user_id);
   const personAlreadyExists = await db.checkIfPersonExistsByUserId(user_id);
-  console.log(personAlreadyExists);
-  if (!personAlreadyExists.ok) {
+   if (!personAlreadyExists.ok) {
     return res.status(500).json(errorResult(`Error interno del servidor: ${personAlreadyExists.data}`));
   } else if (personAlreadyExists.data.exists){
     return res.status(400).json(errorResult("Error creando cliente, ya existe un cliente para este usuario."));
@@ -97,7 +95,7 @@ router.post("/register/", async (req, res) => {
 });
 
 //Actualización de un cliente
-router.put("/:id/", async (req, res) => {
+router.put("/:id/", authenticated, isHairdresser, async (req, res) => {
   const { id } = req.params;
   const {
     name,
@@ -132,7 +130,7 @@ router.put("/:id/", async (req, res) => {
 });
 
 //Delete de un cliente
-router.delete("/:id/", async (req, res) => {
+/*router.delete("/:id/", async (req, res) => {
   const { id } = req.params;
   const { ok, found, data } = await db.deleteClient(id);
 
@@ -146,7 +144,7 @@ router.delete("/:id/", async (req, res) => {
     //Si se ha eliminado el cliente
     return res.json(okResult(data));
   }
-});
+});*/
 
 router.post(
   "/get-people-by-role/",

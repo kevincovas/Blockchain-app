@@ -14,7 +14,6 @@ const authenticated = catchErrors(async (req, res, next) => {
   }
   const token = authHeader.slice("Bearer ".length);
   const {user} = auth.decodeToken(token);
-  console.log(user);
 
   const userExists = await checkIfUserExistsByEmail(user.email);
   if (!userExists.data.exists) {
@@ -34,7 +33,7 @@ const isHairdresser = catchErrors(async (req, res, next) => {
   }
   const token = authHeader.slice("Bearer ".length);
   const {user, person} = auth.decodeToken(token);
-  console.log(person);
+
   if (!person.role.includes(HAIRDRESSER_ROLE_NAME) && !person.role.includes(ADMIN_ROLE_NAME)) {
     errUnauthorized(`Permission required.`);
   }

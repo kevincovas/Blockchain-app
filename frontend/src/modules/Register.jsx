@@ -65,7 +65,7 @@ function Register() {
         if (!userExists.data.exists) {
           const valPassword = validatePassword(password);
           if (valPassword) {
-            const result = await api.register({ email, password });
+            const result = await api.register({ email, password, token });
             if (result.status !== "OK") {
               enqueueSnackbar(`Error: ${result.details.toString()}`, {
                 variant: "error",

@@ -56,10 +56,7 @@ router.post("/login/", async (req, res) => {
   } else {
     //If there is a user with this email, now check if passwords matches
     const password_db = data.password;
-    console.log(`password_db ${password_db}`);
-    console.log(`password ${password}`);
     const passwordMatches = await auth.comparePasswords(password, password_db);
-    console.log(`passwordMatches ${passwordMatches}`);
 
     //If passwords do not match, an error is sent.
     if (!passwordMatches) {
@@ -106,8 +103,6 @@ router.get("/:id/", async (req, res) => {
 //Cambiar contraseña
 router.post("/changePassword/", async (req, res) => {
   const { email, password,newPassword, confirmNewPassword } = req.body;
-  console.log(`newPassword: ${newPassword}`);
-  console.log(`confirmNewPassword: ${confirmNewPassword}`);
   if (!password) {
     return res.status(400).json(errorResult("Missing 'password' field"));
   }
@@ -121,7 +116,6 @@ router.post("/changePassword/", async (req, res) => {
   const { ok, found, data } = await db_users.getUserByEmail(email);
   const password_db = data.password;
   const passwordMatches = await auth.comparePasswords(password, password_db);
-  console.log(`passwordMatches ${passwordMatches}`);
 
   //If passwords do not match, an error is sent.
   if (!passwordMatches) {
@@ -146,11 +140,9 @@ router.post("/rememberPassword/", async (req, res) => {
   const { email } = req.body;
   try {
     const userExist = await db_users.checkIfUserExistsByEmail(email);
-    console.log(`UserExist: ${userExist.data.exists}`);
     if (userExist.data.exists) {
       //Generamos un password aleatorio
       const randPassword = auth.generatePasswordRand(8);
-      console.log(`randPassword: ${randPassword}`);
       //Hasheamos el nuevo password
       const hashedPassword = await auth.hashPassword(randPassword);
       //Actualizamos contraseña
@@ -158,7 +150,6 @@ router.post("/rememberPassword/", async (req, res) => {
       
       //Envío de contraseña
       let to_mail = email;
-      console.log(`to_mail: ${to_mail}`);
       let to_name = "Kevin";
       let subject = "Nueva contraseña generada";
 
@@ -217,7 +208,6 @@ router.post("/register/", async (req, res) => {
   }
   try {
     const hashedPassword = await auth.hashPassword(password);
-    console.log(`Hashed password: ${hashedPassword}`);
     const addUserResult = await db_users.newUser(email, hashedPassword);
     if (!addUserResult.ok) {
       return res.status(400).json(errorResult(data));
@@ -225,7 +215,6 @@ router.post("/register/", async (req, res) => {
 
     //Envío de correo de bienvenida
       let to_mail = email;
-      console.log(`to_mail: ${to_mail}`);
       let to_name = "Kevin";
       let subject = "Bienvenido a Arkus Peluquería";
     

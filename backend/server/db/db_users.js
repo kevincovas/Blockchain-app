@@ -40,7 +40,6 @@ const getUserByEmailSQL = `
 
 const getUserByEmail = async (email) => {
   try {
-    console.log(`email_DB_users ${email}`);
     const result = await pool.query(getUserByEmailSQL, [email]);
 
     //Comprobamos que el cliente exista
@@ -125,7 +124,6 @@ const updatePassword = async (email, password) => {
     if (result.rowCount < 1) {
       return { ok: true, found: false };
     }
-    console.log("Dato actualizado");
     return { ok: true, found: true, data: result.rows };
   } catch (e) {
     return { ok: false, data: e.toString() };
