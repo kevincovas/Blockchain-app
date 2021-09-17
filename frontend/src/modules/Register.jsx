@@ -16,9 +16,14 @@ import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import "../css/LoginAndRegister.css";
+import {clientStructure, genderOptions} from "../config/const";
+import {
+  Select, 
+  MenuItem
+} from "@material-ui/core";
+
 
 function Register() {
-
   //States
   const [name, setName] = useState("");
   const [surname_1, setApellido1] = useState("");
@@ -60,7 +65,7 @@ function Register() {
     //If all fiels are okey the we have the register
     if (!is_wrong) {
       try {
-        //Check that the email of the user doesn't exists 
+        //Check that the email of the user doesn't exists
         const userExists = await api.user_exist({ email });
         if (!userExists.data.exists) {
           const valPassword = validatePassword(password);
@@ -146,7 +151,8 @@ function Register() {
               backgroundPosition: "center",
             }}
           />
-          <Grid className="box-register"
+          <Grid
+            className="box-register"
             item
             xs={12}
             sm={8}
@@ -164,7 +170,10 @@ function Register() {
                 alignItems: "center",
               }}
             >
-              <Avatar className="coorporativeicon" sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <Avatar
+                className="coorporativeicon"
+                sx={{ m: 1, bgcolor: "secondary.main" }}
+              >
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
@@ -207,7 +216,25 @@ function Register() {
                     value={surname_2}
                     onChange={(e) => setApellido2(e.target.value)}
                   />
-                  <Autocomplete
+                  <Select
+                    fullWidth
+                    margin="normal"
+                    labelId="gender-select-label"
+                    id="gender-select"
+                    value={`${gender}`}
+                    label="Sexo"
+                    onChange={(e) => {
+                      setGender(e.target.value);
+                    }}
+                  >
+                    {genderOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {/* <Autocomplete
+                    required
                     onChange={(event, value) => {
                       if (value) {
                         setGender(value.value);
@@ -231,7 +258,7 @@ function Register() {
                     )}
                     getOptionLabel={(option) => `${option.name}`}
                     getOptionSelected={(option) => `${option.value}`}
-                  />
+                  /> */}
                   <TextField
                     margin="normal"
                     fullWidth
