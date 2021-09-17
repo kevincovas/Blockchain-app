@@ -21,14 +21,43 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 import Zoom from "@material-ui/core/Zoom";
 import "../css/Reservations.css";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 
 function Reservations() {
+ 
+ // Style Material
+  const useStyles = makeStyles((theme) => ({
+    formsContainer: {
+      display: "block",
+      padding: "10px",
+      backgroundColor: "#F1F9F7",
+    },
+
+    btnReservation: {
+      backgroundColor: "#555B6E",
+    },
+
+    mainPaper: {
+      display: "block",
+      backgroundColor: "#89b0ae",
+      padding: "10px",
+    },
+
+    paperCalendar: {
+      display: "flex",
+      backgroundColor: "#F1F9F7",
+    },
+  }));
+  const classes = useStyles();
+
+  // History
+  const history = useHistory();
+
   // Get Token
   const token = localStorage.getItem("token");
   // Get Role
   const person = localStorage.getItem("person");
-  // Get User Id
-  const user = localStorage.getItem("user");
 
   // Customer
   const [customer, setCustomer] = useState(0);
@@ -88,8 +117,11 @@ function Reservations() {
     else {
       // Do Reservation
       await handleSubmit();
+     
+      // Redirect to main (only if user)
+      if (JSON.parse(person).role == "customer") 
+      window.location.href = "/";
 
-      // Send OK Message
     }
   };
 
@@ -406,7 +438,6 @@ function Reservations() {
 
   // Set State of Selected TimeTable
   function setTimeTableButton(timeframe_in) {
-
     // Set TimeFrame
     setTimeFrame(
       timeframeList.filter((prevState) => prevState.id == timeframe_in)[0]
@@ -526,12 +557,12 @@ function Reservations() {
       <Zoom in={true}>
         <Container maxWidth="md">
           <form onSubmit={(event) => event.preventDefault()}>
-          <div className='verticalSeparator' />
-            <Paper elevation={5} className="forms-container">
+            <div className="verticalSeparator" />
+            <Paper elevation={5} className={classes.mainPaper}>
               {JSON.parse(person).role == "customer" ? (
                 ""
               ) : (
-                <Paper elevation={2} className="forms-container">
+                <Paper elevation={2} className={classes.formsContainer}>
                   <Dropdown
                     setIdError={setCustomerIdError}
                     setId={setCustomer}
@@ -550,7 +581,7 @@ function Reservations() {
 
               <br />
 
-              <Paper elevation={2} className="forms-container">
+              <Paper elevation={2} className={classes.formsContainer}>
                 <Dropdown
                   setIdError={setEmployeeIdError}
                   setId={setEmployee}
@@ -567,7 +598,7 @@ function Reservations() {
               </Paper>
 
               <br />
-              <Paper elevation={2} className="forms-container">
+              <Paper elevation={2} className={classes.formsContainer}>
                 <Dropdown
                   setIdError={setServiceIdError}
                   setId={setService}
@@ -615,6 +646,7 @@ function Reservations() {
                 <p>
                   <Button
                     variant="contained"
+                    className={classes.btnReservation}
                     color="primary"
                     onClick={addService}
                   >
@@ -624,37 +656,41 @@ function Reservations() {
 
                 {listServicesContracted}
               </Paper>
-              <br />
 
               {servicesContracted.length != 0 ? (
-                <Paper elevation={2} className="row">
-                  <div className="column-center">Escoge fecha y hora por favor</div>
-                  <div className="column">
-                    <DayPicker
-                      onDayClick={handleDayClick}
-                      locale="es"
-                      months={constnt.MONTHS}
-                      weekdaysLong={constnt.WEEKDAYS_LONG}
-                      weekdaysShort={constnt.WEEKDAYS_SHORT}
-                      firstDayOfWeek={1}
-                      showOutsideDays
-                      selectedDays={state.selectedDay}
-                      disabledDays={[
-                        { daysOfWeek: [0] },
-                        { before: new Date() },
-                      ]}
-                      fromMonth={new Date()}
-                      toMonth={
-                        new Date(
-                          new Date().getFullYear(),
-                          new Date().getMonth() + 2
-                        )
-                      }
-                    />
+                <div>
+                  <div className="column-center">
+                    Escoge fecha y hora por favor
                   </div>
 
-                  <div className="column">{listAvailability}</div>
-                </Paper>
+                  <Paper elevation={2} className={classes.paperCalendar}>
+                    <div className="column">
+                      <DayPicker
+                        onDayClick={handleDayClick}
+                        locale="es"
+                        months={constnt.MONTHS}
+                        weekdaysLong={constnt.WEEKDAYS_LONG}
+                        weekdaysShort={constnt.WEEKDAYS_SHORT}
+                        firstDayOfWeek={1}
+                        showOutsideDays
+                        selectedDays={state.selectedDay}
+                        disabledDays={[
+                          { daysOfWeek: [0] },
+                          { before: new Date() },
+                        ]}
+                        fromMonth={new Date()}
+                        toMonth={
+                          new Date(
+                            new Date().getFullYear(),
+                            new Date().getMonth() + 2
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="column">{listAvailability}</div>
+                  </Paper>
+                </div>
               ) : (
                 ""
               )}
@@ -691,6 +727,7 @@ function Reservations() {
                           (employee_temp) =>
                             employee_temp.id == timeframe.employee
                         )[0].surname_2}
+                    <p>Recibirá un mail de confirmación con su reserva.</p>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -698,8 +735,10 @@ function Reservations() {
                     Cancelar
                   </Button>
                   <Button
+                    className={classes.btnReservation}
                     onClick={(e) => handleClose(`1`)}
                     color="primary"
+                    variant="contained"
                     autoFocus
                   >
                     Aceptar
@@ -707,7 +746,7 @@ function Reservations() {
                 </DialogActions>
               </Dialog>
             </Paper>
-            <div className='verticalSeparator' />
+            <div className="verticalSeparator" />
           </form>
         </Container>
       </Zoom>
