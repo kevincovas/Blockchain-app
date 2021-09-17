@@ -58,8 +58,6 @@ function Reservations() {
   const token = localStorage.getItem("token");
   // Get Role
   const person = localStorage.getItem("person");
-  // Get User Id
-  const user = localStorage.getItem("user");
 
   // Customer
   const [customer, setCustomer] = useState(0);
