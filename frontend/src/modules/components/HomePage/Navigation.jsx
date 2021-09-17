@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -9,8 +10,6 @@ import "../../../css/Navigation.css";
 
 
 function Navigation(props) {
- 
-
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -79,7 +78,7 @@ function Navigation(props) {
         : <></>}
 			{ localStorage.getItem("token") != null  ?
             <NavDropdown title="Mi perfil" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="/rememberPassword">
+              <NavDropdown.Item onClick={props.openDialog}>
                 Cambiar contraseña
               </NavDropdown.Item>
               <NavDropdown.Divider />
@@ -87,7 +86,6 @@ function Navigation(props) {
             </NavDropdown>
 			: ""
 			}
-			
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -3,6 +3,7 @@ const db_clients = require("../db/db_clients");
 const { Router } = require("express");
 const auth = require("../auth/auth.service");
 const {sendEmail,from_mail,from_name,text_part,custom_id,} = require("../utils/mail");
+const { authenticated } = require("../auth/auth.middlewares");
 /*const {
   from_mail,
   from_name,
@@ -101,8 +102,18 @@ router.get("/:id/", async (req, res) => {
 });
 
 //Cambiar contraseña
-router.post("/changePassword/", async (req, res) => {
-  const { email, password,newPassword, confirmNewPassword } = req.body;
+router.post("/changePassword/", authenticated, async (req, res) => {
+  const email = req.user.email;
+  console.log(`Email: ${email}`);
+  
+
+  console.log("Ha entrado a change password");
+  const {password,newPassword, confirmNewPassword } = req.body;
+  
+  //console.log(`email: ${email}`);
+  console.log(`Password: ${password}`);
+  console.log(`newPassword: ${newPassword}`);
+  console.log(`confirmNewPassword: ${confirmNewPassword}`);
   if (!password) {
     return res.status(400).json(errorResult("Missing 'password' field"));
   }

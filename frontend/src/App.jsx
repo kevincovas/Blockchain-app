@@ -12,91 +12,97 @@ import Navigation from "./modules/components/HomePage/Navigation";
 import Clients from "./modules/clients";
 import SalesList from "./modules/SalesList";
 import RememberPassword from "./modules/RememberPassword";
+import ChangePassword from "./modules/ChangePassword";
 
 function App() {
   const token = localStorage.getItem("token");
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
   const history = useHistory();
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
 
   const login = (token, person, user) => {
     // Only store token if not undefined or null
     localStorage.setItem("token", token);
     localStorage.setItem("person", JSON.stringify(person));
     localStorage.setItem("user", JSON.stringify(user));
-    setIsLoggedIn(true);  
+    setIsLoggedIn(true);
   };
 
   const logout = () => {
     console.log("Ha entrado en logout");
     localStorage.removeItem("token");
-	localStorage.removeItem("person");
-	localStorage.removeItem("user");	
+    localStorage.removeItem("person");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
     console.log(`History antes: ${history}`);
-    history.push('/');
+    history.push("/");
     console.log(`History despues: ${history}`);
+  };
+
+  const openDialog = () => {
+    setOpenChangePasswordDialog(true);
+  };
+  const closeDialog = () => {
+    setOpenChangePasswordDialog(false);
   };
 
   return (
     <div className="App">
-      {console.log(`History: ${history}`)}
-      
-      <Navigation isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} onLogout = {logout}/>
-        <Route
-          path="/"
-          exact
-          render={() =>
-            <Home/>
-          }
-        />
-        <Route
-          path="/clients"
-          exact
-          render={() =>
-            isLoggedIn && ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ? <Clients /> : <Login onLogin={login} />
-          }
-        />
-        <Route
-          path="/reservations"
-          exact
-          render={() =>  <Reservations /> 
-          }
-        />
-        <Route
-          path="/login"
-          render={() =>
-            isLoggedIn ? <Home /> : <Login onLogin={login} />
-          }
-        />
-        <Route
-          path="/register"
-          render={() =>
-            isLoggedIn ? <Home /> : <Register onLogin={login} />
-          }
-        />
-        <Route
-          path="/sales/new-sale/"
-          render={() =>
-            isLoggedIn ? <NewSale /> : <Login onLogin={login} />
-          }
-        />
-        <Route
-          path="/sales/list/"
-          render={() =>
-            isLoggedIn && ( ( localStorage.getItem("person") != null ) && ( JSON.parse(localStorage.getItem("person")).role != "customer" )  ) ? <SalesList /> : <Login onLogin={login} />
-          }
-        />
-        <Route
-            path="/rememberPassword"
-            exact
-            render={() =>
-              isLoggedIn ? (
-                <Home />
-              ) : (
-                <RememberPassword />
-              )
-            }
-          />
+      <Navigation
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        onLogout={logout}
+        openDialog={openDialog}
+      />
+      <Route path="/" exact render={() => <Home />} />
+      <Route
+        path="/clients"
+        exact
+        render={() =>
+          isLoggedIn &&
+          localStorage.getItem("person") != null &&
+          JSON.parse(localStorage.getItem("person")).role != "customer" ? (
+            <Clients />
+          ) : (
+            <Login onLogin={login} />
+          )
+        }
+      />
+      <Route path="/reservations" exact render={() => <Reservations />} />
+      <Route
+        path="/login"
+        render={() => (isLoggedIn ? <Home /> : <Login onLogin={login} />)}
+      />
+      <Route
+        path="/register"
+        render={() => (isLoggedIn ? <Home /> : <Register onLogin={login} />)}
+      />
+      <Route
+        path="/sales/new-sale/"
+        render={() => (isLoggedIn ? <NewSale /> : <Login onLogin={login} />)}
+      />
+      <Route
+        path="/sales/list/"
+        render={() =>
+          isLoggedIn &&
+          localStorage.getItem("person") != null &&
+          JSON.parse(localStorage.getItem("person")).role != "customer" ? (
+            <SalesList />
+          ) : (
+            <Login onLogin={login} />
+          )
+        }
+      />
+      <Route
+        path="/rememberPassword"
+        exact
+        render={() => (isLoggedIn ? <Home /> : <RememberPassword />)}
+      />
+      <ChangePassword
+        dialogOpened={openChangePasswordDialog}
+        closeDialog={closeDialog}
+      />
     </div>
   );
 }

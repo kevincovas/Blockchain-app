@@ -1,4 +1,4 @@
-const HOST = `http://localhost:8080`
+import {HOST} from "../config/const";
 
 export const register = async ({ email, password }) => {
   const response = await fetch(`${HOST}/users/register`, {
@@ -38,13 +38,14 @@ export const login = async ({ email, password }) => {
   return json;
 }
 
-export const changePassword = async ({email,password,newPassword,confirmNewPassword}) => {
-  const response = await fetch(`${HOST}/users/changePassword`, {
+export const changePassword = async ({token,password,newPassword,confirmNewPassword}) => {
+  const response = await fetch(`${HOST}/users/changePassword/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify({ email,password,newPassword, confirmNewPassword}),
+    body: JSON.stringify( {password,newPassword, confirmNewPassword}),
   });
   const json = await response.json();
   

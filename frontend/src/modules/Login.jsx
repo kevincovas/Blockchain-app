@@ -8,6 +8,11 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -16,12 +21,14 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import "../css/LoginAndRegister.css";
+import { makeStyles } from "@material-ui/core/styles";
 
 function Login({ onLogin }) {
 
   //States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [changePassword, setChangePassword] = useState("");
 
   //Error control
   const { enqueueSnackbar } = useSnackbar();
@@ -53,20 +60,19 @@ function Login({ onLogin }) {
 
   const theme = createTheme();
 
-
- 
   return (
     <div className="login-page">
       <ThemeProvider theme={theme}>
-        <Grid className="container-main" container component="main" sx={{ height: "100vh" }}>
+        <Grid
+          className="container-main"
+          container
+          component="main"
+          sx={{ height: "100vh" }}
+        >
           <CssBaseline />
+          <Grid item xs={false} sm={4} md={7} />
           <Grid
-            item
-            xs={false}
-            sm={4}
-            md={7}
-          />
-          <Grid className="box-login"
+            className="box-login"
             item
             xs={12}
             sm={8}
@@ -84,7 +90,10 @@ function Login({ onLogin }) {
                 alignItems: "center",
               }}
             >
-              <Avatar className="coorporativeicon" sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <Avatar
+                className="coorporativeicon"
+                sx={{ m: 1, bgcolor: "secondary.main" }}
+              >
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
@@ -137,6 +146,7 @@ function Login({ onLogin }) {
             </Box>
           </Grid>
         </Grid>
+        
       </ThemeProvider>
     </div>
   );
