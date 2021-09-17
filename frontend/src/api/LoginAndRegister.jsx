@@ -38,6 +38,18 @@ export const login = async ({ email, password }) => {
   return json;
 }
 
+export const changePassword = async ({email,password,newPassword,confirmNewPassword}) => {
+  const response = await fetch(`${HOST}/users/changePassword`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email,password,newPassword, confirmNewPassword}),
+  });
+  const json = await response.json();
+  
+  return json;
+}
 
 export const user_exist = async ({ email}) => {
   const response = await fetch(`${HOST}/users/exist`, {

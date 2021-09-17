@@ -7,11 +7,9 @@ import { withRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../../css/Navigation.css";
 
+
 function Navigation(props) {
-  const logout = () => {
-    localStorage.removeItem("token");
-    props.setIsLoggedIn(false);
-  };
+ 
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -23,7 +21,7 @@ function Navigation(props) {
         <Navbar.Collapse className="element-right" id="responsive-navbar-nav">
           <Nav>
             {props.isLoggedIn ? (
-              <Nav.Link className={`nav-item`} onClick={logout}>
+              <Nav.Link className={`nav-item`}  onClick={props.onLogout}>
                 Cerrar Sesión
               </Nav.Link>
             ) : (
@@ -76,7 +74,7 @@ function Navigation(props) {
                 Cambiar contraseña
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/logout">Cerrar Sesión</NavDropdown.Item>
+              <NavDropdown.Item onClick={props.onLogout}>Cerrar Sesión</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

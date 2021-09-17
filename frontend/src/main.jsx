@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import {SnackbarProvider} from 'notistack';
 import Slide from "@material-ui/core/Slide";
+import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,7 +16,9 @@ ReactDOM.render(
       }} 
       TransitionComponent={Slide}
       autoHideDuration={5000}>
+      <Router>
       <App />
+      </Router>
     </SnackbarProvider>
   </React.StrictMode>,
   document.getElementById('root')

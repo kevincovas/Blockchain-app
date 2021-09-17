@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Redirect } from "react-router";
 import "./App.css";
-
+import { useHistory } from "react-router-dom";
 import Reservations from "./modules/Reservations.jsx";
 import Register from "./modules/Register.jsx";
 import Login from "./modules/Login.jsx";
@@ -16,6 +16,7 @@ import Context from "../context/context";
 function App() {
   const token = localStorage.getItem("token");
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
+  const history = useHistory();
 
   const login = (token, person, user) => {
     // Only store token if not undefined or null
@@ -29,12 +30,16 @@ function App() {
     console.log("Ha entrado en logout");
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    console.log(`History antes: ${history}`);
+    history.push('/');
+    console.log(`History despues: ${history}`);
   };
 
   return (
     <div className="App">
-      <Router>
-      <Navigation isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+      {console.log(`History: ${history}`)}
+      
+      <Navigation isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} onLogout = {logout}/>
         <Route
           path="/"
           exact
@@ -85,8 +90,6 @@ function App() {
               )
             }
           />
-
-      </Router>
     </div>
   );
 }
