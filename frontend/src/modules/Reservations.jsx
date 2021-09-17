@@ -25,8 +25,7 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
 function Reservations() {
- 
- // Style Material
+  // Style Material
   const useStyles = makeStyles((theme) => ({
     formsContainer: {
       display: "block",
@@ -117,11 +116,10 @@ function Reservations() {
     else {
       // Do Reservation
       await handleSubmit();
-     
-      // Redirect to main (only if user)
-      if (person != null && JSON.parse(person).role == "customer") 
-      window.location.href = "/";
 
+      // Redirect to main (only if user)
+      if (person != null && JSON.parse(person).role == "customer")
+        window.location.href = "/";
     }
   };
 
@@ -129,7 +127,8 @@ function Reservations() {
   // Valores Iniciales
   useEffect(() => {
     // Customers (only if Admin or Employee)
-    if (person != null &&  JSON.parse(person).role != "customer") fetchCustomers();
+    if (person != null && JSON.parse(person).role != "customer")
+      fetchCustomers();
 
     // Peluqueros
     loadEmployeeList();
@@ -444,13 +443,14 @@ function Reservations() {
     );
 
     // Not Customer Selected
-    if(person == null)
-    {
-      enqueueSnackbar("Error: Tienes que registrarte e iniciar sesión en la aplicación para reservar", {
-        variant: "error",
-      });
-    }else
-    if (customer == 0 && JSON.parse(person).role != "customer") {
+    if (person == null) {
+      enqueueSnackbar(
+        "Error: Tienes que registrarte e iniciar sesión en la aplicación para reservar",
+        {
+          variant: "error",
+        }
+      );
+    } else if (customer == 0 && JSON.parse(person).role != "customer") {
       enqueueSnackbar("Error: Ningún cliente seleccionado.", {
         variant: "error",
       });
@@ -565,27 +565,29 @@ function Reservations() {
           <form onSubmit={(event) => event.preventDefault()}>
             <div className="verticalSeparator" />
             <Paper elevation={5} className={classes.mainPaper}>
-              {person == null || ( person != null && JSON.parse(person).role == "customer") ? (
+              {person == null ||
+              (person != null && JSON.parse(person).role == "customer") ? (
                 ""
               ) : (
-                <Paper elevation={2} className={classes.formsContainer}>
-                  <Dropdown
-                    setIdError={setCustomerIdError}
-                    setId={setCustomer}
-                    select={customerList}
-                    error={customerIdError}
-                    field="Cliente"
-                    className={"form-customer-field"}
-                    setIdHelperMessage={setCustomerIdHelperMessage}
-                    idHelperMessage={customerIdHelperMessage}
-                    optionLabel={(option) =>
-                      `${option.name} ${option.surname_1} ${option.surname_2}`
-                    }
-                  />
-                </Paper>
+                <div>
+                  <Paper elevation={2} className={classes.formsContainer}>
+                    <Dropdown
+                      setIdError={setCustomerIdError}
+                      setId={setCustomer}
+                      select={customerList}
+                      error={customerIdError}
+                      field="Cliente"
+                      className={"form-customer-field"}
+                      setIdHelperMessage={setCustomerIdHelperMessage}
+                      idHelperMessage={customerIdHelperMessage}
+                      optionLabel={(option) =>
+                        `${option.name} ${option.surname_1} ${option.surname_2}`
+                      }
+                    />
+                  </Paper>
+                  <br />
+                </div>
               )}
-
-              <br />
 
               <Paper elevation={2} className={classes.formsContainer}>
                 <Dropdown
@@ -733,7 +735,8 @@ function Reservations() {
                           (employee_temp) =>
                             employee_temp.id == timeframe.employee
                         )[0].surname_2}
-                    <br/>Recibirá un mail de confirmación con su reserva.
+                    <br />
+                    Recibirá un mail de confirmación con su reserva.
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
