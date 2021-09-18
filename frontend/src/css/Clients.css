@@ -15,6 +15,9 @@ table.clients {
   table.clients .MuiTableHead-root .MuiTableCell-head {
     background-color: #89b0ae;
     color: white; }
+  table.clients .MuiTableRow-root:hover {
+    cursor: pointer;
+    background-color: #f1f9f7; }
 
 .clients.main-column {
   margin: 10px;

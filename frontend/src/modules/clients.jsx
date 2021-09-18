@@ -15,7 +15,7 @@ import {
   Button,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { clientStructure, genderOptions } from "../config/const";
@@ -151,16 +151,16 @@ function ClientSearch() {
               <Table size="small" className="clients">
                 <TableBody>
                   {clientsListFiltered.map((client) => (
-                    <TableRow key={client.id}>
-                      <StyledTableCell
-                        className="row-client"
-                        onClick={() => {
-                          if (!showClientDetails) {
-                            setShowClientDetails(true);
-                          }
-                          setClientSelected(client);
-                        }}
-                      >{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
+                    <TableRow
+                      key={client.id}
+                      onClick={() => {
+                        if (!showClientDetails) {
+                          setShowClientDetails(true);
+                        }
+                        setClientSelected(client);
+                      }}
+                    >
+                      <StyledTableCell className="row-client">{`${client.name} ${client.surname_1} ${client.surname_2}`}</StyledTableCell>
                     </TableRow>
                   ))}
                 </TableBody>

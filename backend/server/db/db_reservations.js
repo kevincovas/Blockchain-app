@@ -7,7 +7,7 @@ inner join people on people.id = users.id
 where people.role = 'hairdresser';  `;
 
 // Get Products of type Service
-const getServicesSQL = ` select id , name , description , duration , price from products where is_service = true `;
+const getServicesSQL = ` select id , name , description , duration , price from products where is_service = true order by name `;
 
 // Get Booked Services for one specific day
 const getReservationsByDaySQL = ` select * from reservations where to_char(date_ini , 'YYYY-MM-DD') = $1 `;

@@ -34,7 +34,9 @@ function Login({ onLogin }) {
         password,
       });
       if (error) {
-        setMessage({ type: "error", text: error });
+        enqueueSnackbar(`Error iniciando sesión. Por favor, inténtalo de nuevo.`, {
+          variant: "error",
+        });
       } else {
         if (accessToken == undefined) {
           enqueueSnackbar(`Usuario o contraseña incorrecta`, {
@@ -45,7 +47,9 @@ function Login({ onLogin }) {
         }
       }
     } catch (err) {
-      setMessage({ type: "error", text: err.toString() });
+      enqueueSnackbar(`Error iniciando sesión. Por favor, inténtalo de nuevo.`, {
+        variant: "error",
+      });
     }
   };
 

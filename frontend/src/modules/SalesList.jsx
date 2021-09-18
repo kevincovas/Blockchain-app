@@ -131,15 +131,17 @@ function SalesList() {
               <Table size="small" className="sales sales-list">
                 <TableBody>
                   {salesFilteredList.map((sale) => (
-                    <TableRow key={sale.id}>
+                    <TableRow
+                      key={sale.id}
+                      onClick={() => {
+                        if (!showSaleDetails) {
+                          setShowSaleDetails(true);
+                        }
+                        setSalectedSale(sale);
+                        setSoldProductsTrigger(!soldProductsTrigger);
+                      }}
+                    >
                       <StyledTableCell
-                        onClick={() => {
-                          if (!showSaleDetails) {
-                            setShowSaleDetails(true);
-                          }
-                          setSalectedSale(sale);
-                          setSoldProductsTrigger(!soldProductsTrigger);
-                        }}
                         className="customer-name-option"
                         key={`${sale.id}-customer-name`}
                       >

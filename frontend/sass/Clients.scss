@@ -20,6 +20,10 @@ table.clients {
     background-color: $green-dark;
     color: white;
   }
+  .MuiTableRow-root:hover {
+    cursor: pointer;
+    background-color: $green-light;
+  }
 }
 
 .clients.main-column {

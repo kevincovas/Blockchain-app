@@ -123,7 +123,8 @@ const deleteClient = async (id) => {
 const getPersonByUserIdSQL = `
   SELECT id, name, surname_1, COALESCE(surname_2, '') as surname_2, COALESCE(phone, '') as phone, birth_date, gender, observations, user_id, role 
   FROM people
-  WHERE user_id = $1;
+  WHERE user_id = $1
+  ORDER BY name;
 `;
 
 const getPersonByUserId = async (id) => {
@@ -140,7 +141,8 @@ const getPersonByUserId = async (id) => {
 
 const getPeopleByRoleNameSQL = `SELECT id, name, surname_1, COALESCE(surname_2 , '') as surname_2, role
     FROM people 
-    WHERE role=$1;
+    WHERE role=$1
+    ORDER BY name;
 `;
 const getPeopleByRoleName = async ({ role }) => {
   try {
@@ -153,7 +155,8 @@ const getPeopleByRoleName = async ({ role }) => {
 
 const getPeopleByRoleNameExtendedSQL = `SELECT id, name, surname_1, COALESCE(surname_2 , '') as surname_2, phone, birth_date, gender, COALESCE(observations , '') as observations, role
     FROM people 
-    WHERE role=$1;`;
+    WHERE role=$1
+    ORDER BY name;`;
 
 const getPeopleByRoleNameExtended = async ({ role }) => {
   try {

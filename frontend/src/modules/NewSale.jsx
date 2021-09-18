@@ -643,15 +643,13 @@ function NewSale() {
           {"¿Deseas guardar la venta?"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <TextField
-              label="Observaciones"
-              multiline
-              rows={5}
-              variant="filled"
-              onChange={(event) => setObservations(event.target.value)}
-            />
-          </DialogContentText>
+          <TextField
+            label="Observaciones"
+            multiline
+            rows={5}
+            variant="filled"
+            onChange={(event) => setObservations(event.target.value)}
+          />
         </DialogContent>
         <DialogActions>
           <Button

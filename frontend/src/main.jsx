@@ -7,20 +7,18 @@ import Slide from "@material-ui/core/Slide";
 import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <SnackbarProvider
-      maxSnack={5}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "center",
-      }}
-      TransitionComponent={Slide}
-      autoHideDuration={5000}
-    >
-      <Router>
-        <App />
-      </Router>
-    </SnackbarProvider>
-  </React.StrictMode>,
+  <SnackbarProvider
+    maxSnack={5}
+    anchorOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    TransitionComponent={Slide}
+    autoHideDuration={5000}
+  >
+    <Router>
+      <App />
+    </Router>
+  </SnackbarProvider>,
   document.getElementById("root")
 );
