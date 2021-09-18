@@ -128,33 +128,33 @@ function SalesList() {
               }}
             />
             <div className="table-container-sales">
-            <Table size="small" className="sales sales-list">
-              <TableBody>
-                {salesFilteredList.map((sale) => (
-                  <TableRow key={sale.id}>
-                    <StyledTableCell
-                      onClick={() => {
-                        if (!showSaleDetails) {
-                          setShowSaleDetails(true);
-                        }
-                        setSalectedSale(sale);
-                        setSoldProductsTrigger(!soldProductsTrigger);
-                      }}
-                      className="customer-name-option"
-                      key={`${sale.id}-customer-name`}
-                    >
-                      {sale.customer_name.trim()}
-                    </StyledTableCell>
-                    <StyledTableCell key={`${sale.id}-total-price`}>
-                      {sale.total_import}€
-                    </StyledTableCell>
-                    <StyledTableCell key={`${sale.id}-created-at`}>
-                      {`${moment(sale.created_at).format("DD/MM/YYYY")}`}
-                    </StyledTableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+              <Table size="small" className="sales sales-list">
+                <TableBody>
+                  {salesFilteredList.map((sale) => (
+                    <TableRow key={sale.id}>
+                      <StyledTableCell
+                        onClick={() => {
+                          if (!showSaleDetails) {
+                            setShowSaleDetails(true);
+                          }
+                          setSalectedSale(sale);
+                          setSoldProductsTrigger(!soldProductsTrigger);
+                        }}
+                        className="customer-name-option"
+                        key={`${sale.id}-customer-name`}
+                      >
+                        {sale.customer_name.trim()}
+                      </StyledTableCell>
+                      <StyledTableCell key={`${sale.id}-total-price`}>
+                        {sale.total_import}€
+                      </StyledTableCell>
+                      <StyledTableCell key={`${sale.id}-created-at`}>
+                        {`${moment(sale.created_at).format("DD/MM/YYYY")}`}
+                      </StyledTableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </div>
         </div>
@@ -228,7 +228,8 @@ function SalesList() {
                     Importe total: <span>{selectedSale.total_import}€</span>
                   </p>
                   <p>
-                    Observaciones: <span className="block">{selectedSale.observations}</span>
+                    Observaciones:{" "}
+                    <span className="block">{selectedSale.observations}</span>
                   </p>
                 </div>
               </div>

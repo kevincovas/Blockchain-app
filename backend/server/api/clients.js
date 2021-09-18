@@ -1,7 +1,7 @@
 const db = require("../db/db_clients");
 const { Router } = require("express");
 
-const {CLIENT_ROLE_NAME} = require("../common/config");
+const { CLIENT_ROLE_NAME } = require("../common/config");
 
 const { isHairdresser, authenticated } = require("../auth/auth.middlewares");
 
@@ -72,10 +72,20 @@ router.post("/register/", async (req, res) => {
     return res.status(400).json(errorResult("Missing 'user_id' field"));
   }
   const personAlreadyExists = await db.checkIfPersonExistsByUserId(user_id);
-   if (!personAlreadyExists.ok) {
-    return res.status(500).json(errorResult(`Error interno del servidor: ${personAlreadyExists.data}`));
-  } else if (personAlreadyExists.data.exists){
-    return res.status(400).json(errorResult("Error creando cliente, ya existe un cliente para este usuario."));
+  if (!personAlreadyExists.ok) {
+    return res
+      .status(500)
+      .json(
+        errorResult(`Error interno del servidor: ${personAlreadyExists.data}`)
+      );
+  } else if (personAlreadyExists.data.exists) {
+    return res
+      .status(400)
+      .json(
+        errorResult(
+          "Error creando cliente, ya existe un cliente para este usuario."
+        )
+      );
   }
   try {
     const newClient = await db.newClient(

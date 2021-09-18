@@ -17,13 +17,13 @@
 
 .column-center {
   text-align: center;
-  color:white;
+  color: white;
   flex: 100%;
   padding: 10px;
 }
 
-.verticalSeparator{
-  height:30px;
+.verticalSeparator {
+  height: 30px;
 }
 
 .reservation-background {
@@ -53,34 +53,34 @@ div.preload-images {
 @keyframes background-loop {
   0% {
     background-image: url("../img/background-1.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   15% {
     background-image: url("../img/background-1.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   30% {
     background-image: url("../img/background-2.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   45% {
     background-image: url("../img/background-2.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   60% {
     background-image: url("../img/background-3.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   75% {
     background-image: url("../img/background-3.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   90% {
     background-image: url("../img/background-1.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
   100% {
     background-image: url("../img/background-1.png");
-    background-color: #BEE3DB;
+    background-color: #bee3db;
   }
 }

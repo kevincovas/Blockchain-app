@@ -61,7 +61,7 @@ export const addReservation = async (
       date_ini,
       date_end,
       booked_services,
-      mail_content
+      mail_content,
     }),
   });
   const json = await response.json();

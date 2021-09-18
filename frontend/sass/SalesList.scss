@@ -8,32 +8,32 @@
   box-shadow: inset 0 0 5px 0px rgba(0, 0, 0, 0.4);
 }
 
-table.sales.sales-list{
+table.sales.sales-list {
   margin-bottom: 0;
-  .MuiTableRow-root:hover{
+  .MuiTableRow-root:hover {
     cursor: pointer;
     background-color: $green-light;
   }
 }
 
-.shadowed-container.sales-list{
+.shadowed-container.sales-list {
   min-height: 100%;
 }
 
-.sale-details-container{
+.sale-details-container {
   margin-top: 20px;
 }
 
-.sale-details-container p span{
+.sale-details-container p span {
   font-weight: 600;
-  &.block{
+  &.block {
     display: block;
     overflow-y: auto;
     height: 10vh;
   }
 }
 
-.table-container-sales{
+.table-container-sales {
   height: 65vh;
   overflow-y: scroll;
 }

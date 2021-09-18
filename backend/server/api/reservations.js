@@ -3,7 +3,13 @@ const { Router } = require("express");
 const router = new Router();
 const okResult = (results) => ({ status: "OK", results });
 const errorResult = (details) => ({ status: "ERROR", details });
-const {sendEmail,from_mail,from_name,text_part,custom_id,} = require("../utils/mail");
+const {
+  sendEmail,
+  from_mail,
+  from_name,
+  text_part,
+  custom_id,
+} = require("../utils/mail");
 
 // Mail API
 //const mailjet = require("../utils/mail");
@@ -74,7 +80,6 @@ router.post("/add/", async (req, res) => {
   if (!ok) {
     return res.status(500).json(errorResult(data));
   } else {
-    
     // Get Mail from User
     const { ok, data } = await db.getMailFromPerson(person_id);
 

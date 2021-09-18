@@ -70,10 +70,10 @@ const newUserSQL = `
 `;
 
 const newUser = async (email, hashedPassword) => {
-  try{
+  try {
     const result = await pool.query(newUserSQL, [email, hashedPassword]);
     return { ok: true, found: true, data: result.rows[0] };
-  } catch (e){
+  } catch (e) {
     return { ok: false, data: e.toString() };
   }
 };
@@ -129,7 +129,6 @@ const updatePassword = async (email, password) => {
     return { ok: false, data: e.toString() };
   }
 };
-
 
 module.exports = {
   getUsers,

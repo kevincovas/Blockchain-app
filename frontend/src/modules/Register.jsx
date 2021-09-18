@@ -17,12 +17,8 @@ import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import "../css/LoginAndRegister.css";
-import {clientStructure, genderOptions} from "../config/const";
-import {
-  Select, 
-  MenuItem
-} from "@material-ui/core";
-
+import { clientStructure, genderOptions } from "../config/const";
+import { Select, MenuItem } from "@material-ui/core";
 
 function Register() {
   //States
@@ -218,23 +214,23 @@ function Register() {
                     onChange={(e) => setApellido2(e.target.value)}
                   />
                   <div className="select-container">
-                  <InputLabel id="gender-select-label">Sexo</InputLabel>
-                  <Select
-                    fullWidth
-                    labelId="gender-select-label"
-                    id="gender-select"
-                    value={`${gender}`}
-                    variant="standard"
-                    onChange={(e) => {
-                      setGender(e.target.value);
-                    }}
-                  >
-                    {genderOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    <InputLabel id="gender-select-label">Sexo</InputLabel>
+                    <Select
+                      fullWidth
+                      labelId="gender-select-label"
+                      id="gender-select"
+                      value={`${gender}`}
+                      variant="standard"
+                      onChange={(e) => {
+                        setGender(e.target.value);
+                      }}
+                    >
+                      {genderOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </div>
                   {/* <Autocomplete
                     required

@@ -1,25 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import {SnackbarProvider} from 'notistack';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import { SnackbarProvider } from "notistack";
 import Slide from "@material-ui/core/Slide";
 import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <SnackbarProvider 
-      maxSnack={5} 
+    <SnackbarProvider
+      maxSnack={5}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "center", 
-      }} 
+        horizontal: "center",
+      }}
       TransitionComponent={Slide}
-      autoHideDuration={5000}>
+      autoHideDuration={5000}
+    >
       <Router>
-      <App />
+        <App />
       </Router>
     </SnackbarProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);

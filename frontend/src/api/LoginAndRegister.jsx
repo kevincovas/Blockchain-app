@@ -1,4 +1,4 @@
-import {HOST} from "../config/const";
+import { HOST } from "../config/const";
 
 export const register = async ({ email, password }) => {
   const response = await fetch(`${HOST}/users/register`, {
@@ -10,19 +10,35 @@ export const register = async ({ email, password }) => {
   });
   const json = await response.json();
   return json;
-}
+};
 
-export const register_client = async ({name, surname_1, surname_2, gender, birth_date, phone, user_id}) => {
+export const register_client = async ({
+  name,
+  surname_1,
+  surname_2,
+  gender,
+  birth_date,
+  phone,
+  user_id,
+}) => {
   const response = await fetch(`${HOST}/clients/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({name, surname_1, surname_2, gender, birth_date, phone,user_id}),
+    body: JSON.stringify({
+      name,
+      surname_1,
+      surname_2,
+      gender,
+      birth_date,
+      phone,
+      user_id,
+    }),
   });
   const json = await response.json();
   return json;
-}
+};
 
 export const login = async ({ email, password }) => {
   const response = await fetch(`${HOST}/users/login`, {
@@ -33,25 +49,30 @@ export const login = async ({ email, password }) => {
     body: JSON.stringify({ email, password }),
   });
   const json = await response.json();
-  
-  return json;
-}
 
-export const changePassword = async ({token,password,newPassword,confirmNewPassword}) => {
+  return json;
+};
+
+export const changePassword = async ({
+  token,
+  password,
+  newPassword,
+  confirmNewPassword,
+}) => {
   const response = await fetch(`${HOST}/users/changePassword/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify( {password,newPassword, confirmNewPassword}),
+    body: JSON.stringify({ password, newPassword, confirmNewPassword }),
   });
   const json = await response.json();
-  
-  return json;
-}
 
-export const user_exist = async ({ email}) => {
+  return json;
+};
+
+export const user_exist = async ({ email }) => {
   const response = await fetch(`${HOST}/users/exist`, {
     method: "POST",
     headers: {
@@ -59,11 +80,11 @@ export const user_exist = async ({ email}) => {
     },
     body: JSON.stringify({ email }),
   });
-  const json = await response.json();  
+  const json = await response.json();
   return json.results;
-}
+};
 
-export const rememberPassword = async ({ email}) => {
+export const rememberPassword = async ({ email }) => {
   const response = await fetch(`${HOST}/users/rememberPassword`, {
     method: "POST",
     headers: {
@@ -71,6 +92,6 @@ export const rememberPassword = async ({ email}) => {
     },
     body: JSON.stringify({ email }),
   });
-  const json = await response.json();  
+  const json = await response.json();
   return json.results;
-}
+};

@@ -1,23 +1,25 @@
-
-import React, { useEffect, useState } from 'react';/*import "./LoginAndRegisterPage.css";*/
-import * as api from '../api/LoginAndRegister';
-import 'react-day-picker/lib/style.css';
-import { useLocation } from 'react-router';
+import React, {
+  useEffect,
+  useState,
+} from "react"; /*import "./LoginAndRegisterPage.css";*/
+import * as api from "../api/LoginAndRegister";
+import "react-day-picker/lib/style.css";
+import { useLocation } from "react-router";
 import { useSnackbar } from "notistack";
 
 const LOGIN = "Login";
 const REGISTER = "Register";
 
-function RememberPassword(){
-    const [email, setEmail] = useState("");
-    const [userExist_error, setUserExistError] = useState("");
-    const { enqueueSnackbar } = useSnackbar();
+function RememberPassword() {
+  const [email, setEmail] = useState("");
+  const [userExist_error, setUserExistError] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
-    const checkPassword = async (e) => {
-        e.preventDefault();
-        try {
-          const { status, result } = await api.rememberPassword({email});
-          /*
+  const checkPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const { status, result } = await api.rememberPassword({ email });
+      /*
           if (error) {
              setMessage({ type: "error", text: error });
           } else {
@@ -29,12 +31,10 @@ function RememberPassword(){
             onLogin(accessToken);
             }
           }*/
-        } catch (err) {
-          setMessage({ type: "error", text: err.toString() });
-        }
-      }
+    } catch (err) {
+      setMessage({ type: "error", text: err.toString() });
+    }
+  };
 }
 
-
-
-  export default RememberPassword;
+export default RememberPassword;

@@ -164,7 +164,6 @@ const getPeopleByRoleNameExtended = async ({ role }) => {
   }
 };
 
-
 const checkIfPersonExistsByUserIdSQL = `SELECT EXISTS(SELECT * FROM people WHERE user_id=$1);`;
 
 const checkIfPersonExistsByUserId = async (userId) => {
@@ -185,5 +184,5 @@ module.exports = {
   getPersonByUserId,
   getPeopleByRoleName,
   getPeopleByRoleNameExtended,
-  checkIfPersonExistsByUserId
+  checkIfPersonExistsByUserId,
 };

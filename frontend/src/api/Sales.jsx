@@ -4,7 +4,7 @@ export const getProductCategories = async (HOST, token) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
   });
   const response = await res.json();
@@ -17,13 +17,12 @@ export const getProducts = async (HOST, token) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
   });
   const response = await res.json();
   return response;
 };
-
 
 // Create Sale API call
 export const createSale = async (HOST, token, sale) => {
@@ -31,7 +30,7 @@ export const createSale = async (HOST, token, sale) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(sale),
   });
@@ -45,13 +44,13 @@ export const addProductToSale = async (HOST, token, saleProduct) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(saleProduct),
   });
   const response = await res.json();
   return response;
-}
+};
 
 // Get Customers API call
 export const getPeopleByRole = async (HOST, token, role) => {
@@ -59,14 +58,13 @@ export const getPeopleByRole = async (HOST, token, role) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({role}),
+    body: JSON.stringify({ role }),
   });
   const response = await res.json();
   return response;
 };
-
 
 //Get Sales
 export const getSales = async (HOST, token) => {
@@ -74,7 +72,7 @@ export const getSales = async (HOST, token) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
   });
   const response = await res.json();
@@ -87,7 +85,7 @@ export const getSoldProducts = async (HOST, token, saleId) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
   });
   const response = await res.json();

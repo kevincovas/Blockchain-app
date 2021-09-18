@@ -17,7 +17,7 @@ function ChangePassword(props) {
 
   const changePassword = async () => {
     try {
-      const token = localStorage.getItem("token");      
+      const token = localStorage.getItem("token");
       const results = await api.changePassword({
         token,
         password,

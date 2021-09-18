@@ -1,22 +1,24 @@
 @import "./_variables.scss";
 
-.navbar.bg-dark.navbar-dark{
-    background-color: $grey !important;
-    padding-right: 20px;
-    padding-left: 20px;
-    
-    .navbar-light, .navbar-brand, .navbar-toggler{
-        color: white;
-    }
+.navbar.bg-dark.navbar-dark {
+  background-color: $grey !important;
+  padding-right: 20px;
+  padding-left: 20px;
+
+  .navbar-light,
+  .navbar-brand,
+  .navbar-toggler {
+    color: white;
+  }
 }
 
-.logo{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .element-right{
-    display: inline-block;
-    text-align: right;
-  }
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.element-right {
+  display: inline-block;
+  text-align: right;
+}

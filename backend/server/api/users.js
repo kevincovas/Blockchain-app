@@ -2,7 +2,13 @@ const db_users = require("../db/db_users");
 const db_clients = require("../db/db_clients");
 const { Router } = require("express");
 const auth = require("../auth/auth.service");
-const {sendEmail,from_mail,from_name,text_part,custom_id,} = require("../utils/mail");
+const {
+  sendEmail,
+  from_mail,
+  from_name,
+  text_part,
+  custom_id,
+} = require("../utils/mail");
 const { authenticated } = require("../auth/auth.middlewares");
 /*const {
   from_mail,
@@ -104,8 +110,8 @@ router.get("/:id/", async (req, res) => {
 //Cambiar contraseña
 router.post("/changePassword/", authenticated, async (req, res) => {
   const email = req.user.email;
-  const {password,newPassword, confirmNewPassword } = req.body;
-  
+  const { password, newPassword, confirmNewPassword } = req.body;
+
   if (!password) {
     return res.status(400).json(errorResult("Missing 'password' field"));
   }
@@ -113,7 +119,9 @@ router.post("/changePassword/", authenticated, async (req, res) => {
     return res.status(400).json(errorResult("Missing 'newPassword' field"));
   }
   if (!confirmNewPassword) {
-    return res.status(400).json(errorResult("Missing 'confirmNewPassword' field"));
+    return res
+      .status(400)
+      .json(errorResult("Missing 'confirmNewPassword' field"));
   }
 
   const { ok, found, data } = await db_users.getUserByEmail(email);
@@ -126,14 +134,16 @@ router.post("/changePassword/", authenticated, async (req, res) => {
       .status(400)
       .json(errorResult(`Wrong email/password combination`));
   }
-  if(newPassword == confirmNewPassword){
+  if (newPassword == confirmNewPassword) {
     //Hasheamos el nuevo password
     const hashedPassword = await auth.hashPassword(newPassword);
     //Actualizamos contraseña
-    const updatedPassword = await db_users.updatePassword(email,hashedPassword);
+    const updatedPassword = await db_users.updatePassword(
+      email,
+      hashedPassword
+    );
     res.json(okResult(updatedPassword));
-  }
-  else{  
+  } else {
     res.json(errorResult(`New passwords don't match`));
   }
 });
@@ -149,8 +159,8 @@ router.post("/rememberPassword/", async (req, res) => {
       //Hasheamos el nuevo password
       const hashedPassword = await auth.hashPassword(randPassword);
       //Actualizamos contraseña
-      await db_users.updatePassword(email,hashedPassword);
-      
+      await db_users.updatePassword(email, hashedPassword);
+
       //Envío de contraseña
       let to_mail = email;
       let to_name = "Kevin";
@@ -217,10 +227,10 @@ router.post("/register/", async (req, res) => {
     }
 
     //Envío de correo de bienvenida
-      let to_mail = email;
-      let to_name = "Kevin";
-      let subject = "Bienvenido a Arkus Peluquería";
-    
+    let to_mail = email;
+    let to_name = "Kevin";
+    let subject = "Bienvenido a Arkus Peluquería";
+
     //HTML de correo de Usuario Creado
     let html_usuarioCreado = `
         <br />Bienvenido a Peluquería Arkus,

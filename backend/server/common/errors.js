@@ -7,13 +7,13 @@ class ApiError extends Error {
   }
 }
 
-const catchErrors  = (route) => async (req, res, next) => {
-  try{
+const catchErrors = (route) => async (req, res, next) => {
+  try {
     await route(req, res, next);
-  } catch (err){
+  } catch (err) {
     next(err);
   }
-}
+};
 
 const errorHandler = (err, req, res, next) => {
   if (err.name === "ApiError") {
@@ -25,20 +25,18 @@ const errorHandler = (err, req, res, next) => {
     .send({ error: `Internal Server error (TODO FULLSTACK): ${err}` });
 };
 
-const errMalformed  = (msg) => {
+const errMalformed = (msg) => {
   throw new ApiError(400, msg);
-}
+};
 
-const errUnauthorized  = (msg) => {
+const errUnauthorized = (msg) => {
   throw new ApiError(403, msg);
-}
-
-
+};
 
 module.exports = {
   ApiError,
   errorHandler,
   catchErrors,
-  errMalformed, 
+  errMalformed,
   errUnauthorized,
 };

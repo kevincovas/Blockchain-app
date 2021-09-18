@@ -2,35 +2,33 @@
 
 table.sales {
   margin: 0;
-  .MuiTableHead-root .MuiTableCell-head{
+  .MuiTableHead-root .MuiTableCell-head {
     background-color: $green-dark;
     color: white;
-    &:not(.name-option){
+    &:not(.name-option) {
       text-align: center;
     }
-    &.name-option{
+    &.name-option {
       width: 50%;
     }
   }
-  .MuiTableBody-root .MuiTableCell-body{
-    &:not(.name-option){
+  .MuiTableBody-root .MuiTableCell-body {
+    &:not(.name-option) {
       text-align: center;
     }
-    &.name-option{
+    &.name-option {
       width: 50%;
     }
-    .sale-action-icon{
-      &:not(:first-child){
+    .sale-action-icon {
+      &:not(:first-child) {
         margin-left: 3px;
-      } 
-      &:not(:last-child){
+      }
+      &:not(:last-child) {
         margin-right: 3px;
       }
-
     }
   }
 }
-
 
 .buttons-container {
   display: block;
@@ -43,7 +41,6 @@ table.sales {
   &.categories {
     height: 20vh;
   }
-
 }
 
 .MuiButton-root.product-button,
@@ -61,12 +58,12 @@ table.sales {
   text-transform: none;
 }
 
-.categories-products-container, .account-total-container {
+.categories-products-container,
+.account-total-container {
   display: grid;
   grid-template-rows: 65% 35%;
   height: 100%;
 }
-
 
 .MuiTable-root {
   margin-top: 20px;
@@ -85,41 +82,41 @@ form.new-sale-people-form {
   }
 }
 
-.sale-action-icon{
+.sale-action-icon {
   color: $grey;
   font-size: 15px;
 }
 
-.mop-buttons-container{
+.mop-buttons-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  .mop-button{
+  .mop-button {
     width: 100px;
     height: 100px;
-    &:not(:first-child){
+    &:not(:first-child) {
       margin-left: 20px;
     }
     font-size: 40px;
     color: $green-light;
     background-color: $green-medium;
-    &:hover{
+    &:hover {
       background-color: $pale-pink;
     }
   }
 }
 
-.final-import-container{
+.final-import-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-bottom: 30px;
-  .final-import-label{
+  .final-import-label {
     font-weight: 600;
     line-height: 2.5rem;
     font-size: 1.5rem;
   }
-  .final-import-value{
+  .final-import-value {
     line-height: 2.5rem;
     text-align: right;
     font-weight: 600;
@@ -127,10 +124,10 @@ form.new-sale-people-form {
   }
 }
 
-.MuiTextField-root{
+.MuiTextField-root {
   width: 100%;
 }
 
-.MuiDialog-paper{
+.MuiDialog-paper {
   width: 60vw;
 }

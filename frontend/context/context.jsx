@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 const Context = React.createContext({
-    token: "",
-    user: {}
+  token: "",
+  user: {},
 });
 
-export default Context
+export default Context;

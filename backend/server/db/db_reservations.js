@@ -32,7 +32,7 @@ const getMailFromPersonSQL = ` select email from users inner join people on peop
 
 const getMailFromPerson = async (id) => {
   try {
-    const result = await pool.query(getMailFromPersonSQL,[id]);
+    const result = await pool.query(getMailFromPersonSQL, [id]);
     // Check if mail
     if (result.rowCount < 1) {
       return { ok: false, data: "" };

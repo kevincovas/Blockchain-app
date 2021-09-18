@@ -17,7 +17,6 @@ import "../css/LoginAndRegister.css";
 import { makeStyles } from "@material-ui/core/styles";
 
 function Login({ onLogin }) {
-
   //States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +24,6 @@ function Login({ onLogin }) {
 
   //Error control
   const { enqueueSnackbar } = useSnackbar();
-
 
   //Function of login
   const login = async (e) => {
@@ -139,7 +137,6 @@ function Login({ onLogin }) {
             </Box>
           </Grid>
         </Grid>
-        
       </ThemeProvider>
     </div>
   );
