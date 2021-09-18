@@ -1,21 +1,35 @@
 .navbar.bg-dark.navbar-dark {
   background-color: #555b6e !important;
   padding-right: 20px;
-  padding-left: 20px;
-}
-.navbar.bg-dark.navbar-dark .navbar-light,
-.navbar.bg-dark.navbar-dark .navbar-brand,
-.navbar.bg-dark.navbar-dark .navbar-toggler {
-  color: white;
-}
+  padding-left: 20px; }
+  .navbar.bg-dark.navbar-dark .navbar-light,
+  .navbar.bg-dark.navbar-dark .navbar-brand,
+  .navbar.bg-dark.navbar-dark .navbar-toggler {
+    color: white; }
 
 .logo {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
+  align-items: center; }
 
 .element-right {
   display: inline-block;
-  text-align: right;
-}
+  text-align: right; }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px; }
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px; }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #89b0ae;
+  border-radius: 10px; }
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555b6e; }
