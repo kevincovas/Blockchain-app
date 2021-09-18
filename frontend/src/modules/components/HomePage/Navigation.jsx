@@ -14,30 +14,7 @@ function Navigation(props) {
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse className="element-right" id="responsive-navbar-nav">
-        <Nav>
-          {props.isLoggedIn ? (
-            <></>
-          ) : (
-            <>
-              <Nav.Link
-                className={`nav-item  ${
-                  props.location.pathname === "/login" ? "active" : ""
-                }`}
-                href="/login"
-              >
-                Inicio Sesión
-              </Nav.Link>
-              <Nav.Link
-                className={`nav-item  ${
-                  props.location.pathname === "/register" ? "active" : ""
-                }`}
-                href="/register"
-              >
-                Registrarse
-              </Nav.Link>
-            </>
-          )}
-
+        <Nav className="me-auto">
           <Nav.Link
             className={`nav-item  ${
               props.location.pathname === "/reservations" ? "active" : ""
@@ -77,18 +54,41 @@ function Navigation(props) {
           ) : (
             <></>
           )}
-          {localStorage.getItem("token") != null ? (
-            <NavDropdown title="Mi perfil" id="collasible-nav-dropdown">
-              <NavDropdown.Item onClick={props.openDialog}>
-                Cambiar contraseña
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={props.onLogout}>
-                Cerrar Sesión
-              </NavDropdown.Item>
-            </NavDropdown>
+        </Nav>
+        <Nav>
+          {props.isLoggedIn ? (
+            localStorage.getItem("token") ? (
+              <NavDropdown title="Mi perfil" id="collasible-nav-dropdown" align="end">
+                <NavDropdown.Item onClick={props.openDialog}>
+                  Cambiar contraseña
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={props.onLogout}>
+                  Cerrar Sesión
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <></>
+            )
           ) : (
-            ""
+            <>
+              <Nav.Link
+                className={`nav-item  ${
+                  props.location.pathname === "/login" ? "active" : ""
+                }`}
+                href="/login"
+              >
+                Inicio Sesión
+              </Nav.Link>
+              <Nav.Link
+                className={`nav-item  ${
+                  props.location.pathname === "/register" ? "active" : ""
+                }`}
+                href="/register"
+              >
+                Registrarse
+              </Nav.Link>
+            </>
           )}
         </Nav>
       </Navbar.Collapse>
