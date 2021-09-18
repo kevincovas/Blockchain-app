@@ -518,6 +518,12 @@ function Reservations() {
         booked_services,
         mail_content
       );
+      enqueueSnackbar(
+        "Tu reserva se ha guardado correctamente.",
+        {
+          variant: "success",
+        }
+      );
 
       // Load Time Zones again
       loadAvailability();
