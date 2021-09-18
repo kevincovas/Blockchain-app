@@ -58,6 +58,7 @@ table.clients {
 .observations {
   margin-top: 2rem;
   width: 100%;
+  min-height: 10vh;
 }
 
 .container-table-client {
@@ -73,4 +74,9 @@ h1.clients-title {
   margin-bottom: 2rem;
   margin-top: 1rem;
   color: $grey;
+}
+
+.MuiButton-contained.corporativeButton.clients{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }

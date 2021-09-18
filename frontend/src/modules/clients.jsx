@@ -15,8 +15,8 @@ import {
   Button,
   Select,
   MenuItem,
+  InputLabel
 } from "@material-ui/core";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { Autocomplete } from "@material-ui/lab";
 import { clientStructure, genderOptions } from "../config/const";
 
@@ -246,7 +246,11 @@ function ClientSearch() {
                       name="phone"
                       autoComplete="phone"
                       autoFocus
-                      value={`${editedClientFields.phone}`}
+                      value={
+                        editedClientFields.phone
+                          ? `${editedClientFields.phone}`
+                          : ""
+                      }
                       onChange={(e) =>
                         setEditedClientFields({
                           ...editedClientFields,
@@ -274,35 +278,38 @@ function ClientSearch() {
                           })
                         }
                       />
-                      <Select
-                        fullWidth
-                        margin="normal"
-                        labelId="gender-select-label"
-                        id="gender-select"
-                        value={`${editedClientFields.gender}`}
-                        label="Sexo"
-                        onChange={(e) => {
-                          setEditedClientFields({
-                            ...editedClientFields,
-                            gender: e.target.value,
-                          });
-                        }}
-                      >
-                        {genderOptions.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      <div className="select-container">
+                        <InputLabel id="gender-select-label">Sexo</InputLabel>
+                        <Select
+                          fullWidth
+                          margin="normal"
+                          labelId="gender-select-label"
+                          id="gender-select"
+                          value={`${editedClientFields.gender}`}
+                          label="Sexo"
+                          variant="standard"
+                          className="select"
+                          onChange={(e) => {
+                            setEditedClientFields({
+                              ...editedClientFields,
+                              gender: e.target.value,
+                            });
+                          }}
+                        >
+                          {genderOptions.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
                     </div>
-
-                    <TextareaAutosize
-                      className="observations"
-                      multiline
+                    <TextField
+                      label="Observaciones"
                       fullWidth
-                      rows={1}
-                      aria-label="maximum height"
-                      placeholder="Observaciones"
+                      multiline
+                      rows={3}
+                      variant="standard"
                       type="text"
                       value={`${editedClientFields.observations}`}
                       onChange={(e) =>
@@ -313,7 +320,7 @@ function ClientSearch() {
                       }
                     />
                     <Button
-                      className="corporativeButton"
+                      className="corporativeButton clients"
                       type="submit"
                       fullWidth
                       variant="contained"

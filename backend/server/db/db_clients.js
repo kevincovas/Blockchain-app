@@ -121,7 +121,7 @@ const deleteClient = async (id) => {
 };
 
 const getPersonByUserIdSQL = `
-  SELECT id, name, surname_1, COALESCE(surname_2, '') as surname_2, phone, birth_date, gender, observations, user_id, role 
+  SELECT id, name, surname_1, COALESCE(surname_2, '') as surname_2, COALESCE(phone, '') as phone, birth_date, gender, observations, user_id, role 
   FROM people
   WHERE user_id = $1;
 `;
