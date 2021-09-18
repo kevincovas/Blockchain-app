@@ -58,7 +58,11 @@ function Navigation(props) {
         <Nav>
           {props.isLoggedIn ? (
             localStorage.getItem("token") ? (
-              <NavDropdown title="Mi perfil" id="collasible-nav-dropdown" align="end">
+              <NavDropdown
+                title="Mi perfil"
+                id="collasible-nav-dropdown"
+                align="end"
+              >
                 <NavDropdown.Item onClick={props.openDialog}>
                   Cambiar contraseña
                 </NavDropdown.Item>
