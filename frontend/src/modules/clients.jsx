@@ -148,7 +148,7 @@ function ClientSearch() {
               }}
             />
             <div className="container-table-client">
-              <Table size="small">
+              <Table size="small" className="clients">
                 <TableBody>
                   {clientsListFiltered.map((client) => (
                     <TableRow key={client.id}>

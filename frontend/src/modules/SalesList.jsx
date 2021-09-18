@@ -116,7 +116,7 @@ function SalesList() {
         elevation={6}
         className="sales-list sales-list-container sales-container"
       >
-        <div className="sales-list sales main-column right">
+        <div className="sales-list sales main-column left">
           <div className="shadowed-container sales-list">
             <TextField
               placeholder="Busca por cliente"
@@ -127,6 +127,7 @@ function SalesList() {
                 setClientFilter(event.target.value);
               }}
             />
+            <div className="table-container-sales">
             <Table size="small" className="sales sales-list">
               <TableBody>
                 {salesFilteredList.map((sale) => (
@@ -154,6 +155,7 @@ function SalesList() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           </div>
         </div>
         <div className="sale-list sales main-column left">

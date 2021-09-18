@@ -23,3 +23,7 @@ table.sales.sales-list {
     display: block;
     overflow-y: auto;
     height: 10vh; }
+
+.table-container-sales {
+  height: 65vh;
+  overflow-y: scroll; }

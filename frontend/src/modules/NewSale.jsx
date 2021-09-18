@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { HOST, METHODS_OF_PAYMENT } from "../config/const";
+import { HOST } from "../config/const";
 import * as api from "../api/Sales";
 import "../css/Sales.css";
 import "../css/NewSale.css";
@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -98,8 +98,12 @@ function NewSale() {
       }
     }
   }*/
-
   useEffect(() => {
+    /* 
+      Only executed on component first render. 
+      It gets the product categories, products, customers and hairdressers from the database and updates the states: 
+        - productsList: list of all the products
+    */
     const fetchProductCategories = async () => {
       try {
         await api.getProductCategories(HOST, token).then((response) => {
@@ -353,11 +357,11 @@ function NewSale() {
             }
           });
           if (!createProductsError) {
-            enqueueSnackbar("Tu compra se ha guardado correctamente", {
+            enqueueSnackbar("La venta se ha guardado correctamente", {
               variant: "success",
             });
             setDialogOpen(false);
-            history.push("/sales/list/");ç
+            history.push("/sales/list/");
             // cleanStates();
           }
         }
@@ -384,7 +388,7 @@ function NewSale() {
         elevation={6}
         className="new-sale new-sale-container sales-container"
       >
-        <div className="new-sale sales main-column right">
+        <div className="new-sale sales main-column left">
           <div className="categories-products-container">
             <div className="products-container">
               <p>Productos:</p>

@@ -66,7 +66,7 @@ CREATE TABLE sales (
   employee_id INTEGER NOT NULL,
   total_import DECIMAL(10,2) NOT NULL,
   observations TEXT,
-  method_of_payment SMALLINT NOT NULL,      -- Podemos definir nuestras propias variables con los tipos y asignarles enteros (Efectivo=0, Tarjeta=1...)
+  method_of_payment SMALLINT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
